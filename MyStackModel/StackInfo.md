@@ -1,6 +1,6 @@
 此目录的文件皆关于一种独特的数据结构-----栈
 ===========================
-目录包含12个文件(待定),一共三组
+目录包含五组共计16个文件
 ------------------------
 * 第一组:PracticeStack.cpp<br>
 　　　　MyStackBasic.cpp+MyStackBasic.h
@@ -75,6 +75,31 @@
         内容:
         栈模版类及相关内容的实现,包含主要的函数体代码以及大量的注释内容
 
+* 第四组:NSConversionDemo.cpp<br>
+　　　　StackNSConversion.h
+
+        NSConversionDemo.cpp
+        内容:
+        包含主函数,主函数中包括了一些主要的命令代码用于实现功能,
+        并对一个数字进行了必要的测试
+
+        StackNSConversion.h
+        内容:
+        Stack类及相关成员函数的声明,
+        添加了一些简单的注释解释
+
+* 第五组:ParentMatchDemo.cpp<br>
+　　　　StackParentMatch.h
+
+        ParentMatchDemo.cpp
+        内容:
+        包含主函数,主函数中包括了一些主要的命令代码用于实现功能,
+        并对一个括号字符串进行了必要的测试
+
+        StackParentMatch.h
+        内容:
+        Stack类及相关成员函数的声明,
+        添加了一些简单的注释解释
 
 [PS]关于栈的知识:<br>
 　　栈（stack）又名堆栈，它是一种运算受限的线性表。其限制是仅允许在表的一端进行插入和删除运算。这一端被称为栈顶，相对地，把另一端称为栈底。<br>
