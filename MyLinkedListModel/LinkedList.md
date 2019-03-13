@@ -1,12 +1,12 @@
 此目录的文件皆关于一种独特的数据结构-----线性表(链表)
 ===========================
-目录包含5个文件(待定),一共一组(待定)
+目录包含12个文件(待定),一共两组(待定)
 ------------------------
 * 第一组:BasicDemo.cpp<br>
 　　　　SLListBasic.h+SLListBasic.cpp<br>
 　　　　NodeBasic.h+NodeBasic.cpp
 
-        这五个文件是线性表(单链表)(或单向链表)关于Node(结点)数据类型的例子,并不是模版类
+        这五个文件是线性表(单链表)(或单向链表)关于Node(结点)数据类型的例子,并不是模版类<br>
         SLList==>Single Linked List
 
         BasicDemo.cpp
@@ -32,6 +32,49 @@
         NodeBasic.cpp
         内容:
         对结点类的实现,包括了一些简单的注释
+
+* 第二组:AdvDemo.cpp<br>
+　　　　SLListAdv.h+SLListAdv.cpp<br>
+　　　　NodeAdv.h+NodeAdv.cpp<br>
+　　　　PersonAdv.h+PersonAdv.cpp
+
+        这七个文件是线性表(单链表)(或单向链表)关于Node(结点)<br>
+        以及Person类型数据类型的例子,并不是模版类<br>
+        SLList==>Single Linked List
+
+        AdvDemo.cpp
+        内容:
+        简要介绍了例子的功能,并注释了一个特别的例子
+        包含主函数,以及两个单链表的测试例子
+        编写了一些并不重要的功能函数
+
+        SLListAdv.h
+        内容:
+        包含List类及相关成员函数,以及许多注释说明
+        简要介绍了函数声明的原因
+
+        SLListAdv.cpp
+        内容:
+        SLListBasic.h文件各个函数的具体声明,
+        附有相关代码的注释,以及各个函数体的操作说明和功能解释
+
+        NodeAdv.h
+        内容:
+        包含结点类及相关内容的声明,
+        简要介绍了相关的函数声明
+
+        NodeAdv.cpp
+        内容:
+        对结点类的实现,包括了一些简单的注释
+
+        PersonAdv.h
+        内容:
+        包含Person类及相关内容的声明,
+        简要介绍了相关的函数声明
+
+        PersonAdv.cpp
+        内容:
+        对Person类的实现,包括了一些简单的注释
 
 
 [PS]关于线性表(链表)的知识:<br>
