@@ -1,6 +1,6 @@
 此目录的文件皆关于一种独特的数据结构-----图(Graph/Map)
 ===========================
-目录包含 个文件(待定),一共三组(待定)
+目录包含19个文件(待定),一共三组(待定)
 ------------------------
 * 第一组:BasicDemo.cpp<br>
 　　　　MapBasic.h+MapBasic.cpp<br>
@@ -36,7 +36,7 @@
 　　　　MapAdvPrimNode.h+MapAdvPrimNode.cpp<br>
 　　　　MapAdvPrimEdge.h+MapAdvPrimEdge.cpp
 
-        这五个文件是关于无向图的普里姆算法生成最小生成树的内容,
+        这七个文件是关于无向图的普里姆算法生成最小生成树的内容,
         定义了一个无向图,并进行了简单的生成树测试
         AdvPrimDemo.cpp
         内容:
@@ -67,6 +67,41 @@
         内容:
         对MapAdvPrimEdge.h中构造函数的实现
 
+* 第三组:AdvKruskalDemo.cpp<br>
+　　　　MapAdvKruskal.h+MapAdvKruskal.cpp<br>
+　　　　MapAdvKruskalNode.h+MapAdvKruskalNode.cpp<br>
+　　　　MapAdvKruskalEdge.h+MapAdvKruskalEdge.cpp
+
+        这七个文件是关于无向图的克鲁斯卡尔算法生成最小生成树的内容,
+        定义了一个无向图,并进行了简单的测试
+        AdvKruskalDemo.cpp
+        内容:
+        介绍关于实验的内容,并建立了一个无向图进行测试
+
+        MapAdvKruskal.h
+        内容:
+        基于之前的MapAdvPrim.h基础上,添加了关于克鲁斯卡尔算法的内容,
+        并对声明进行了简要的解释
+
+        MapAdvKruskal.cpp
+        内容:
+        对于MapAdvKruskal.h声明内容的实现,附有大量的注释解释内容
+
+        MapAdvKruskalNode.h
+        内容:
+        定义顶点相关的内容声明
+
+        MapAdvKruskalNode.cpp
+        内容:
+        对构造函数进行函数体实现
+
+        MapAdvKruskalEdge.h
+        内容:
+        定义相关的边的内容声明
+
+        MapAdvKruskalEdge.cpp
+        内容:
+        对边的构造函数的函数体实现
 
 [PS]关于图的知识:<br>
 　　图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E)，其中，G表示一个图，V是图G中顶点的集合，E是图G中边的集合。<br>
