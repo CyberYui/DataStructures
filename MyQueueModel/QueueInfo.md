@@ -1,6 +1,6 @@
 此目录的文件皆关于一种独特的数据结构-----环形队列
 ===========================
-目录包含10个文件,一共三组
+目录包含14个文件,一共四组
 ------------------------
 * 第一组:PracticeQueue.cpp+MyQueue.h
 
@@ -56,6 +56,31 @@
         MyQueueAdv.cpp
         内容:
         关于MyQueueAdv.h文件中的函数实现,添加了很多注释以表明函数体的编写代码原因
+
+* 第四组:QueueModelDemo.cpp<br>
+　　　　CustomerTest.h+CustomerTest.cpp<br>
+　　　　MyQueueModel.h
+
+        这四个文件是环形队列的模版类的例子
+        QueueModelDemo.cpp
+        内容:
+        整个模版类的测试例子,配有简短的注释
+
+        CustomerTest.h
+        内容:
+        用于测试的用户头文件,包括对成员函数和数据成员的声明
+        [注]有关于输出运算符重载的声明
+
+        CustomerTest.cpp
+        内容:
+        用于实现CustomerTest.h的内容,简单的逻辑
+
+        MyQueueModel.h
+        内容:
+        在MyQueueAdv.h的基础上进行内容修改,使其成为模版类
+        由于模版类要求.h和.cpp文件整合,故没有相关的.cpp文件
+        内容的具体实现详见代码,逻辑与MyQueueAdv.h基本没有区别
+
 
 [PS]关于队列的知识:<br>
 　　队列是一种特殊的线性表，特殊之处在于它只允许在表的前端（front）进行删除操作，而在表的后端（rear/tail）进行插入操作，和栈一样，队列是一种操作受限制的线性表。<br>
