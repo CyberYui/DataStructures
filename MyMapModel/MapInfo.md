@@ -31,6 +31,43 @@
         内容:
         包括了对NodeBasic.h中的构造函数的书写,很简单的一个函数
 
+* 第二组:AdvPrimDemo.cpp<br>
+　　　　MapAdvPrim.h+MapAdvPrim.cpp<br>
+　　　　MapAdvPrimNode.h+MapAdvPrimNode.cpp<br>
+　　　　MapAdvPrimEdge.h+MapAdvPrimEdge.cpp
+
+        这五个文件是关于无向图的普里姆算法生成最小生成树的内容,
+        定义了一个无向图,并进行了简单的生成树测试
+        AdvPrimDemo.cpp
+        内容:
+        关于实验内容的表示,以及对普里姆生成树的测试,
+        附有简单的注释内容
+
+        MapAdvPrim.h
+        内容:
+        在MapBasic.h的基础上增加了内容,定义了普利姆算法的成员函数
+
+        MapAdvPrim.cpp
+        内容:
+        对MapBasic.h的相关函数的实现及修改,实现了普里姆生成树算法
+
+        MapAdvPrimNode.h
+        内容:
+        结点类用于初始化顶点,声明了相关内容
+
+        MapAdvPrimNode.cpp
+        内容:
+        对MapAdvPrimNode.h的内容的实现
+
+        MapAdvPrimEdge.h
+        内容:
+        定义相关的边的构造函数以及相应的成员变量
+
+        MapAdvPrimEdge.cpp
+        内容:
+        对MapAdvPrimEdge.h中构造函数的实现
+
+
 [PS]关于图的知识:<br>
 　　图（Graph）是由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为：G(V,E)，其中，G表示一个图，V是图G中顶点的集合，E是图G中边的集合。<br>
 　　比如下面这样:<br>
