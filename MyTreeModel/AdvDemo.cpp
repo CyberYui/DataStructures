@@ -1,23 +1,23 @@
 /************************************************************************/
 /*  二叉树:链表实现
 /*
-/*	Tree();													//创建树
-/*	~Tree();												//销毁树
-/*	Node *SearchNode(int nodeIndex);						//搜索结点
+/*	Tree();							//创建树
+/*	~Tree();							//销毁树
+/*	Node *SearchNode(int nodeIndex);				//搜索结点
 /*	bool AddNode(int nodeIndex, int direction, Node *pNode);//添加结点
 /*	bool DeleteNode(int nodeIndex, Node *pNode);			//删除结点
-/*	void PreorderTraversal();								//前序遍历
-/*	void InorderTraversal();								//中序遍历
-/*	void PostorderTraversal();								//后序遍历
+/*	void PreorderTraversal();					//前序遍历
+/*	void InorderTraversal();					//中序遍历
+/*	void PostorderTraversal();					//后序遍历
 /*
 /*	结点要素:索引  数据(int类型)  左孩子指针(叶子节点没有)右孩子指针
-/*										父节点指针(最顶层节点没有)
-/*										//添加结点要知道挂载的结点的索引
-/*				(0)						//并将其挂载的左右搞清楚
-/*										//三个遍历的区别
-/*		5(1)			8(2)			//前:根左右
-/*										//中:左根右
-/*	2(3)	6(4)	9(5)	7(6)		//后:左右根
+/*	              父节点指针(最顶层节点没有)
+/*					//添加结点要知道挂载的结点的索引
+/*	             (0)			//并将其挂载的左右搞清楚
+/*					//三个遍历的区别
+/*	    5(1)	     8(2)			//前:根左右
+/*					//中:左根右
+/*	2(3)   6(4)   9(5)   7(6)			//后:左右根
 /*
 /*	//以这棵树为例,创建头结点,其数据域可以没有意义,但是一定要指定其左右指针域
 /*	//如果要给已经挂载在左右的结点再挂载左右结点,则需要先从根结点索引,
