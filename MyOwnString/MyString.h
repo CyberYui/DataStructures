@@ -15,6 +15,11 @@ public:
 	MyString & operator+(const MyString &str);	//+号的运算符重载
 	bool operator==(const MyString &aStr);		//判断相等
 	int getLength();							//用于获取长度
+	//一个简单暴力的匹配算法(朴素算法)
+	int violentMatch(MyString &str, MyString &pre);
+	//KMP算法
+	int getNext(MyString &str, MyString &pre, int array[]);
+
 	//输出运算符重载
 	friend ostream &operator<<(ostream &out, const MyString &str);
 protected:

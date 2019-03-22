@@ -167,6 +167,60 @@ int MyString::getLength()
 }
 
 
+/****************************************************************/
+/* violentMatch(MyString &str, MyString &pre)					*/
+/* 功能:一个简单的串匹配,传入主串souStr和要找的串subStr,查询	*/
+/*		subStr是否存在于subStr,存在则返回下标,否则返回-1		*/
+/* 																*/
+/* 创建日期:2019-3-22						Author:Cyber Kaka	*/
+/****************************************************************/
+int MyString::violentMatch(MyString &str, MyString &pre)
+{
+	//两个迭代器
+	int i = 0;
+	int j = 0;
+	//开始循环进行匹配
+	while (i < str.m_iLen&&j < pre.m_iLen)
+	{
+		//如果当前字符匹配成功,则继续下去
+		if (str.m_pStr[i] == pre.m_pStr[j])
+		{
+			i++;
+			j++;
+		}
+		//当前字符不匹配,则str从前一个匹配组的第二位开始进行新匹配
+		//j用于pre串,其重新开始匹配
+		else
+		{
+			i = i - j + 1;
+			j = 0;
+		}
+	}
+	//当匹配成功,输出index+1,即在串中的位置
+	if (j == pre.m_iLen)
+	{
+		//即使是从第一位匹配的,也不会显示数组下标0
+		return i - j + 1;
+	}
+	//匹配不成功,输出-1
+	else
+	{
+		return -1;
+	}
+}
+
+
+/****************************************************************/
+/* getNext(MyString &str, MyString &pre, int array[])			*/
+/* 功能:KMP算法的辅助函数,用于测量主串和模式串的next[]数列		*/
+/* 																*/
+/* 创建日期:2019-3-22						Author:Cyber Kaka	*/
+/****************************************************************/
+int getNext(MyString &str, MyString &pre, int array[])
+{
+
+}
+
 
 /****************************************************************/
 /* friend ostream &operator<<(ostream &out, const MyString &str)*/
