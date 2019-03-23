@@ -211,14 +211,67 @@ int MyString::violentMatch(MyString &str, MyString &pre)
 
 
 /****************************************************************/
-/* getNext(MyString &str, MyString &pre, int array[])			*/
+/* getNext(MyString &pre, int array[])							*/
 /* 功能:KMP算法的辅助函数,用于测量主串和模式串的next[]数列		*/
 /* 																*/
 /* 创建日期:2019-3-22						Author:Cyber Kaka	*/
 /****************************************************************/
-int getNext(MyString &str, MyString &pre, int array[])
+void MyString::getNext(MyString &pre, int next[])
 {
+	//首先给next数组第一位放-1
+	next[0] = -1;
+	int i = 0, j = -1;
+	//逐步通过PMT保存next数列
+	while (i < pre.m_iLen)
+	{
+		if (j == -1 || pre.m_pStr[i] == pre.m_pStr[j])
+		{
+			++i;
+			++j;
+			next[i] = j;
+		}
+		else
+		{
+			j = next[j];
+		}
+	}
+}
 
+
+/****************************************************************/
+/* KMP(MyString &str, MyString &pre)							*/
+/* 功能:KMP算法的具体实现										*/
+/* 																*/
+/* 创建日期:2019-3-23						Author:Cyber Kaka	*/
+/****************************************************************/
+int MyString::KMP(MyString &str, MyString &pre,int next[])
+{
+	//KMP匹配算法
+	int i = 0;
+	int j = 0;
+	while ((i < str.m_iLen) && (j < pre.m_iLen))
+	{
+		if (j == -1 || str.m_pStr[i] == pre.m_pStr[j])
+		{
+			i++;
+			j++;
+		}
+		else
+		{
+			j = next[j];
+		}
+	}
+
+	if (j == pre.m_iLen)
+	{
+		//匹配成功,输出位置,数组计算从0开始,所以+1
+		return i - j + 1;
+	}
+	else
+	{
+		//若匹配失败,输出-1
+		return -1;
+	}
 }
 
 

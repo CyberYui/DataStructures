@@ -18,7 +18,8 @@ public:
 	//一个简单暴力的匹配算法(朴素算法)
 	int violentMatch(MyString &str, MyString &pre);
 	//KMP算法
-	int getNext(MyString &str, MyString &pre, int array[]);
+	void getNext(MyString &pre, int next[]);
+	int KMP(MyString &str, MyString &pre,int next[]);
 
 	//输出运算符重载
 	friend ostream &operator<<(ostream &out, const MyString &str);
