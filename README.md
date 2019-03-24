@@ -14,6 +14,7 @@
 [MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyQueueModel/QueueInfo.md)<br>
 [MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyStackModel)<br>
 [MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyTreeModel)<br>
+[String-Info](https://github.com/CyberYui/DataStructures/blob/master/MyOwnString/StringInfo.md)
 
 希望这些内容会对正在学习数据结构的你有所帮助.
 
@@ -33,5 +34,6 @@ You can check the information files(chinese only) by clicking these links below.
 [MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyQueueModel/QueueInfo.md)<br>
 [MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyStackModel)<br>
 [MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyTreeModel)<br>
+[String-Info](https://github.com/CyberYui/DataStructures/blob/master/MyOwnString/StringInfo.md)
 
 Hoping these files are useful for you guys who is learning DataStructures.
