@@ -8,15 +8,18 @@
 此外,每一个文件夹包含一个介绍文件,<br>
 可以点击下方链接查看,当然,介绍文件只有中文的<br>
 <br>
-[MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyLinkedListModel/LinkedList.md)<br>
-[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyListModel/ListInfo.md)<br>
-[MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyMapModel/MapInfo.md)<br>
-[MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyQueueModel/QueueInfo.md)<br>
-[MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyStackModel)<br>
-[MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyTreeModel)<br>
-[String-Info](https://github.com/CyberYui/DataStructures/blob/master/MyOwnString/StringInfo.md)
+[MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyLinkedListModel/LinkedList.md)<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyListModel/ListInfo.md)<br>
+[MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyMapModel/MapInfo.md)<br>
+[MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyQueueModel/QueueInfo.md)<br>
+[MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyStackModel)<br>
+[MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyTreeModel)<br>
+[String-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyOwnString/StringInfo.md)
 
 希望这些内容会对正在学习数据结构的你有所帮助.
+<br><br>
+C:<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyListModel/ListInfo.md)<br>
 
 MyDataStructuresPractices
 -----------------------
@@ -28,12 +31,15 @@ Every folder in this repository have one type of DataStructures,you can see it b
 Every folder have a markdown file of the Informations.<br>
 You can check the information files(chinese only) by clicking these links below.<br>
 <br>
-[MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyLinkedListModel/LinkedList.md)<br>
-[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyListModel/ListInfo.md)<br>
-[MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyMapModel/MapInfo.md)<br>
-[MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/MyQueueModel/QueueInfo.md)<br>
-[MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyStackModel)<br>
-[MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/MyTreeModel)<br>
-[String-Info](https://github.com/CyberYui/DataStructures/blob/master/MyOwnString/StringInfo.md)
+[MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyLinkedListModel/LinkedList.md)<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyListModel/ListInfo.md)<br>
+[MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyMapModel/MapInfo.md)<br>
+[MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyQueueModel/QueueInfo.md)<br>
+[MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyStackModel)<br>
+[MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyTreeModel)<br>
+[String-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyOwnString/StringInfo.md)
 
 Hoping these files are useful for you guys who is learning DataStructures.
+<br><br>
+C:<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyListModel/ListInfo.md)<br>
