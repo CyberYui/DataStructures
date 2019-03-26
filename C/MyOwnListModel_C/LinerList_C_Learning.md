@@ -89,29 +89,29 @@ operations</font><br>
 ----------------------
 >顺序表
 
-<code>typedef int DataType;<br></code>
-<code>struct List<br></code>
-<code>{<br></code>
-<code>　　int Max;//最大元素个数<br></code>
-<code>　　int n;//实际元素个数<br></code>
-<code>　　DataType *elem;//首地址<br></code>
-<code>};<br></code>
-<code>typedef struct List *SeqList;<br></code>
-<code>//顺序表类型定义<br></code>
+<code>typedef int DataType;</code><br>
+<code>struct List</code><br>
+<code>{</code><br>
+<code>　　int Max;//最大元素个数</code><br>
+<code>　　int n;//实际元素个数</code><br>
+<code>　　DataType *elem;//首地址</code><br>
+<code>};</code><br>
+<code>typedef struct List *SeqList;</code><br>
+<code>//顺序表类型定义</code><br>
 <br>
 
 >链表
 
-<code>typedef int DataType;<br></code>
-<code>struct Node<br></code>
-<code>{<br></code>
-<code>　　DataType data;//数据域<br></code>
-<code>　　struct Node* next;//指针域<br></code>
-<code>}<br></code>
-<code>typedef struct Node *PNode;<br></code>
-<code>//结点类型定义<br></code>
-<code>typedef struct Node *LinkList;<br></code>
-<code>//单链表类型定义<br></code>
+<code>typedef int DataType;</code><br>
+<code>struct Node</code><br>
+<code>{</code><br>
+<code>　　DataType data;//数据域</code><br>
+<code>　　struct Node* next;//指针域</code><br>
+<code>}</code><br>
+<code>typedef struct Node *PNode;</code><br>
+<code>//结点类型定义</code><br>
+<code>typedef struct Node *LinkList;</code><br>
+<code>//单链表类型定义</code><br>
 <br>
 
 ********************************
