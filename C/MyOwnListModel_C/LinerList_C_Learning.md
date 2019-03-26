@@ -89,29 +89,33 @@ operations</font><br>
 ----------------------
 >顺序表
 
-<code>typedef int DataType;</code><br>
-<code>struct List</code><br>
-<code>{</code><br>
-<code>　　int Max;//最大元素个数</code><br>
-<code>　　int n;//实际元素个数</code><br>
-<code>　　DataType *elem;//首地址</code><br>
-<code>};</code><br>
-<code>typedef struct List *SeqList;</code><br>
-<code>//顺序表类型定义</code><br>
+```c++
+typedef int DataType;
+struct List
+{
+    int Max;//最大元素个数
+    int n;//实际元素个数
+    DataType *elem;//首地址
+};
+typedef struct List *SeqList;
+//顺序表类型定义
+```
 <br>
 
 >链表
 
-<code>typedef int DataType;</code><br>
-<code>struct Node</code><br>
-<code>{</code><br>
-<code>　　DataType data;//数据域</code><br>
-<code>　　struct Node* next;//指针域</code><br>
-<code>}</code><br>
-<code>typedef struct Node *PNode;</code><br>
-<code>//结点类型定义</code><br>
-<code>typedef struct Node *LinkList;</code><br>
-<code>//单链表类型定义</code><br>
+```c++
+typedef int DataType;
+struct Node
+{
+    DataType data;//数据域
+    struct Node* next;//指针域
+}
+typedef struct Node *PNode;
+//结点类型定义
+typedef struct Node *LinkList;
+//单链表类型定义
+```
 <br>
 
 ********************************
