@@ -119,3 +119,67 @@ typedef struct Node *LinkList;
 <br>
 
 ********************************
+
+顺序表建立和判空
+---------------
+首先定义顺序表类型为int型,封装三个成员在结构体中<br>
+最后定义结构体为SeqList类型<br>
+
+```c++
+//伪代码
+typedef int DataType;
+struct List
+{
+    int Max;//最大元素个数
+    int n;//实际元素个数
+    DataType *elem;//首地址
+};
+typedef struct List *SeqList;
+//顺序表类型定义
+
+//使用的时候,首先定义对象
+SeqList slist;
+//给对象的数据成员赋初始值
+slist -> Max = 12;
+slist -> n = 0;
+slist -> elem;
+//判空则通过检查顺序表的长度即可
+if(n = 0)
+    return false;
+```
+
+创建顺序表的具体实现
+---------
+
+```c++
+SeqList SetNullList_seq(int m)//创建空顺序表
+{
+    SeqList slist = (SeqList)malloc(sizeof(struct List));
+    //申请结构体List空间
+    if(slist != NULL)
+    {
+        slist -> elem = (DataType*)malloc(sizeof(DataType)*m);
+        //申请顺序表空间,大小为m个DataType空间,这里DataType应为int
+        if(slist -> elem)
+        {
+            slist -> Max = m;//顺序表的最大值
+            slist -> n = 0;//顺序表长度赋值为0,即首位无元素
+            return(slist);
+        }
+        else free(slist);
+    }
+    printf("out of space!!\n");
+    return NULL;
+    //申请不成功,返回空,跳出函数
+}
+```
+
+顺序表判空的具体实现
+-------------------
+```c++
+int IsNullList_seq(SeqList slist)//判断顺序表是否为空
+{
+    return(slist -> n == 0);
+    //返回值是1或0,故为int型
+}
+```
