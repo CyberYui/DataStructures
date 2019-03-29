@@ -183,3 +183,4 @@ int IsNullList_seq(SeqList slist)//判断顺序表是否为空
     //返回值是1或0,故为int型
 }
 ```
+
