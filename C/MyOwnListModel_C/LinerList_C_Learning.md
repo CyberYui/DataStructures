@@ -186,3 +186,5 @@ int IsNullList_seq(SeqList slist)//判断顺序表是否为空
 
 
 
+
+
