@@ -231,9 +231,9 @@ int InsertPre_seq(SeqList slist,int p,DataType x)
 即最坏情况,时间复杂度为O(n)<br>
 <br>
 平均的时间复杂度为<br>
-![F1](http://baidu.com/pic/doge.png)<br>
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/InsertF1.png)<br>
 其中:<br>
-![F2](http://baidu.com/pic/doge.png)<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/InsertF2.png)<br>
 M<sub>i</sub>为第i个结点<br>
 P<sub>i</sub>为在第i个位置上插入结点的概率<br>
 <br>
