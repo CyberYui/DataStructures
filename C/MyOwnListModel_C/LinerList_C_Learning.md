@@ -184,7 +184,57 @@ int IsNullList_seq(SeqList slist)//判断顺序表是否为空
 }
 ```
 
+顺序表的插入
+----------
+1. 移动结点
+2. 插入结点
+3. 增加表长
 
+先要检查表的空间是否满了,在表满的情况下是不能继续插入的,否则会产生溢出错误<br>
+要检验插入位置的有效性,这里p的有效范围是:0<=p<=n,其中n为原表长<br>
+注意数据的移动方向:从下标大的元素开始移动
 
+```c++
+int InsertPre_seq(SeqList slist,int p,DataType x)
+{
+    //在线性表slist的p位置之前插入x,成功返回1,否则返回0
+    int q;
+    if(slist->n >= slist->Max)
+    {
+        //顺序表满溢出
+        printf("overflow");
+        return(0);
+    }
+    if(p<0 || p>slist->n)
+    {
+        //不存在下标为p的元素
+        printf("not exist!\n");
+        return(0);
+    }
+    for(q = slist->n-1;q>=p;q--)
+    {
+        //插入位置以及之后的元素后移
+        slist->elem[q+1]=slist->elem[q];
+    }
+    slist->elem[p] = x;//插入元素x
+    slist->n = slist-> n+1;//顺序表长度加1
+    return(1);
+}
+```
 
-
+插入算法时间复杂度
+----------------
+算法的时间主要花费在结点的移动上,在表中第i个位置上插入一个结点的移动次数为(n-i)<br>
+当i=n时,无需移动结点;<br>
+即最好情况,时间复杂度为O(1)<br>
+当i=0时,需要移动表中所有结点;<br>
+即最坏情况,时间复杂度为O(n)<br>
+<br>
+平均的时间复杂度为<br>
+![F1](http://baidu.com/pic/doge.png)<br>
+其中:<br>
+![F2](http://baidu.com/pic/doge.png)<br>
+M<sub>i</sub>为第i个结点<br>
+P<sub>i</sub>为在第i个位置上插入结点的概率<br>
+<br>
+结果为n/2,即平均时间复杂度为O(n)<br>
