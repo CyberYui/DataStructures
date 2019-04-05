@@ -277,9 +277,9 @@ int Delindex_seq(SeqList slist,int p)
 即最坏情况,时间复杂度为O(n)<br>
 <br>
 平均的时间复杂度为<br>
-![F3]
+![F3](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/DeleteF3.png)
 其中:<br>
-![F4]
+![F4](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/DeleteF4.png)
 <br>
 M<sub>d</sub>为第i个结点<br>
 P<sub>i</sub>为在第i个位置上删除结点的概率<br>
