@@ -278,6 +278,7 @@ int Delindex_seq(SeqList slist,int p)
 <br>
 平均的时间复杂度为<br>
 ![F3](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/DeleteF3.png)
+<br>
 其中:<br>
 ![F4](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/DeleteF4.png)
 <br>
