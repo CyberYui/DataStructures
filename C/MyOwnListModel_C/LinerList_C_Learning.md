@@ -315,14 +315,14 @@ int LocateIndex_seq(SeqList slist,int x)
 减而治之,即策略为每次检索都将问题分为一半<br>
 首先将一段数据分为两部分,最左侧设为Low,最右侧设为High<br>
 中间设为Mid=(Low+High)/2<br>
-![F5]CuttingTheSequence
+![F5](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/CuttingTheSequence.png)<br>
 如果现在要检索x的存在,首先要同中间的元素相比较,<br>
 如果中间元素就是x,那么比较一次就成功,则返回<br>
 如果中间元素不是x,那么有两种情况<br>
 <1>小于x的,即前半区间进行递归检索,此时,Low不动,High变为Mid-1<br>
-![F6]WhenLowerThanX
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/WhenLowerThanX.png)<br>
 <2>大于x的,即后半区间进行递归检索,此时,High不动,Low变为Mid+1<br>
-![F7]WhenHigherThanX
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/WhenHigherThanX.png)<br>
 在此过程中,返回的情况有多种,以下给出只有两种的情况<br>
 可以直接将返回设定为一直二分直到变成一次成功,即返回1<br>
 此外,如果没有查找到,则返回-1即可<br>
