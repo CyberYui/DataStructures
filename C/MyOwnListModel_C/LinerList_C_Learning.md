@@ -288,3 +288,81 @@ P<sub>i</sub>为在第i个位置上删除结点的概率<br>
 结果为n-1/2,即平均时间复杂度为O(n)<br>
 
 [思考]如果想要删除顺序表中所有值为x的元素,应该怎么设计算法呢?
+
+顺序表的查找
+-----------
+从起始位置开始依次扫描,扫描到元素后返回下标,若整个表寻找完毕之后仍未找到,则返回-1
+```c++
+//查找值为x的元素,返回元素所在位置的下标
+int LocateIndex_seq(SeqList slist,int x)
+{
+    int q;
+    for(q=0;q<slist->n;q++)
+    {
+        //查找成功,返回对应的下标
+        if(slist->elem[q]==x)
+            return q;
+    }
+    return -1;
+}
+```
+[注]不难看出,算法的时间复杂度为O(n)
+
+使用二分查找算法进行顺序表的查找
+-------------
+[TOC] 二分查找---减而治之
+
+减而治之,即策略为每次检索都将问题分为一半<br>
+首先将一段数据分为两部分,最左侧设为Low,最右侧设为High<br>
+中间设为Mid=(Low+High)/2<br>
+![F5]CuttingTheSequence
+如果现在要检索x的存在,首先要同中间的元素相比较,<br>
+如果中间元素就是x,那么比较一次就成功,则返回<br>
+如果中间元素不是x,那么有两种情况<br>
+<1>小于x的,即前半区间进行递归检索,此时,Low不动,High变为Mid-1<br>
+![F6]WhenLowerThanX
+<2>大于x的,即后半区间进行递归检索,此时,High不动,Low变为Mid+1<br>
+![F7]WhenHigherThanX
+在此过程中,返回的情况有多种,以下给出只有两种的情况<br>
+可以直接将返回设定为一直二分直到变成一次成功,即返回1<br>
+此外,如果没有查找到,则返回-1即可<br>
+
+```C++
+//*pos用于记录如果查找失败的情况下,这个元素插入到顺序表中应当插入的位置
+int Binsearch_seq(SeqList slist,int key,int *pos)
+{
+    int index=1;//用于记录比较次数
+    int mid;
+    int low=0;
+    int high=slist->n-1;
+    while(low<=high)
+    {
+        mid=(low+high)/2;
+        //一次查找成功,返回1
+        if(slist->elem[mid]==key)
+        {
+            *pos=mid;
+            printf("找到元素,共进行了%d次比较\n",index);
+            printf("要找的数据%d在位置%d上\n",key,mid);
+            return 1;
+        }
+        //二分策略
+        else if(slist->elem[mid]>key)
+        {
+            high=mid-1;
+        }
+        else
+        {
+            low=mid+1;
+        }
+        //比较次数增加
+        index++;
+    }
+    *pos=low;
+    printf("没有找到元素,共进行了%d次比较\n",index-1);
+    printf("可将此数插入到位置%d上\n",*pos);
+    return -1;
+}
+```
+[注]二分查找算法是基于顺序表进行的,顺序表必为按序排列的表
+相关的具体实例见CH2-4顺序表的查找定位.pdf

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//定义结构体
 typedef int DataType;
 struct List
 {
@@ -93,6 +94,18 @@ void Print_seq(SeqList slist)
 	printf("\n");
 }
 
+int LocateIndex_seq(SeqList slist, int x)
+{
+	int q;
+	for (q = 0; q < slist->n; q++)
+	{
+		//查找成功,返回对应的下标
+		if (slist->elem[q] == x)
+			return q;
+	}
+	return -1;
+}
+
 int main()
 {
 	SeqList seqlist;
@@ -116,4 +129,7 @@ int main()
 	InsertPre_seq(seqlist, 2, 99);
 	printf("在下标2位置之前插入99后顺序表为: ");
 	Print_seq(seqlist);
+	int y = 3;
+	int m = LocateIndex_seq(seqlist, y);
+	printf("值为%d的元素在顺序表的%d位置", y, m);
 }
