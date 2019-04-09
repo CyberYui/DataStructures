@@ -19,7 +19,7 @@
 希望这些内容会对正在学习数据结构的你有所帮助.
 <br><br>
 C:<br>
-[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/LinerList_C_Learning.md)<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
 
 MyDataStructuresPractices
 -----------------------
@@ -42,4 +42,4 @@ You can check the information files(chinese only) by clicking these links below.
 Hoping these files are useful for you guys who is learning DataStructures.
 <br><br>
 C:<br>
-[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnListModel_C/LinerList_C_Learning.md)<br>
+[MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
