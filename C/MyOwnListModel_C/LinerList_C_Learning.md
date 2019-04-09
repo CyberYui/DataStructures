@@ -366,3 +366,136 @@ int Binsearch_seq(SeqList slist,int key,int *pos)
 ```
 [注]二分查找算法是基于顺序表进行的,顺序表必为按序排列的表
 相关的具体实例见CH2-4顺序表的查找定位.pdf
+
+**********************************************
+
+关于代码中使用到的一些知识
+==============
+<1> 结构体
+---------
+在C语言中，可以使用结构体（Struct）来存放一组不同类型的数据。结构体的定义形式为：
+```c
+struct 结构体名{
+    结构体所包含的变量或数组
+};
+```
+在调用这一结构体时,必须像下面这样
+```c
+类型    结构体名 实例化对象名       其他内容
+struct  Point   oPoint1         ={100，100，0};
+struct  Point   oPoint2;
+```
+
+
+本例中有这样一段代码
+```c
+typedef int DataType;
+struct List
+{
+    int Max;//最大元素个数
+    int n;//实际元素个数
+    DataType *elem;//首地址
+};
+typedef struct List *SeqList;
+```
+其中以下内容就是一个结构体
+```c
+struct List
+{
+    int Max;//最大元素个数
+    int n;//实际元素个数
+    DataType *elem;//首地址
+};
+```
+即一个顺序表包含了3个成员,分别是max,n,elem<br>
+结构体成员的定义方式与变量和数组的定义方式相同，只是不能初始化
+
+<2> typedef的用法
+---------------
+其用法主要有四种:
+1. 为基本数据类型定义新的类型名,如
+
+        typedef unsigned int COUNT;
+        typedef double REAL;
+
+这样做便于跨平台移植程序,具体见百度.
+
+2. 为自定义数据类型（结构体、共用体和枚举类型）定义简洁的类型名称,如
+
+```c
+typedef struct tagPoint
+{
+    double x;
+    double y;
+    double z;
+} Point;
+```
+在这段代码中,实际上完成了两个操作,
+[TAG]定义了一个新的结构类型,即
+```c
+struct tagPoint
+{
+    double x;
+    double y;
+    double z;
+} ;
+```
+[TAG]使用 typedef 为这个新的结构起了一个别名，叫Point,即
+```c
+typedef struct tagPoint Point
+```
+这样之后就可以使用<code>Point oPoint1={100，100，0};</code>之类的形式调用结构体了
+
+即标准的定义名称格式为类似于这样的代码:
+```c
+struct tagNode
+{
+    char *pItem;
+    struct tagNode *pNext;
+};
+typedef struct tagNode *pNode;
+```
+
+3. 为数组定义简洁的类型名称<br>
+
+它的定义方法很简单，与为基本数据类型定义新的别名方法一样，示例代码如下所示：
+```c
+typedef int INT_ARRAY_100[100];
+INT_ARRAY_100 arr;
+```
+
+4. 为指针定义简洁的名称<br>
+
+对于指针，我们同样可以使用下面的方式来定义一个新的别名:
+```c
+typedef char* PCHAR;
+PCHAR pa;
+```
+
+在上段代码中,有以下两句
+```c
+typedef int DataType;
+typedef struct List *SeqList;
+```
+顺序表代码中的<code>typedef int DataType;</code>就是<font color=red>用法1</font>,即对int型定义为DataType型.<br>
+顺序表代码中的<code>typedef struct List *SeqList;</code>就是<font color=red>用法2</font>,即对List结构体起了一个SeqList的别名.<br>
+
+<3> malloc函数和free函数
+-------------
+
+void *malloc(long NumBytes)：<br>
+该函数分配了NumBytes个字节，并返回了指向这块内存的指针。如果分配失败，则返回一个空指针（NULL）。<br>
+
+void free(void *FirstByte)：<br>
+ 该函数是将之前用malloc分配的空间还给程序或者是操作系统，也就是释放了这块内存，让它重新得到自由。<br>
+
+在顺序表代码中,有这样两行代码
+```c
+SeqList slist = (SeqList)malloc(sizeof(struct List));
+..........//略去一些内容
+free(slist);
+```
+即第一行<code>(SeqList)malloc(sizeof(struct List))</code><br>
+是申请了一个List结构体大小的内存空间给slist,slist的类型是(SeqList),这是用于告诉malloc函数的,不是定义<br>
+
+之后这行<code>free(slist);</code>即释放了malloc申请到的内存空间<br>
