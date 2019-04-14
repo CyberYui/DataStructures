@@ -10,6 +10,29 @@
 * 双链表一个结点有两个指针域,一个指向其前驱结点,另一个指向其后继结点<br>
 * 此外,双链表还封装着一个包括头指针和尾指针的结构体,头指针指向头结点,尾指针指向尾结点<br>
 
+```c
+//双向链表类型声明
+struct DoubleNode;
+typedef struct DoubleNode *PDoubleNode;
+
+//双链表结点结构体
+struct DoubleNode
+{
+    DataType info;
+    PDoubleNode leftlink,rightlink;
+};
+
+//双链表类型
+struct DoubleList
+{
+    PDoubleNode head;//头指针
+    PDoubleNode rear;//尾指针
+};
+
+typedef struct DoubleList * PDoubleList;
+PDoubleList pdlist;//pdlist是指向双链表类型的指针变量
+```
+
 例如下图这样:<br>
 ![F1](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DoubleLinkedListDemo.png)<br>
 

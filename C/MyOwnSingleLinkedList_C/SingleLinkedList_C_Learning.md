@@ -233,7 +233,6 @@ int InsertPost_link(LinkList linkedlist,PNode p,DataType x)
 4. 新结点作为pre的后继被插入<br>
 <code>pre->next=q</code><br>
 <font color=pink>第三步和第四步能交换,因为指针的指向并不会互相影响</font><br>
-
 ```c
 int InsertPre_link(LinkList linkedlist,PNode p,DataType x)
 {
@@ -258,8 +257,29 @@ int InsertPre_link(LinkList linkedlist,PNode p,DataType x)
     return 1;
 }//算法时间复杂度O(n)
 ```
-
 >插入的两种算法相比,如果能做后插法,尽量使用后插法,因为时间复杂度较低
+
+单链表的倒置
+-----------
+依次取出原链表中的每一个结点,然后将其作为第一个结点插入新链表中<br>
+当取到了终端结点时,其特征为指针域为空<br>
+```c
+void reverse(LinkList linkedlist)
+{
+    PNode p,q;
+    p=head->next;//p指向第一个数据结点
+    head->next=NULL;//将原链表置空
+    //只要p结点的指针域不为空,则一直进行循环
+    while(p)
+    {
+        q=p;//保存当前结点
+        p=p->next;//p继续指向下一个结点
+        q->next=head->next;//将当前结点插入到头结点的后面
+        head->next=q;
+    }
+}
+```
+
 
 单链表的删除:删除r结点的后继
 ------------
@@ -337,4 +357,40 @@ void DelValue_Link(struct Node *head,int data)
 }
 ```
 
->关于循环链表见同目录下的另一个markdown文件
+单链表的删除:删除一个单链表的重复结点
+-----------------
+从开头开始进行对比,找到与其值相同的结点就删除,以此类推,最后只会剩下一个该值结点<br>
+```c
+void pur_LinkList(LinkList linkedlist)
+{
+    PNode p,q,s;
+    p=head->next;//p指向第一个结点
+    if(p==NULL)
+        return;
+    while(p->next)
+    {
+        s=p;
+        q=p->next;
+        while(q)
+        {
+            //从p的后继开始寻找与p值相同的结点
+            if(q->data==p->data)
+            {
+                //找到重复结点,删除
+                s->next=q->next;
+                free(q);
+                q=s->next;
+            }
+            else
+            {
+                s=q;
+                q=q->next;
+            }
+            //删除一种,继续进行下一种
+            p=p->next;
+        }
+    }
+}
+```
+
+>关于循环链表见同目录下的另两个markdown文件
