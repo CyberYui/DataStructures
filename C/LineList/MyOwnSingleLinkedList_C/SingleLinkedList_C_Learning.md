@@ -63,10 +63,10 @@ int IsNull_Link(LinkList head)
 头插法建立单链表
 -----------
 例如建立这样一个链表:<br>
-![F1](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/InsertFromHead.png)<br>
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/InsertFromHead.png)<br>
 1. 首先申请结点空间<br>
 <code>p=malloc(sizeof(struct Node)) //申请的大小是struct Node这样的大小</code><br>
-![F2](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/NodeSpaceHead.png)<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/NodeSpaceHead.png)<br>
 2. 对数据域进行赋值<br>
 <code>p->data = data;//后面的data即具体数值</code><br>
 3. 对指针域进行赋值<br>
@@ -97,11 +97,11 @@ void CreateList_Head(struct Node *head)//头插法建立单链表
 尾插法建立单链表
 -------------
 与头插法不同,尾插法是从最后开始插入的,例如插入这样一个链表:<br>
-![F3](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/InsertFromEnd.png)<br>
+![F3](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/InsertFromEnd.png)<br>
 可见开始时有一个尾指针q指向终端结点,尾插法即从终端结点之后插入<br>
 1. 首先申请结点空间<br>
 <code>p = malloc(sizeof(struct Node))</code><br>
-![F4](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/NodeSpaceEnd.png)<br>
+![F4](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/NodeSpaceEnd.png)<br>
 2. 对数据域进行赋值<br>
 <code>p->data=data;</code><br>
 3. 对指针域进行赋值<br>
@@ -185,10 +185,10 @@ PNode Locate_LinkTNo(LinkList linkedlist,DataType i)
 单链表的插入:后插法
 ------------
 例如建立这样一个链表:<br>
-![F5](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/InsertFromEnd2.png)<br>
+![F5](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/InsertFromEnd2.png)<br>
 1. 首先申请结点空间<br>
 <code>q = malloc(sizeof(struct Node))</code><br>
-![F6](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/NodeInsertEnd.png)<br>
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/NodeInsertEnd.png)<br>
 2. 对数据域进行赋值<br>
 <code>q->data=data;</code><br>
 3. 对指针域进行赋值<br>
@@ -222,10 +222,10 @@ int InsertPost_link(LinkList linkedlist,PNode p,DataType x)
 ---------------
 与后插法不同,要在一个结点p之前插入结点,要知道其前驱结点pre的情况<br>
 例如建立这样一个链表:<br>
-![F7](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/InsertFromHead2.png)<br>
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/InsertFromHead2.png)<br>
 1. 首先申请结点空间<br>
 <code>q = malloc(sizeof(struct Node))</code><br>
-![F8](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/NodeInsertHead.png)<br>
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/NodeInsertHead.png)<br>
 2. 对数据域进行赋值<br>
 <code>q->data=data;</code><br>
 3. 对指针域进行赋值<br>
@@ -284,7 +284,7 @@ void reverse(LinkList linkedlist)
 单链表的删除:删除r结点的后继
 ------------
 例如有这样一个链表,要删除r结点的后继结点:<br>
-![F9](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DeleteTheNext.png)<br>
+![F9](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/DeleteTheNext.png)<br>
 1. 首先提取出后继结点<br>
 <code>p=r->next;</code><br>
 2. p的后继变成r的后继<br>
@@ -309,7 +309,7 @@ void DelPostlonNext_Link(LinkList head,PNode r)
 --------------
 与删除后继不同,这种方式要寻找r结点的前驱结点<br>
 例如有这样的一个链表,要删除r结点:<br>
-![F10](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DeleteRSelf.png)<br>
+![F10](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/DeleteRSelf.png)<br>
 1. 找到前驱结点,并提取出r结点<br>
 <code>pre->next=r->next;</code><br>
 2. 释放r结点<br>

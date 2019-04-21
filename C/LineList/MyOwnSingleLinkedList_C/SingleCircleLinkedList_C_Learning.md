@@ -11,10 +11,10 @@
 
 实际中多采用<font color=red>尾指针(rear)</font>表示单循环链表<br>
 例如下图这样:<br>
-![F1](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/TailPointerREAR.png)<br>
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/TailPointerREAR.png)<br>
 
 <font color=purple>例:将两个线性表(a<sub>1</sub>,a<sub>2</sub>,...,a<sub>n</sub>)和(b<sub>1</sub>,b<sub>2</sub>,...,b<sub>m</sub>)链接成一个线性表(a<sub>1</sub>,a<sub>2</sub>,...,a<sub>n</sub>,b<sub>1</sub>,b<sub>2</sub>,...,b<sub>m</sub>),两个线性表都用下图的循环链表表示,其中r<sub>a</sub>为第一个线性表的尾指针,r<sub>b</sub>为第二个线性表的尾指针.</font><br>
-![F2](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/ExampleGraph1.png)<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/ExampleGraph1.png)<br>
 <font color=blue>[分析]:a<sub>n</sub>的后继是b<sub>1</sub>,b<sub>m</sub>的后继是a<sub>1</sub></font><br>
 1. <font color=blue>p=ra->next;//指针指向第一个链表的头结点,即尾指针的next</font>
 2. <font color=blue>ra->next=rb->next->next;//链接两个线性表,第二个链表的头结点可以去除了,因为没有意义</font>

@@ -34,7 +34,7 @@ PDoubleList pdlist;//pdlist是指向双链表类型的指针变量
 ```
 
 例如下图这样:<br>
-![F1](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DoubleLinkedListDemo.png)<br>
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/DoubleLinkedListDemo.png)<br>
 
 双链表以牺牲空间为代价达到了便于查找的形式.<br>
 
@@ -46,7 +46,7 @@ PDoubleList pdlist;//pdlist是指向双链表类型的指针变量
 p的后继结点的前驱指针指向p的前驱结点,这样就提取出(k<sub>i</sub>)p结点了<br>
 <code>p->leftlink->rightlink = p->rightlink;</code><br>
 <code>p->rightlink->leftlink = p->leftlink;</code><br>
-![F2](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DoubleLinkedListDeleteDemo.png)<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/DoubleLinkedListDeleteDemo.png)<br>
 
 
 双链表的插入操作
@@ -63,4 +63,4 @@ q变为p的后继结点,这样就插入了q结点<br>
 <code>p->rightlink = q;</code><br>
 
 [注]后两步的顺序一定不能变化,具体看图即可
-![F3](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/DoubleLinkedListInsertDemo.png)<br>
+![F3](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/MyOwnSingleLinkedList_C/DoubleLinkedListInsertDemo.png)<br>

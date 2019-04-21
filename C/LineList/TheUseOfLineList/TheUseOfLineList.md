@@ -3,11 +3,11 @@
 一元多项式的加法问题
 ------------
 &emsp;&emsp;在数学上,一个一元多项式P<sub>n</sub>(x)可<font color=blue>按升幂</font>写成:<br>
-![F1](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF1.png)<br>
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/polymerizationF1.png)<br>
 &emsp;&emsp;它由n+1个系数唯一确定<br>
 
 &emsp;&emsp;可以用一个线性表P来表示多项式:<br>
-![F2](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF2.png)<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/polymerizationF2.png)<br>
 &emsp;&emsp;每一项的指数i隐含在其系数p<sub>i</sub>的序号中<br>
 
 1. 全部系数顺序存储结构
@@ -29,7 +29,7 @@
 * [<font color=purple>Star</font>]若只对多项式进行"<font color=red>求值</font>"等不改变多项式的系数和指数的运算,则采用<font color=red>顺序存储结构</font>即可;<font color=red>否则应采用链表表示</font>.<br>
 &emsp;&emsp;结点包括3部分:系数+指数+指针域<br>
 例如这两个多项式:<br>
-![F3](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF3.png)<br>
+![F3](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/polymerizationF3.png)<br>
 
 如何实现用有序链表表示的多项式的加法运算?
 -------------
@@ -40,7 +40,7 @@
 
 在有序链表中,就可以按这样的三步进行<br>
 如下图,有两个指针,一个指向pa多项式链表,另一个指向pb多项式链表<br>
-![F4](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF4.png)<br>
+![F4](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/polymerizationF4.png)<br>
 将pa多项式作为"和多项式"<br>
 
 ```c
@@ -112,7 +112,7 @@ void AddPolyn(linklist *pa,linklist *pb)
 }
 ```
 流程图如下:<br>
-![F5](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF5.png)<br>
+![F5](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/polymerizationF5.png)<br>
 
 Josephus问题
 ---------
@@ -121,7 +121,7 @@ Josephus问题
 &emsp;&emsp;Josephus问题是:对于任意给定的n,s和m,求出按出列次序得到的n个人员的序列<br>
 
 假设:n=9;s=1;m=5;<br>
-![F6](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestion.png)<br>
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/JosephusQuestion/JosephusQuestion.png)<br>
 则其出列顺序为:5 1 7 4 3 6 9 2 8<br>
 
 >很明显要使用循环链表实现
@@ -135,11 +135,11 @@ Josephus问题
 <font color=purple>[注意]单循环链表结束的判断条件</font><br>
 
 
-![F7](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestionF1.png)<br>
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/JosephusQuestion/JosephusQuestionF1.png)<br>
 由于链表是从0数起的,所以循环的执行条件应为m-1的倍数次<br>
 pre和current指针始终保持为前驱和现任的关系<br>
 
-![F8](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestionF2.png)<br>
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/JosephusQuestion/JosephusQuestionF2.png)<br>
 当删除第5个结点时,current后移一位,然后pre的next指向6号结点<br>
 
 ```c
