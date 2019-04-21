@@ -1,6 +1,6 @@
 线性表的应用
 ==========
-一元多项式的加法:
+一元多项式的加法问题
 ------------
 &emsp;&emsp;在数学上,一个一元多项式P<sub>n</sub>(x)可<font color=blue>按升幂</font>写成:<br>
 ![F1](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF1.png)<br>
@@ -113,3 +113,64 @@ void AddPolyn(linklist *pa,linklist *pb)
 ```
 流程图如下:<br>
 ![F5](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/PolynomialAddition/polymerizationF5.png)<br>
+
+Josephus问题
+---------
+问题描述:<br>
+&emsp;&emsp;设有n个人围坐在一个圆桌周围,现从第s个人开始报数,数到第m的人出列,然后从出列的下一个人重新开始报数,数到第m的人又出列,...,以此类推,直到所有的人都出列为止.<br>
+&emsp;&emsp;Josephus问题是:对于任意给定的n,s和m,求出按出列次序得到的n个人员的序列<br>
+
+假设:n=9;s=1;m=5;<br>
+[JosephusQuestion.png]<br>
+则其出列顺序为:5 1 7 4 3 6 9 2 8<br>
+
+>很明显要使用循环链表实现
+
+用单循环链表结构求解Josephus问题的一般步骤为:<br>
+[问题分析]Josephus问题中,n个人之间的关系是线性的,假设采用带有头结点的单循环链表结构,采用<font color=red>尾指针</font>表示方法.<br>
+(尾指针表示法可以很容易地访问到最后和第一个结点)
+* 创建单循环链表算法
+* 单循环链表查找第s个结点
+* 再从第s个结点查找第k个结点的前驱结点pre,然后从pre删除pre的后继结点
+<font color=purple>[注意]单循环链表结束的判断条件</font><br>
+
+[JosephusQuestionF1.png]<br>
+由于链表是从0数起的,所以循环的执行条件应为m-1的倍数次<br>
+pre和current指针始终保持为前驱和现任的关系<br>
+[JosephusQuestionF2.png]<br>
+当删除第5个结点时,current后移一位,然后pre的next指向6号结点<br>
+
+```c
+//伪:free(current)
+//这两句的原因可以好好体会下
+pre->next=current->next;//pre的next指向current的下一位,即4->5变成了4->6
+current=pre->next;//current的指针跟着pre走,两者永远保持前驱和后继的关系,即从5变为6
+```
+
+循环这一过程,最后会删除第8个结点,删除的条件就是current->next == current时即只剩一个结点<br>
+
+Josephus问题变形
+----------
+问题描述:<br>
+&emsp;&emsp;有N张纸牌,记为1,2,...,N.<br>
+将它们牌面朝下垂直叠放在一起,应该怎样摆放,才能满足下列条件:<br>
+&emsp;&emsp;从上面抽出的第一张牌是1,然后把该牌后面的两张牌依次插入牌叠的末尾;<br>
+&emsp;&emsp;抽出上面一张,刚好是2,再依次把该牌后面的三张牌依次插入牌叠的末尾;<br>
+&emsp;&emsp;抽出上面一张,刚好是3,再依次把该牌后面的四张...<br>
+&emsp;&emsp;以此类推,直到抽到N为止.<br>
+
+|开始顺序|取1,放2张|取2,放3张|取3,放4张|取4,放5张|取5,放6张|取6,放7张|取7,放8张|
+|:----:|:------------------------:|:------------------------:|:------------------------:|:---------------------------:|:-------------------------------------------:|:--------------------------------------------:|:-------------------------------------------:|
+|1|2|3|4|<font color=red>5</font>|<font color=purple>6</font>|<font color=green>7</font>|<font color=orange>8</font>|
+|7|6|7|<font color=red>7</font>|<font color=red>6</font>|<font color=purple>8</font>|<font color=blue>8</font>| |
+|5|8|5|<font color=red>5</font>|<font color=red>8</font>|<font color=purple>7</font>| | |
+|2|4|<font color=red>6</font>|<font color=red>6</font>|<font color=purple>7</font>| | | |
+|6|3|<font color=red>8</font>|<font color=red>8</font>| | | | |
+|8|<font color=red>7</font>|<font color=red>4</font>| | | | | |
+|4|<font color=red>5</font>| | | | | | |
+|3|<font color=gray>不同颜色表示移动次数</font>|<font color=grey>即取牌之后的移动次数</font>|<font color=red>红色</font>表示移动了一次|<font color=purple>紫色</font>表示移动了两次|<font color=green>绿色</font>表示移动了三次|<font color=blue>蓝色</font>表示移动了四次|<font color=orange>橙色</font>表示移动了八次|
+
+相关代码:
+```c
+
+```
