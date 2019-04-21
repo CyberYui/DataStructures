@@ -121,7 +121,7 @@ Josephus问题
 &emsp;&emsp;Josephus问题是:对于任意给定的n,s和m,求出按出列次序得到的n个人员的序列<br>
 
 假设:n=9;s=1;m=5;<br>
-[JosephusQuestion.png]<br>
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestion.png)<br>
 则其出列顺序为:5 1 7 4 3 6 9 2 8<br>
 
 >很明显要使用循环链表实现
@@ -134,10 +134,12 @@ Josephus问题
 * 再从第s个结点查找第k个结点的前驱结点pre,然后从pre删除pre的后继结点
 <font color=purple>[注意]单循环链表结束的判断条件</font><br>
 
-[JosephusQuestionF1.png]<br>
+
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestionF1.png)<br>
 由于链表是从0数起的,所以循环的执行条件应为m-1的倍数次<br>
 pre和current指针始终保持为前驱和现任的关系<br>
-[JosephusQuestionF2.png]<br>
+
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/TheUseOfLineList/JosephusQuestion/JosephusQuestionF2.png)<br>
 当删除第5个结点时,current后移一位,然后pre的next指向6号结点<br>
 
 ```c
