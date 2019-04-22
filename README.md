@@ -8,6 +8,7 @@
 此外,每一个文件夹包含一个介绍文件,<br>
 可以点击下方链接查看,当然,介绍文件只有中文的<br>
 <br>
+C++:<br>
 [MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyLinkedListModel/LinkedList.md)<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyListModel/ListInfo.md)<br>
 [MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyMapModel/MapInfo.md)<br>
@@ -20,6 +21,9 @@
 <br><br>
 C:<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
+>有一些在学习期间额外做的不必要的小实验,它们的介绍文件如下:
+[ReplenishesOfLineList--DLL](https://github.com/CyberYui/DataStructures/blob/master/C/ReplenishesOfLineList/ReplenishesOfLineList_DLL.md)<br>
+
 [MySingleLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/SingleLinkedList_C_Learning.md)<br>
 
 MyDataStructuresPractices
@@ -32,6 +36,7 @@ Every folder in this repository have one type of DataStructures,you can see it b
 Every folder have a markdown file of the Informations.<br>
 You can check the information files(chinese only) by clicking these links below.<br>
 <br>
+C++:<br>
 [MyLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyLinkedListModel/LinkedList.md)<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyListModel/ListInfo.md)<br>
 [MyMapModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyMapModel/MapInfo.md)<br>
@@ -44,4 +49,7 @@ Hoping these files are useful for you guys who is learning DataStructures.
 <br><br>
 C:<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
+>There are some unnecessary projects about LineList,here is these projects' Info.md
+[ReplenishesOfLineList--DLL](https://github.com/CyberYui/DataStructures/blob/master/C/ReplenishesOfLineList/ReplenishesOfLineList_DLL.md)<br>
+
 [MySingleLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/SingleLinkedList_C_Learning.md)<br>
