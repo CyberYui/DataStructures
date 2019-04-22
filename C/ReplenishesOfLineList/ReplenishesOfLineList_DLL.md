@@ -11,7 +11,7 @@ DLL(Dynamic Link Library) DSO(Dynamic Shared Objects)动态链接库
 * Windows:PE(Protable Executable)
 * Linux:ELF(Executable Linkable Format)
 
-可执行文件,目标文件,.dll,.lib,.so,.a
+可执行文件,目标文件,.dll,.lib,.so,.a<br>
 
 DLL(Dynamic Link Library)
 --------
@@ -21,16 +21,17 @@ DLL(Dynamic Link Library)
 * <font color=grey>dumpbin.exe是VS自带的工具,VS2017也自带</font>
 >路径为:F:\MicrosoftVisualStudio2017\VC\Tools\MSVC\14.16.27023\bin\Hostx64\arm64
 
-[注]由于dumpbin.exe也是需要一些依赖的,所以最好的使用方式是用VS自身的命令行进行使用
+[注]由于dumpbin.exe也是需要一些依赖的,所以最好的使用方式是用VS自身的命令行进行使用<br>
 >VS2017-->工具(T)-->Visual Studio 命令提示(C)
 
-有两种方式使用:
+有两种方式使用:<br>
 1. 用命令行打开路径之后再使用,可以用dumpbin /?来测试是否进入了正确的路径
 2. 将dumpbin.exe所在目录放入PATH环境变量中就可以直接使用了
 
-对于dumpbin.exe的使用,需要用到以下命令:
-* /IMPORTS[:文件名]----查看一个应用程序运行时要导入哪些动态库
-例子:比如要看csgo.exe导入了哪些动态库
+对于dumpbin.exe的使用,需要用到以下命令:<br>
+* /IMPORTS[:文件名]----查看一个应用程序运行时要导入哪些动态库<br>
+
+例子:比如要看csgo.exe导入了哪些动态库<br>
 ```cmd
 F:\MicrosoftVisualStudio2017\VC\Tools\MSVC\14.16.27023\bin\Hostx64\arm64>dumpbin /imports "I:\Steam\steamapps\common\Counter-Strike Global Offensive\csgo.exe"
 Microsoft (R) COFF/PE Dumper Version 14.16.27030.1
@@ -164,12 +165,15 @@ File Type: EXECUTABLE IMAGE
        53000 .text
         1000 .tls
 ```
-可见例子中用到了USER32.dll和KERNEL32.dll两个动态库
+可见例子中用到了USER32.dll和KERNEL32.dll两个动态库<br>
 
 * /EXPORTS----查看一个动态库会导出哪些函数
-例子:比如要看USER32.dll和KERNEL32.dll两个动态库会导出哪些函数
-首先要知道这两个动态库的位置,比如KERNEL32.dll位于C:\Windows\System32中
->即dumpbin /exports C:\Windows\System32\kernel32.dll
+
+例子:比如要看USER32.dll和KERNEL32.dll两个动态库会导出哪些函数<br>
+&emsp;&emsp;首先要知道这两个动态库的位置<br>
+&emsp;&emsp;比如KERNEL32.dll位于C:\Windows\System32中<br>
+>即dumpbin /exports C:\Windows\System32\kernel32.dll<br>
+
 ```cmd
 f:\MicrosoftVisualStudio2017\Common7\Tools>dumpbin /exports C:\Windows\System32\kernel32.dll
 Microsoft (R) COFF/PE Dumper Version 14.16.27030.1
@@ -215,37 +219,41 @@ File Type: DLL
         1000 .rsrc
        76000 .text
 ```
-可见会显示出dll文件中的所有函数的函数名,比如本台电脑上的kernel32.dll有1629个函数
+可见会显示出dll文件中的所有函数的函数名,比如本台电脑上的kernel32.dll有1629个函数<br>
 
 Windows与DLL
 ---------
-Windows系统中大量采用了DLL机制,甚至windows内核结构在很大程度上都依赖DLL机制.
+&emsp;&emsp;Windows系统中大量采用了DLL机制,甚至windows内核结构在很大程度上都依赖DLL机制.<br>
 
-Windows平台上大型软件的升级是通过DLL实现的.比如Office,IE,VS系列等.
+&emsp;&emsp;Windows平台上大型软件的升级是通过DLL实现的.比如Office,IE,VS系列等.<br>
 
-Service Packs软件升级包
+&emsp;&emsp;Service Packs软件升级包<br>
 
 使用DLL的优点
 ---------
-* <font color=blue>节省内存和减少交换操作</font>
-    很多进程可以同时使用一个DLL,在内存中共享该DLL的一个副本.相反,对于每个用静态链接库生成的应用程序,Windows必须在内存中加载库代码的一个副本.
+* <font color=blue>节省内存和减少交换操作</font><br>
+    &emsp;很多进程可以同时使用一个DLL,在内存中共享该DLL的一个副本.<br>
+    &emsp;相反,对于每个用静态链接库生成的应用程序,Windows必须在内存中加载库代码的一个副本.<br>
 
-* <font color=blue>易于升级,提供售后支持</font>
-    当DLL中的函数发生更改时,只要函数的参数和返回值没有更改,就不需重新编译或重新链接使用它们的应用程序.相反,静态链接的对象代码要求在函数更改时重新链接应用程序.
+* <font color=blue>易于升级,提供售后支持</font><br>
+    &emsp;当DLL中的函数发生更改时,只要函数的参数和返回值没有更改,就不需重新编译或重新链接使用它们的应用程序.<br>
+    &emsp;相反,静态链接的对象代码要求在函数更改时重新链接应用程序.<br>
 
-* <font color=blue>支持多语言程序</font>
-    只要程序遵循函数的调用约定,用不同编程语言编写的程序就卡一调用相同的DLL函数.
+* <font color=blue>支持多语言程序</font><br>
+    &emsp;只要程序遵循函数的调用约定,用不同编程语言编写的程序就卡一调用相同的DLL函数.<br>
 
-* <font color=green>比如:</font>
-    使用VB或C#编写应用程序的界面,业务逻辑使用C++或C语言
+* <font color=green>比如:</font><br>
+    &emsp;使用VB或C#编写应用程序的界面,业务逻辑使用C++或C语言<br>
 
-* <font color=pink>隐藏代码的实现</font>
+* <font color=pink>隐藏代码的实现</font><br>
 
 使用DLL的缺点
 ----------
 * <font color=red>应用程序不是独立的</font>
 
 * <font color=red>意味着发布自己的应用程序时,必须同时发布DLL</font>
+
+***************************
 
 <font color=pink>**DLL的创建和使用**</font>
 ==========
@@ -254,7 +262,7 @@ Service Packs软件升级包
 * 创建一个DLL:
 
     新建MathTest.c程序;<br>
-    注意使用指定符号:_declspec(dllexport)
+    注意使用指定符号:_declspec(dllexport)<br>
 
 ```c
 //在函数前面加上_declspec(dllexport)即可表示动态链接库导出符号对应
@@ -273,19 +281,19 @@ _declspec (dllexport) float GetAdd(float a, float b)
 	return a * b;
 }
 ```
-在命令行中对MathTest.c程序进行编译
-
-要想使用cl命令,还是要从VS中进入命令行使用
+在命令行中对MathTest.c程序进行编译<br>
+<br>
+要想使用cl命令,还是要从VS中进入命令行使用<br>
 
     cl /LDd MathTest.c 创建Debug版DLL
     cl /LD Math.c 创建release版DLL
 
-在使用时,可能会出现"无法打开编译器生成的文件"这样的错误
-解决方法是将文件所在项目的项目属性修改一下
->项目(P)-->XXX(项目名)属性(P)-->C/C++-->输出文件-->汇编程序输出-->无列表
-或者打开一个其他的项目,解除该项目的编译器占用
+在使用时,可能会出现"无法打开编译器生成的文件"这样的错误<br>
+解决方法是将文件所在项目的项目属性修改一下<br>
+>项目(P)-->XXX(项目名)属性(P)-->C/C++-->输出文件-->汇编程序输出-->无列表<br>
+或者打开一个其他的项目,解除该项目的编译器占用<br>
 
-单独的文件,就将.c文件放在一个简单的文件夹中,再进行编译即可
+单独的文件,就将.c文件放在一个简单的文件夹中,再进行编译即可<br>
 
 ```cmd
 G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList>cl MathTest.c
@@ -302,8 +310,8 @@ MathTest.obj
 LINK : fatal error LNK1561: 必须定义入口点
 ```
 
-编译完成后会产生.exp,.lib,.obj三种文件,但没有想要的dll文件
->解决方法:添加main函数到文件中去即可
+编译完成后会产生.exp,.lib,.obj三种文件,但没有想要的dll文件<br>
+>解决方法:添加main函数到文件中去即可<br>
 
 ```c
 _declspec (dllexport) float GetAdd(float a, float b)
@@ -327,7 +335,7 @@ int main()
 }
 ```
 
-删掉原先生成的.exp,.lib,.obj三种文件,重新编译
+删掉原先生成的.exp,.lib,.obj三种文件,重新编译<br>
 
 ```cmd
 G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList>cl /LDd MathTest.c
@@ -362,9 +370,9 @@ G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList>dir
                2 个目录 225,654,464,512 可用字节
 ```
 
-可见产生了.dll,.exp,.lib,.obj文件
-
-使用dumpbin查看一下DLL的导出符号
+可见产生了.dll,.exp,.lib,.obj文件<br>
+<br>
+使用dumpbin查看一下DLL的导出符号<br>
 
     dumpbin /EXPORTS Math.dll 查看DLL的导出符号
 
@@ -400,9 +408,9 @@ File Type: DLL
         2000 .reloc
        2D000 .text
 ```
-可见有三个函数,函数名分别是GetAdd,GetMul,GetSub(按字母顺序排列)
-
-要想使用这个dll动态链接库,需要再写一个文件TestMathDemo.c导入想用的函数即可
+可见有三个函数,函数名分别是GetAdd,GetMul,GetSub(按字母顺序排列)<br>
+<br>
+要想使用这个dll动态链接库,需要再写一个文件TestMathDemo.c导入想用的函数即可<br>
 
 ```c
 //TestMathDemo.c
@@ -419,7 +427,7 @@ int main(int agrc, char **argv)
 }
 ```
 
-对其进行编译,并连接生成的.obj和刚刚生成的.lib文件
+对其进行编译,并连接生成的.obj和刚刚生成的.lib文件<br>
 
         cl /c TestMathDemo.c
         link TestMathDemo.obj MathTest.lib
@@ -476,31 +484,37 @@ G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList>dir
                2 个目录 225,651,728,384 可用字节
 ```
 
-这样就会生成TestMathDemo.exe文件,运行它,就得到了TestMathDemo.c文件的结果
-直接打开该文件会一闪而过,因为没有system(pause)命令,所以接着使用命令行运行
->[注]如果该目录里没有MathTest.dll文件的话,运行exe文件时,会报错说系统缺失DLL文件
+&emsp;这样就会生成TestMathDemo.exe文件,运行它,就得到了TestMathDemo.c文件的结果<br>
+&emsp;直接打开该文件会一闪而过,因为没有system(pause)命令,所以接着使用命令行运行<br>
+>[注]如果该目录里没有MathTest.dll文件的话,运行exe文件时,会报错说系统缺失DLL文件<br>
 
 ```cmd
 G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList>TestMathDemo.exe
 result=5.000000
 ```
 
-得到结果result=5.000000
+得到结果result=5.000000<br>
 
->小结:
-新建c文件,并写入使用指定符号:_declspec(dllexport)修饰的函数,再配备一个入口(main函数)
-编译此文件,创建DLL文件(cl /LDd MathTest.c 创建Debug版DLL)
-新建新的c文件,写入使用指定符号:_declspec (dllimport)修饰的函数声明,写出使用函数的主函数体
-编译此文件,链接obj文件和lib文件,并将dll文件放入同目录下,运行链接后生成的.exe文件,得到结果
->>注:链接obj文件和lib文件,这种使用DLL文件创建应用程序的方式是一种静态链接过程,并不是动态链接过程,所以要放入dll文件
+>小结步骤:<br>
+1>新建c文件,并写入使用指定符号:_declspec(dllexport)修饰的函数,再配备一个入口(main函数)<br>
+2>编译此文件,创建DLL文件(cl /LDd MathTest.c 创建Debug版DLL)<br>
+3>新建新的c文件,写入使用指定符号:_declspec (dllimport)修饰的函数声明,写出使用函数的主函数体<br>
+4>编译此文件,链接obj文件和lib文件,并将dll文件放入同目录下,运行链接后生成的.exe文件,得到结果<br>
+>>注:链接obj文件和lib文件,这种使用DLL文件创建应用程序的方式是一种静态链接过程,并不是动态链接过程,所以要在目录中放入dll文件<br>
 
 VS开发环境下的创建和使用
 ----------
 1. 创建DLL工程
-新建-->项目-->Visual C++-->Windows桌面-->Windows桌面向导-->应用程序类型:选择dll-->附加选项:选择空项目-->完成
->例子:参照项目---Demo_DLL
-项目包含两个文件:Create_DLL.h和Create_DLL.c
-Create_DLL.h
+
+新建-->项目-->Visual C++-->Windows桌面-->Windows桌面向导-->应用程序类型:选择dll-->附加选项:选择空项目-->完成<br>
+>例子:参照项目---Demo_DLL<br>
+
+项目包含两个文件:<br>
+
+    Create_DLL.h和Create_DLL.c
+<br>
+Create_DLL.h<br>
+
 ```c
 #ifndef Create_DLL_H
 #define Create_DLL_H
@@ -513,7 +527,8 @@ _declspec (dllexport) float GetMul(float a, float b);
 #endif // Create_DLL_H
 ```
 
-Create_DLL.c
+Create_DLL.c<br>
+
 ```c
 #include "Create_DLL.h"
 
@@ -534,24 +549,29 @@ float GetMul(float a, float b)
 	return a * b;
 }
 ```
-生成项目,可见项目的Debug文件夹下产生了相应的文件,其中包括lib和dll文件
+生成项目,可见项目的Debug文件夹下产生了相应的文件,其中包括lib和dll文件<br>
 
 2. 创建测试DLL工程
-演示隐式链接:两种方法
 
-<font color=blue>隐式链接:在加载时动态链接(常用的方法)</font>
+&emsp;<font color=red>演示隐式链接有两种方法</font><br>
+<br>
+<font color=blue>隐式链接:在加载时动态链接(常用的方法)</font><br>
+<br>
+&emsp;&emsp;在加载时动态链接中,应用程序像调用本地函数一样对导出的DLL函数进行调用.<br>
+&emsp;&emsp;要使用加载时动态链接,需要在编译和链接应用程序时提供头文件(.h)和导入库文件(.lib)<br>
+&emsp;&emsp;这样做时,链接器将向系统提供加载DLL所需的信息,并在加载时解析导出的DLL函数的位置<br>
 
-在加载时动态链接中,应用程序像调用本地函数一样对导出的DLL函数进行调用.
-要使用加载时动态链接,需要在编译和链接应用程序时提供头文件(.h)和导入库文件(.lib)
-这样做时,链接器将向系统提供加载DLL所需的信息,并在加载时解析导出的DLL函数的位置
+在现有解决方案中创建DLL测试工程<br>
+&emsp;&emsp;[注]因为是一个测试工程,所以要有exe应用程序输出,故在此不是一个dll项目了,而是exe项目<br>
 
-在现有解决方案中创建DLL测试工程
-[注]因为是一个测试工程,所以要有exe应用程序输出,故在此不是一个dll项目了,而是exe项目
-右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成
->例子:参照项目---Test_DLL_implicit
+右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成<br>
 
-项目包含两个文件:Create_DLL.h和Test_DLL.c
-Create_DLL.h文件和第一个项目并没有不同
+>例子:参照项目---Test_DLL_implicit<br>
+
+    项目包含两个文件:Create_DLL.h和Test_DLL.c
+
+Create_DLL.h文件和第一个项目并没有不同<br>
+
 ```c
 #ifndef Create_DLL_H
 #define Create_DLL_H
@@ -563,7 +583,8 @@ _declspec (dllexport) float GetMul(float a, float b);
 
 #endif // Create_DLL_H
 ```
-Test_DLL.c是测试的源文件
+Test_DLL.c是测试的源文件<br>
+
 ```c
 #include <stdio.h>
 #include <stdlib.h>
@@ -595,29 +616,43 @@ int main()
 	system("pause");
 }
 ```
-现在这种情况下,是无法直接运行的,因为并不知道三个函数函数体在哪
->解决方式:需要使用两种隐式链接方式的一种
+现在这种情况下,是无法直接运行的,因为并不知道三个函数函数体在哪<br>
 
-比如要使用方法一:在linker--input中添加依赖项lib文件
->具体操作:右键点击项目名Test_DLL_implicit-->属性-->链接器-->输入-->附加依赖项-->编辑-->添加文件名:Demo_DLL.lib
+>解决方式:需要使用两种隐式链接方式的一种<br>
+<br>
 
-在使用VS2017时,c语言的很多函数需要使用加_s的方式使用,即新的安全模式函数
-另外,局部变量需要初始化
+比如要使用方法一:在linker--input中添加依赖项lib文件<br>
 
-遇到报错
->LINK : fatal error LNK1104: 无法打开文件“Demo_DLL.lib"
->解决方式:右键点击项目名Test_DLL_implicit-->属性-->VC++目录-->库目录-->添加G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList_DLL\Demo_DLL\Debug(即Demo_DLL.lib所在的目录)
+>具体操作:右键点击项目名Test_DLL_implicit-->属性-->链接器-->输入-->附加依赖项-->编辑-->添加文件名:Demo_DLL.lib<br>
+<br>
 
-运行,成功
+&emsp;&emsp;在使用VS2017时,c语言的很多函数需要使用加_s的方式使用,即新的安全模式函数<br>
+&emsp;&emsp;另外,局部变量需要初始化<br>
+<br>
+遇到报错<br>
+>LINK : fatal error LNK1104: 无法打开文件“Demo_DLL.lib"<br>
+>解决方式:右键点击项目名Test_DLL_implicit-->属性-->VC++目录-->库目录-->添加G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList_DLL\Demo_DLL\Debug(即Demo_DLL.lib所在的目录)<br>
 
-在现有解决方案中创建DLL测试工程
-右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成
-方法二即不需要单独配置lib文件,直接释放注释中的下行代码即可
-<code>#pragma comment(lib,"Demo_DLL")</code>
->例子:参照项目---Test_DLL_implicit_another
+<br>
+运行,成功<br>
 
-项目包含两个文件:Create_DLL.h和Test_DLL_another.c
-Create_DLL.h文件和第一个项目并没有不同
+<br>
+在现有解决方案中创建DLL测试工程<br>
+
+右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成<br>
+
+***********************
+
+方法二即不需要单独配置lib文件,直接释放注释中的下行代码即可<br>
+<code>#pragma comment(lib,"Demo_DLL")</code><br>
+>例子:参照项目---Test_DLL_implicit_another<br>
+
+项目包含两个文件:<br>
+
+    Create_DLL.h和Test_DLL_another.c
+
+Create_DLL.h文件和第一个项目并没有不同<br>
+
 ```c
 #ifndef Create_DLL_H
 #define Create_DLL_H
@@ -629,7 +664,8 @@ _declspec (dllexport) float GetMul(float a, float b);
 
 #endif // Create_DLL_H
 ```
-Test_DLL_another.c是测试的源文件
+Test_DLL_another.c是测试的源文件<br>
+
 ```c
 #include <stdio.h>
 #include <stdlib.h>
@@ -662,30 +698,41 @@ int main()
 }
 ```
 
->两个项目都是测试项目,要运行哪一个呢?
->>右键点击项目名-->设为启动项目
-即最后一个设定为启动项目的就是按ctrl+f5会生成并运行的项目
+>两个项目都是测试项目,要运行哪一个呢?<br>
+>>右键点击项目名-->设为启动项目<br>
 
-[Different]两个测试都是隐式测试,但结果不同,Test_DLL_implicit结果为X,Test_DLL_implicit_another结果为X.0000
+<font color=pink>即最后一个设定为启动项目的就是按ctrl+f5会生成并运行的项目</font><br>
 
-遇到报错
->LINK : fatal error LNK1104: 无法打开文件“Demo_DLL.lib"
->解决方式:右键点击项目名Test_DLL_implicit-->属性-->VC++目录-->库目录-->添加G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList_DLL\Demo_DLL\Debug(即Demo_DLL.lib所在的目录)
+[Different]两个测试都是隐式测试,但结果不同<br>
+&emsp;&emsp;Test_DLL_implicit结果为X<br>
+&emsp;&emsp;Test_DLL_implicit_another结果为X.0000<br>
+
+遇到报错<br>
+
+>LINK : fatal error LNK1104: 无法打开文件“Demo_DLL.lib"<br>
+>解决方式:右键点击项目名Test_DLL_implicit-->属性-->VC++目录-->库目录-->添加G:\C_StructureAlgorithmCollegeMooc\LineList\ReplenishesOfLineList_DLL\Demo_DLL\Debug(即Demo_DLL.lib所在的目录)<br>
 
 3. 创建测试工程
-演示显示链接
 
-<font color=blue>显示链接:运行时动态链接</font>
-在运行时动态链接中,应用程序调用LoadLibrary函数或LoadLibraryEx函数实现在运行时加载DLL.
-成功加载DLL后,可以使用GetProcAddress函数获得要调用的导出的DLL函数的地址.在使用运行时动态链接时,无需使用导入库文件.
+演示显示链接<br>
 
-在现有解决方案中创建DLL测试工程
-[注]因为是一个测试工程,所以要有exe应用程序输出,故在此不是一个dll项目了,而是exe项目
-右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成
->例子:参照项目---Test_DLL_explicit
+&emsp;<font color=blue>显示链接:运行时动态链接</font><br>
 
-项目包含一个文件Test_DLL_explicit.cpp
-Test_DLL_explicit.cpp
+&emsp;&emsp;在运行时动态链接中,应用程序调用LoadLibrary函数或LoadLibraryEx函数实现在运行时加载DLL.<br>
+&emsp;&emsp;成功加载DLL后,可以使用GetProcAddress函数获得要调用的导出的DLL函数的地址.在使用运行时动态链接时,无需使用导入库文件.<br>
+
+在现有解决方案中创建DLL测试工程<br>
+
+&emsp;&emsp;[注]因为是一个测试工程,所以要有exe应用程序输出,故在此不是一个dll项目了,而是exe项目<br>
+
+右键项目解决方案名-->添加-->新建项目-->Visual C++-->Windows桌面-->Windows桌面向导-->输入名称-->解决方案选择:添加到解决方案-->应用程序类型:选择控制台应用程序(.exe)-->附加选项:选择空项目-->完成<br>
+>例子:参照项目---Test_DLL_explicit<br>
+
+项目包含一个文件<br>
+
+    Test_DLL_explicit.cpp
+
+Test_DLL_explicit.cpp<br>
 ```c++
 #include <windows.h>
 #include <iostream>
@@ -731,45 +778,49 @@ int main()
 }
 ```
 
-遇到报错
->error C2664: “HMODULE LoadLibraryW(LPCWSTR)”: 无法将参数 1 从“const char [13]”转换为“LPCWSTR”
->note: 与指向的类型无关；强制转换要求 reinterpret_cast、C 样式强制转换或函数样式强制转换
+遇到报错<br>
+>error C2664: “HMODULE LoadLibraryW(LPCWSTR)”: 无法将参数 1 从“const char [13]”转换为“LPCWSTR”<br>
+>note: 与指向的类型无关；强制转换要求 reinterpret_cast、C 样式强制转换或函数样式强制转换<br>
 
->解决方式:
->>1)右键项目名称-->属性-->常规-->字符集-->使用多字节字符集
->>2)右键项目名称-->属性-->C/C++-->预处理器-->预处理定义-->删掉UNICODE的项
+>解决方式:<br>
+>>1)右键项目名称-->属性-->常规-->字符集-->使用多字节字符集<br>
+>>2)右键项目名称-->属性-->C/C++-->预处理器-->预处理定义-->删掉UNICODE的项<br>
+<br>
 
-运行,成功
+运行,成功<br>
+<br>
 
-[注]相关的知识点:
-<1>typedef float(_cdecl *MyGetAdd)(float, float);
-//首先,这是一个回调函数的用法,要使用的部分只有MyGetAdd这个函数指针而已
-//float表示这个含有两个参数(float, float)的函数指针返回类型为float类型
-//由于是c语言的练习,所以即使用了c++,能调的地方也调一下,因此用到了_cdecl这个缩写
+[注]相关的知识点:<br>
+<1>typedef float(_cdecl *MyGetAdd)(float, float);<br>
+//首先,这是一个回调函数的用法,要使用的部分只有MyGetAdd这个函数指针而已<br>
+//float表示这个含有两个参数(float, float)的函数指针返回类型为float类型<br>
+//由于是c语言的练习,所以即使用了c++,能调的地方也调一下,因此用到了_cdecl这个缩写<br>
+<br>
+<2>HMODULE hModule = LoadLibrary("Demo_DLL.dll");<br>
+//HMODULE是表示模块句柄的关键字<br>
+//这是一行返回DLL模块句柄的代码,dll文件为Demo_DLL.dll<br>
+<br>
+//LoadLibrary函数<br>
+//[格式]:<br>
+//function LoadLibrary(LibFileName:PChar):Thandle;<br>
+//即加载由参数LibFileName指定的dll文件<br>
+<br>
+<3>FreeLibrary函数<br>
+//[格式]:<br>
+//procedure FreeLibrary(Module:Thandle);<br>
+将由参数 Module 指定的 DLL 文件从内存中卸载 1 次<br>
+<br>
+>[注意]：每调用一次 LoadLibrary 函数就应调用一次 FreeLibrary 函数,以保证不会有多余的库模块在应用程序结束后仍留在内存中,否则导致内存泄漏<br>
 
-<2>HMODULE hModule = LoadLibrary("Demo_DLL.dll");
-//HMODULE是表示模块句柄的关键字
-//这是一行返回DLL模块句柄的代码,dll文件为Demo_DLL.dll
+<br>
+<4>GetProcAddress 函数<br>
+//[格式]:<br>
+//function GetProcAddress(Module:Thandle; ProcName:PChar): TfarProc;<br>
+//返回Module指定的模块中,由参数ProcName指定的过程或函数的入口地址<br>
+//参数Module包含被调用函数的DLL句柄,这个值由LoadLibrary函数返回<br>
+//ProcName是指向含有函数名的以nil结尾的字符串指针,或者可以是函数的次序值,<font color=green>但大多数情况下,用函数名是一种更稳妥的选择</font><br>
+//如果该函数执行成功,则返回DLL中由参数ProcName指定的过程或函数的入口地址,否则返回nil<br>
+<br>
 
-//LoadLibrary函数
-//[格式]:
-//function LoadLibrary(LibFileName:PChar):Thandle;
-//即加载由参数LibFileName指定的dll文件
-
-<3>FreeLibrary函数
-//[格式]:
-//procedure FreeLibrary(Module:Thandle);
-将由参数 Module 指定的 DLL 文件从内存中卸载 1 次
-
->[注意]：每调用一次 LoadLibrary 函数就应调用一次 FreeLibrary 函数,以保证不会有多余的库模块在应用程序结束后仍留在内存中,否则导致内存泄漏
-
-<4>GetProcAddress 函数
-//[格式]:
-//function GetProcAddress(Module:Thandle; ProcName:PChar): TfarProc;
-//返回Module指定的模块中,由参数ProcName指定的过程或函数的入口地址
-//参数Module包含被调用函数的DLL句柄,这个值由LoadLibrary函数返回
-//ProcName是指向含有函数名的以nil结尾的字符串指针,或者可以是函数的次序值,<font color=green>但大多数情况下,用函数名是一种更稳妥的选择</font>
-//如果该函数执行成功,则返回DLL中由参数ProcName指定的过程或函数的入口地址,否则返回nil
-
->>到此为止结束相关内容
->>拓展书籍:<<程序员的自我修养--链接、装载与库>>,<<Windows核心编程(第5版)>>
+>>到此为止结束相关内容<br>
+>>拓展书籍:<<程序员的自我修养--链接、装载与库>>,<<Windows核心编程(第5版)>><br>
