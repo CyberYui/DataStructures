@@ -23,6 +23,7 @@
 # Fortran module files
 *.mod
 *.smod
+*.ipch
 
 # Compiled Static libraries
 *.lai
