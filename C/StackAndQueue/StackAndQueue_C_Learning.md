@@ -40,15 +40,13 @@
     <tr>
         <td colspan="2"><center>两者的区别就在于<font color=pink>栈是后进先出,队列是先进先出</font></center></td>
     </tr>
-    <tr>
-        <td>
-        ![F1](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/StackGraphEx1.png)<br>
-        </td>
-        <td>
-        ![F2](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/QueueGraphEx1.png)<br>
-        </td>
-    </tr>
 </table>
+
+* 栈的后进先出
+![F1](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/StackGraphEx1.png)<br>
+
+* 队列的先进先出
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/QueueGraphEx1.png)<br>
 
 栈和队列的抽象数据类型
 ------------
