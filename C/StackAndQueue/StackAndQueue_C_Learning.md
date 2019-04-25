@@ -401,3 +401,188 @@ DataType Pop_seq_return(LinkedStack top)
 }
 ```
 
+********************************************
+栈的应用举例
+=========
+* 数制转换
+* 括号匹配
+* 迷宫问题
+* 栈和递归:"聪明的学生"
+* 表达式求值
+
+数制转换
+------
+&emsp;即类似于计算器的进制转换,这种问题是如何实现的呢?<br>
+算法的基本原理:<font color=green>**N=(N div d)*d+N mod d**</font><br>
+
+[例子]<font color=orange>(2016)<sub>10</sub>=(3740)<sub>8</sub></font><br>
+&emsp;在计算时,需要记录两个信息:<br>
+1. N div 8 (即N除以8得到的商)
+2. N mod 8 (即N除以8得到的余数)
+
+表格如下:<br>
+|N|N div 8(商)|N mod 8(余数)|
+|:------:|:------:|:------:|
+|2016|252|0  <font color=red>低位</font>|
+|252|31|4&nbsp;&emsp;&emsp;|
+|31|3|7&nbsp;&emsp;&emsp;|
+|3|0|3  <font color=red>高位</font>|
+这样获得一个由低到高的0473这四个数字<br>
+逆序输出这四个数字,即<font color=red>3740</font>就是所要求的八进制数
+>[注]计算顺序和输出顺序相反
+
+<font color=pink>**代码实现参照LinkedStackHEX项目**</font>
+
+相关主要代码:
+-----------
+<1>.实现8进制的转换
+```c
+//实现8进制的转换
+void OctConversion(LinkedStack ps, int n)
+{
+	int temp;
+	while (n)
+	{
+		//将n除以8的余数压入栈中
+		Push_link(ps, n % 8);
+		//新的n = 原n / 8  (的商)
+		n /= 8;
+	}
+	printf("转换为八进制之后,结果为:");
+	//只要不空就一直出栈,直到栈为空为止
+	while (!IsNullStack_link(ps))
+	{
+		temp = Pop_seq_return(ps);
+		printf("%d", temp);
+		Pop_link(ps);
+	}
+	printf("\n");
+	//End OCTONARY
+}
+```
+
+<2>.实现16进制的转换
+```c
+//实现16进制的转换
+void HexConversion(LinkedStack ps, int n)
+{
+	//在16进制中,有ABCDEF的显示,需要加一个switch句段
+	int temp;
+	while (n)
+	{
+		//对16求模,赋值给temp,经过判断之后再压入栈中
+		temp = n % 16;
+		switch (temp)
+		{
+		case 10:
+		{
+			temp = 'A';
+			break;
+		}
+		case 11:
+		{
+			temp = 'B';
+			break;
+		}
+		case 12:
+		{
+			temp = 'C';
+			break;
+		}
+		case 13:
+		{
+			temp = 'D';
+			break;
+		}
+		case 14:
+		{
+			temp = 'E';
+			break;
+		}
+		case 15:
+		{
+			temp = 'F';
+			break;
+		}
+		default:
+			break;
+		}
+		//进栈
+		Push_link(ps, temp);
+		//n = n/16
+		n /= 16;
+	}
+	printf("转换为十六进制后的结果为:");
+	while (!IsNullStack_link(ps))
+	{
+		temp = Pop_seq_return(ps);
+		if (temp<10)
+		{
+			printf("%d", temp);
+		}
+		else
+		{
+			printf("%c", temp);
+		}
+		//输出一个数就出一次栈,直到栈为空
+		Pop_link(ps);
+	}
+	printf("\n");
+	//End HEXADECIMAL
+}
+```
+
+<3>.实现2进制的转换
+```c
+//实现2进制的转换
+void BinConversion(LinkedStack ps, int n)
+{
+	int temp;
+	while (n)
+	{
+		//将n除以2的余数压入栈中
+		Push_link(ps, n % 2);
+		//新的n = 原n / 2  (的商)
+		n /= 2;
+	}
+	printf("转换为二进制之后,结果为:");
+	//只要不空就一直出栈,直到栈为空为止
+	while (!IsNullStack_link(ps))
+	{
+		temp = Pop_seq_return(ps);
+		printf("%d", temp);
+		Pop_link(ps);
+	}
+	printf("\n");
+	//End BINARY
+}
+```
+
+一个特殊的出栈操作
+---------
+<font color=brown>[改进措施]</font><br>
+&emsp;&emsp;之前的函数中,出栈和取栈元素的函数是分开的,这样导致要想在出栈前输出栈顶元素,需要先调用Pop_seq_return(取栈顶元素函数),然后再调用Pop_link(出栈函数),很麻烦<br>
+&emsp;&emsp;所以写出一个PopWithReturn_link(出栈并取栈顶元素函数),代码如下<br>
+```c
+//出栈栈顶元素,并返回其值
+DataType PopWithReturn_link(LinkedStack top)
+{
+	PNode p;
+	int temp = 0;
+	//判断栈是否为空
+	if (IsNullStack_link(top))
+	{
+		printf("It is an empty stack!\n");
+		return 0;	//因为DataType即是int类型
+	}
+	else
+	{
+		temp = top->next->data;	//保存栈顶结点数据域内容
+		//出栈栈顶
+		p = top->next;          //p指向待删除结点
+		top->next = p->next;    //修改栈顶指针
+		free(p);                //释放要删除的结点的空间,完成删除
+		return temp;
+	}
+}
+```
