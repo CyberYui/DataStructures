@@ -586,3 +586,150 @@ DataType PopWithReturn_link(LinkedStack top)
 	}
 }
 ```
+
+括号匹配
+--------
+&emsp;在编码过程中,会使用到()和[]以及{}这样的括号,使用栈就可以知道这些括号是否匹配<br>
+
+&emsp;假设允许有两种括号:圆括号()和方括号[]<br>
+那么"([]())"这样的就是一种匹配的情况,"([][()]"这样的就是不匹配的情况<br>
+
+检查括号是否匹配的方法可以用"<font color=red>期待的优先级</font>"这个概念描述.
+例如:考虑下列的括号序列
+|[|(|[|]|)|]|
+|:------:|:------:|:------:|:------:|:------:|:------:|
+|1|2|3|4|5|6|
+
+第一步,获取到了一个[,那么就要有相应的"]"来对应它<br>
+但是第二步,获取到了(,那么就要再有相应的")"来对应它<br>
+以此类推,在匹配时,优先级最高的是3,当3匹配成功后,优先级最高的变为2,从而慢慢完成匹配<br>
+这种特性刚刚好满足栈的结构,即栈顶元素最后入栈,但优先级最高
+
+[分析]可能的不匹配情况有三种:
+* 到来的右括号不是所"期待"的;
+		例子:[())
+* 有多余的右括号;
+		例子:[()]]
+* 有多余的左括号,即直到结束也有未匹配项;
+		例子:[()
+
+<font color=brown>[算法的设计思路]</font>:<br>
+1. 只要出现左括号,就进栈
+2. 只要出现右括号,首先检查<font color=blue>栈是否为空</font>:<br>
+&emsp;栈空,则表明<font color=orange>右括号多了</font>;<br>
+&emsp;栈不空,则<font color=blue>与栈顶元素比较</font>:<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;若匹配,则左括号出栈;<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;若不匹配,直接就可以结束了,因为<font color=orange>右括号不是"期待"的</font>
+3. 表达式检验结束时,检查<font color=blue>栈是否为空</font>:<br>
+&emsp;若栈空,则匹配成功;<br>
+&emsp;否则,说明<font color=orange>左括号多了</font>
+
+算法的流程图如下:<br>
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/BracketsMatchFlowProcessDiagram.png)<br>
+
+<font color=pink>**代码实现参照LinkedStackBrackets项目**</font>
+
+相关主要代码
+-------
+
+```c
+//括号匹配算法
+int BracketMatch(LinkedStack top)
+{
+	int flag = 1;//标志
+	//定义并初始化输入的表达式和临时变量
+	char ch = "a";
+	char temp = "b";
+	printf("请输入要判断的表达式,用#号结束:");
+	//直接输入表达式之后用#表示结束即可
+	scanf_s("%c", &ch);
+	while (ch != '#')
+	{
+		//小括号
+		if (ch == '(')//是左括号,压入栈中
+		{
+			Push_link(top, ch);
+		}
+		else
+		{
+			if (ch == ')')//右括号,检查是否出栈
+			{
+				//先取出栈顶元素,看是不是匹配
+				temp = Pop_seq_return(top);//如果有右括号多现象,虽然栈空,但flag=0
+				if (temp == '(')
+				{
+					//括号匹配,栈顶出栈
+					Pop_link(top);
+				} 
+				else
+				{
+					//不匹配,flag=0,跳出循环
+					flag = 0;//右括号不是期望的右括号
+					break;
+				}
+			} 
+		}
+		//中括号
+		if (ch == '[')//是左括号,压入栈中
+		{
+			Push_link(top, ch);
+		}
+		else
+		{
+			if (ch == ']')//右括号,检查是否出栈
+			{
+				//先取出栈顶元素,看是不是匹配
+				temp = Pop_seq_return(top);//如果有右括号多现象,虽然栈空,但flag=0
+				if (temp == '[')
+				{
+					//括号匹配,栈顶出栈
+					Pop_link(top);
+				}
+				else
+				{
+					//不匹配,flag=0,跳出循环
+					flag = 0;//右括号不是期望的右括号
+					break;
+				}
+			}
+		}
+		//大括号
+		if (ch == '{')//是左括号,压入栈中
+		{
+			Push_link(top, ch);
+		}
+		else
+		{
+			if (ch == '}')//右括号,检查是否出栈
+			{
+				//先取出栈顶元素,看是不是匹配
+				temp = Pop_seq_return(top);//如果有右括号多现象,虽然栈空,但flag=0
+				if (temp == '{')
+				{
+					//括号匹配,栈顶出栈
+					Pop_link(top);
+				}
+				else
+				{
+					//不匹配,flag=0,跳出循环
+					flag = 0;//右括号不是期望的右括号
+					break;
+				}
+			}
+		}
+		scanf_s("%c", &ch);
+	}//while end
+	//循环结束后
+	if (!flag || !IsNullStack_link(top))
+	{
+		//如果有不期望现象,或者有左括号多现象,则不匹配
+		printf("\n不匹配!\n");
+		return 0;
+	} 
+	else
+	{
+		printf("\n匹配!\n");
+		return 1;
+	}
+}
+```
