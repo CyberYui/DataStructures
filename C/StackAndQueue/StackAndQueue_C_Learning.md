@@ -733,3 +733,202 @@ int BracketMatch(LinkedStack top)
 	}
 }
 ```
+
+栈和递归:聪明的学生
+---------
+&emsp;递归是程序设计中的一个强有力的工具
+* 很多数学函数是递归定义的
+* 有的数据结构,如二叉树,广义表等,由于结构本身固有的递归特性,使得它们的操作可递归地描述
+* 有些问题,虽然问题本身没有明显的递归结构,但用递归求解比迭代求解更简单,如背包问题,汉诺塔问题,八皇后问题等.
+
+下面先看一个求n的阶乘的例子:<br>
+```c
+//求n的阶乘的非尾部递归
+int factorial(int n)
+{
+	if(n==0)
+		return 1;
+	if(n==1)
+		return 1;
+	else
+		return(n*factorial(n-1));//递归调用
+};
+//假如输入n=5,那么会有以下的调用行为
+//1--首先n=5,返回n*factorial(n-1),即5*factorial(4)
+//接下来进行factorial(4)
+//2--n=4,则返回4*factorial(3)
+//以此类推
+//3--n=3,返回3*factorial(2)
+//4--n=2,返回2*factorial(1)
+//此时n=1,则factorial(1)走的是if(n==1)这一个判断
+//5--返回1
+//最后调用的factorial(1)先返回,以此类推,类似于栈的"后进先出"
+//这样把式子连起来,就是5*4*3*2*1,即5的阶乘
+```
+* 即函数自己调用自己称为递归调用
+* 递归可以分为直接调用和间接调用
+
+[补充]阶乘的例子可以使用循环和顺序栈这样做<br>
+```c
+//阶乘函数
+int Factorial_NR(int n)
+{
+	int res = 1;//定义临时变量并初始化,用于返回result
+	//初始化顺序栈,n为最大元素数,也是阶乘的最大数
+	LinkedStack sstack;
+	sstack = SetNullStack_link(n);
+	//阶乘数依次入栈
+	while(n>0)
+	{
+		Push_link(sstack,n);
+		n = n-1;
+	}//当n=0时,结束入栈
+	//栈非空,开始出栈操作
+	while(!IsNullStack_link(sstack))
+	{
+		//类似于递归的操作
+		res = res*Top_link(sstack);//栈顶元素出栈并乘以之前的结果,实现阶乘
+		//每取一个栈顶元素就输出一次
+		printf("当前栈顶元素是:%d\n",Top_link(sstack));
+		Pop_link(sstack);//取完栈顶元素就出栈
+	}
+	//返回阶乘的结果
+	return(res);
+}
+```
+>对比可见使用递归的操作与循环的操作的不同,在阶乘这个问题上,明显递归的操作要更简洁
+
+回顾函数调用的过程从而更好地理解递归
+----------
+* 函数调用:
+调用前<br>
+<1> 将所有的实参,返回地址传递给被调用函数保存<br>
+<2> 为被调用函数的局部变量分配存储区<br>
+<3> 将控制转移到被调用函数入口<br>
+调用后<br>
+<1> 保存被调用函数的计算结果<br>
+<2> 释放被调用函数的数据区<br>
+<3> 依照被调用函数保存的返回地址将控制转移到调用函数<br>
+
+* 多个函数嵌套调用时,按照"<font color=orange>**后调用先返回**</font>"的原则进行
+>后调用先返回即类似后进先出的行为
+* 内存管理实行"<font color=orange>**栈式管理**</font>"
+* <font color=orange>**运行栈**</font>:运行时动态分配的空间
+
+&emsp;每次调用函数都会有一个<font color=red>活动记录[Active Record]</font>(或者叫<font color=red>堆栈帧[Stack Frame]</font>)<br>
+>活动记录的作用是保存一个函数调用所需要维护的各项信息
+
+![F9](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/ActiveRecordWithStack.png)<br>
+
+递归分类
+--------
+1. 尾部递归
+
+<font color=red>**[注意]十分不推荐使用这种递归方式**</font><br>
+>这样的递归完全可以通过一个循环实现
+```c(fake)
+void tail(int i)
+{
+	if( i>0 )
+		printf( "%d\n", i);
+	tail( i - 1);//调用放在整个函数的最后
+}
+```
+
+2. 非尾部递归
+```c(fake)
+//如果输入abc,返回的则是cba
+void NonTail()
+{
+	char ch;
+	ch = getchar();
+	if(ch != '\n')
+	{
+		NonTail();//递归并不在主函数体最后
+		output(ch);
+	}
+}
+```
+
+3. 非尾部递归的非递归实现
+```c(fake)
+//使用栈实现非尾部递归
+void NonRecursive()
+{
+	char ch;
+	ch = getchar();
+	//依次入栈的循环
+	while(ch != '\n')
+	{
+		push(st,ch);//st是一个栈
+		ch = getchar();
+	}
+	//依次出栈的循环
+	while(!IsEmpty(st))
+	{
+		output(top(st));//输出提取到的栈顶元素
+		pop(st);//出栈
+	}
+}
+```
+
+[思考]Koch雪花问题的递归实现
+------------
+&emsp;&emsp;科赫曲线(Koch curve)是一种典型的分形(fractal)曲线,其简单的构造方法为:<br>
+&emsp;给定一直线线段，把它等分三段，加入一个等边三角形，以三段的中间一段为底对齐，再去除该段线段。然后，对每个新线段重复进行上述步骤，就能形成科赫曲线:<br>
+![F10](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/KochCurveEx1.png)<br>
+&emsp;如果画3条科赫曲线，每次旋转120<sup>o</sup>，就能得到科赫雪花:<br>
+![F11](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/KochCurveEx2.png)<br>
+
+<font color=brown>[算法思路]</font><br>
+&emsp;可以用/,\,_, ,来画出这个图形,也就是说,写出程序,获得以下的结果<br>
+```c(fake)
+//n=0
+__
+//n=1
+__/\__
+//n=2
+	  __/\__
+      \    /
+__/\__/    \__/\__
+
+//当n=3时,情况会有些不同,例如下面标记的,需要在适当的位置画出下划线和斜线
+				       __/\__
+			           \    /
+			     __/\__/    \__/\__
+				 \		          /
+		  这里 -> /__		    __\ <- 这里
+			   		 \		   /
+       __/\__      __/		   \__      __/\__
+       \    /      \		     /	    \    /
+ __/\__/    \__/\__/		     \__/\__/    \__/\__
+//这种地方可以选择只画出/_或者\_
+```
+&emsp;首先建立一个字符数组作为画布,用于存储绘画的中间结果,最后我们再把数组打印出来即可,空白的地方刚刚好就能用到" "(空格)这个字符,画布的大小即数组的大小,是w*h(宽*高)<br>
+&emsp;设直角坐标系为x(→),y(↓),例如:画笔从(x,y)处往右画,即是image[y*w + x]="_",然后x++<br>
+&emsp;对于输出的字符,我们定义六个方向,0代表向右,1代表右上,2代表左上(注意使用转义字符\\),3代表向左,4代表右上,5代表右下(注意使用转义字符\\)<br>
+>注意的是,在需要输出"__"的时候使用的是两个"_",即0和3时使用
+
+&emsp;使用递归完成这一操作,<br>
+每次调用KochCurve(n,dir)函数,表示我们要从当前位置(x,y)向dir方向绘画一条n阶科赫曲线.<br>
+那么要画一条n阶科赫曲线,其实就只需要根据所需方向画4条n-1阶科赫曲线.<br>
+[比如]:若n=2,然后要向右画,即dir=0,那么就要先画一条"__",然后画一个"/",再画一个"\",再画一个"__"<br>
+也就是<br>
+```c
+KochCurve(1, 0);	//KochCurve(n - 1, dir);
+KochCurve(1, 1);	//KochCurve(n - 1, dir + 1);
+KochCurve(1, 5);	//KochCurve(n - 1, dir + 5);
+KochCurve(1, 0);	//KochCurve(n - 1, dir);
+```
+直到n=0,一条0阶科赫曲线就是一条直线<br>
+
+>>具体项目参照Recurrence_KochCurve项目
+>>项目借鉴了Milo Yip大佬的教程https://zhuanlan.zhihu.com/p/24688522
+
+[注]项目中的一些特别函数:<br>
+<1> memset函数,首先它是对字节为单位赋值的.<br>
+例如:void *memset(void *s, int ch, size_t n);<br>
+//将s中前n个字节(typedef unsigned int size_t)用ch替换并返回s<br>
+//其实这里面的ch就是ascii为ch的字符；<br>
+即:memset的作用是在一段内存块中填充某个给定的值,它是对较大的结构体或数组进行清零操作的一种最快方法<br>
+
