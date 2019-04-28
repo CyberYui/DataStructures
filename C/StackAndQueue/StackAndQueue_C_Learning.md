@@ -872,6 +872,7 @@ void NonRecursive()
 	}
 }
 ```
+
 "聪明的学生"
 --------
 [BackGround]一位逻辑学的教授有三个<font color=red>非常聪明善于推理且精于心算</font>的学生,一天教授出了一道题:<br>
@@ -1119,3 +1120,53 @@ KochCurve(1, 0);	//KochCurve(n - 1, dir);
 //其实这里面的ch就是ascii为ch的字符；<br>
 即:memset的作用是在一段内存块中填充某个给定的值,它是对较大的结构体或数组进行清零操作的一种最快方法<br>
 
+迷宫问题
+-------
+&emsp;例如有下图这样一个迷宫,如何找到一条从入口到出口的路径呢?<br>
+![F12](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/MazeGraph1.png)<br>
+<font color=brown>[方法]</font><font color=red>广度优先策略</font>和<font color=red>深度优先策略</font><br>
+&emsp;假设在一个格子中,有八个方向的选择<br>
+&emsp;每个方向坐标和原坐标位置关系像这样:<br>
+↖(x-1,y-1)&emsp;↑(x-1,y)&emsp;↗(x-1,y+1)<br>
+←(x,y-1)&emsp;&emsp;&nbsp;A(x,y)&emsp;&emsp;→(x,y+1)<br>
+↙(x+1,y-1)&emsp;↓(x+1,y)&emsp;↘(x+1,y+1)<br>
+//按顺时针对每个方向进行编号,从小到大进行选择前进,以此类推,从而类穷举找到出口<br>
+&emsp;[Eg]从入口开始,有两个方向的选择,选择好了之后开始前进,当不能前进并且不是出口的时候返回,这时就是后走的格子先返回,刚刚好就是类似于栈的"后进先出"原则.<br>
+>[So]采用深度优先策略,使用的数据结构就是栈.<br>
+
+迷宫问题中要找到路径并输出需要解决三个问题:<br>
+<1> 从某一个坐标点(x,y)出发如何搜索其相邻位置(g,h)?<br>
+&emsp;不妨假设8个方向的顺序是从<font color=red>正东开始按顺时针</font><br>
+>建立一个数组,表示方向,例如东边(→)就是(x,y+1),增量为{0,1}<br>
+
+则数组为:<br>
+&emsp;direction[8][2] = {{0,1},{1,1},{1,0},{1,-1},{0,-1},{-1,-1},{-1,0},{-1,1}}<br>
+
+相邻位置(g,h)相对于当前位置(x,y)的增量.即:<br>
+&emsp;g = x + direction[i][j]<br>
+&emsp;h = y + direction[i][j]<br>
+假设从当前位置(3,5)向南出发,则:<br>
+&emsp;g = x + direction[2][0] = 3 + 1 = 4<br>
+&emsp;h = y + direction[2][1] = 5 + 0 = 5<br>
+
+<2> 如何记录探索过的路径?<br>
+&emsp;&emsp;采用<font color=green>回溯方法</font>,因此,设计一个栈来存放探索过的路径,当不能向前继续探索时,从栈中回弹出元素.可以<font color=red>使用两个栈LinkedStackX和LinkedStackY分别存放行坐标和列坐标</font>.<br>
+
+<3> 如何防止重复探索某位置<br>
+&emsp;&emsp;通过设置标志来识别,初始时各个位置的标识为<font color=green>mark[i][j]=0</font>,当探索到某位置之后设置<font color=green>mark[i][j]=1</font>.<br>
+
+<font color=brown>[算法思路]:</font><br>
+&emsp;首先创建两个用于保存横纵坐标的栈StackX和StackY<br>
+&emsp;将入口坐标entryX和entryY分别压入栈StackX和StackY中<br>
+&emsp;while(栈不空)<br>
+&emsp;&emsp;&emsp;取栈顶元素,出栈.当前位置为栈顶元素.<br>
+&emsp;&emsp;&emsp;while(mov < 8)判断方向,小于8表示在0~7中选,一个数对应一个方向
+&emsp;&emsp;&emsp;即还存在探索的方向<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;按照顺时针依次探索各个位置(posX,posY)<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;如果(posX,posY)是出口,则输出路径,返回1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;如果(posX,posY)是没有走过的通路,<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;设置标志mark[posX][posY] = 1<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;当前位置的坐标进栈<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;将(posX,posY)设置为当前位置<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;设置mov = 0,即从这个位置再探索8个方向<br>
+&emsp;&emsp;&emsp;&emsp;&emsp;否则(如果(X,Y)是没有走过的通路),则mov++,即换个方向<br>
