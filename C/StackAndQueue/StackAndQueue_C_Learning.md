@@ -1170,3 +1170,9 @@ KochCurve(1, 0);	//KochCurve(n - 1, dir);
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;将(posX,posY)设置为当前位置<br>
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;设置mov = 0,即从这个位置再探索8个方向<br>
 &emsp;&emsp;&emsp;&emsp;&emsp;否则(如果(X,Y)是没有走过的通路),则mov++,即换个方向<br>
+
+>具体实现参照MazeDFS项目(该项目有些内容未完成,需要补充才能运行)
+>>主要未完成原因在于:结构体内的数组指针无法在函数中初始化
+
+表达式求值
+--------
