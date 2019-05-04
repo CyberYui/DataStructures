@@ -21,10 +21,13 @@ C++:<br>
 <br><br>
 C:<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
->有一些在学习期间额外做的不必要的小实验,它们的介绍文件如下:
+>有一些在学习期间额外做的不必要的小实验,它们的介绍文件如下:<br>
 [ReplenishesOfLineList--DLL](https://github.com/CyberYui/DataStructures/blob/master/C/ReplenishesOfLineList/ReplenishesOfLineList_DLL.md)<br>
 
 [MySingleLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/SingleLinkedList_C_Learning.md)<br>
+>有一些在学习期间额外做的实验,它们的介绍文件如下:<br>
+[ReplenishesOfLineList--PolynomialAddition](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/PolynomialAdditionInfo.md)<br>
+[ReplenishesOfLineList--JosephusQuestion](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/JosephusQuestion/JosephusQuestionInfo.md)<br>
 
 MyDataStructuresPractices
 -----------------------
@@ -49,9 +52,12 @@ Hoping these files are useful for you guys who is learning DataStructures.
 <br><br>
 C:<br>
 [MyListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSequenceListModel_C/LinerList_C_Learning.md)<br>
->There are some unnecessary projects about LineList,here is these projects' Info.md
+>There are some unnecessary projects about LineList,here is these projects' Info.md:<br>
 [ReplenishesOfLineList--DLL](https://github.com/CyberYui/DataStructures/blob/master/C/ReplenishesOfLineList/ReplenishesOfLineList_DLL.md)<br>
 
 [MySingleLinkedListModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/MyOwnSingleLinkedList_C/SingleLinkedList_C_Learning.md)<br>
+>There are some unnecessary projects about LinkedList,here is these projects' Info.md:<br>
+[ReplenishesOfLineList--PolynomialAddition](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/PolynomialAddition/PolynomialAdditionInfo.md)<br>
+[ReplenishesOfLineList--JosephusQuestion](https://github.com/CyberYui/DataStructures/blob/master/C/LineList/TheUseOfLineList/JosephusQuestion/JosephusQuestionInfo.md)<br>
 
 
