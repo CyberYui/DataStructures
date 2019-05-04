@@ -1,0 +1,33 @@
+此目录的文件是关于链栈的应用------迷宫的示例(由于技术原因,本示例仍为未完成阶段)
+===========================
+目录包含6个文件
+-----------
+项目文件:main.c<br>
+　　　　MazeDFS.c<br>
+　　　　mazeutil.h+mazeutil.c<br>
+　　　　LinkedStack.h+LinkedStack.c<br>
+<br>
+        这6个文件实现了一个解决输入的迷宫从入口到出口的路径坐标输出程序<br>
+        main.c<br>
+        内容:<br>
+        包括主函数并对相应的迷宫函数进行了测试<br>
+<br>
+        MazeDFS.c<br>
+        内容:<br>
+        包括迷宫深度遍历算法<br>
+<br>
+        mazeutil.h<br>
+        内容:<br>
+        迷宫的结构体设定以及相关的初始化等函数声明<br>
+<br>
+        mazeutil.c<br>
+        内容:<br>
+        迷宫的初始化等函数的实现<br>
+<br>
+        LinkedStack.h<br>
+        内容:<br>
+        链栈的结构体定义以及相关函数的声明<br>
+<br>
+        LinkedStack.c<br>
+        内容:<br>
+        链栈的相关函数的实现<br>
