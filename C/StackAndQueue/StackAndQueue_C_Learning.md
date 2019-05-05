@@ -1300,3 +1300,4 @@ paqu->f = (paqu->f+1) % MAXNUM
 <font color=blue>当尾指针 + 1 == 头指针的时候</font>,判断队列为满,此时仅仅是浪费了一个空间,但达成了判断队列空满的结果<br>
 
 <code>(paqu->r + 1) % MAXNUM == paqu->f</code>
+
