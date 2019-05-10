@@ -1171,7 +1171,35 @@ KochCurve(1, 0);	//KochCurve(n - 1, dir);
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;设置mov = 0,即从这个位置再探索8个方向<br>
 &emsp;&emsp;&emsp;&emsp;&emsp;否则(如果(X,Y)是没有走过的通路),则mov++,即换个方向<br>
 
->具体实现参照MazeDFS项目(该项目有些内容未完成,需要补充才能运行)
+**<以下内容在了解队列之后进行>**<br>
+如何找到一条从入口到出口的最短路径?<br>
+可以使用广度优先搜索策略<br>
+即从一个位置出发,将当前可以探索的所有内容都探索完毕,然后再进行下一步探索<br>
+在整个过程中,探索的方向同深度优先搜索,每探索一个地方就入队一次,直到找到出口<br>
+这样,从出口逆着推,就可以找到一条最短路径<br>
+
+<font color=brown>[算法思路]:</font><br>
+&emsp;首先创建两个空队列LinkQueueX和LinkQueueY<br>
+&emsp;将入口entryX和entryY分别压入两个队列中<br>
+&emsp;while(队列不空)<br>
+&emsp;&emsp;取队头元素,出队<br>
+&emsp;&emsp;for(mov=0;mov<8;mov++),即还存在可以探索的相邻方向<br>
+&emsp;&emsp;&emsp;按照顺时针依次探索各个位置(X,Y)<br>
+&emsp;&emsp;&emsp;如果(posX,posY)是没有走过的通路<br>
+&emsp;&emsp;&emsp;&emsp;设置标志mark[posX][posY]=1<br>
+&emsp;&emsp;&emsp;&emsp;当前位置入队<br>
+&emsp;&emsp;&emsp;&emsp;记录前驱位置,方便输出路径<br>
+
+[迷宫问题拓展]<br>
+如何最快找到一条从入口到出口的路径呢?<br>
+即基于时间效率设定此问题<br>
+问题相关的变量有:迷宫的规模,迷宫的形态,迷宫入口和出口的设置等<br>
+
+如何用其他方法找到一条从入口到出口的最短路径呢?<br>
+可以使用人工智能方面的算法<br>
+
+>具体实现参照MazeDFS项目(该项目mazeutl.c内容未完成,需要补充才能运行)
+>就是一个二维数组的读入和输出的过程
 >>主要未完成原因在于:结构体内的数组指针无法在函数中初始化
 
 表达式求值
@@ -1240,7 +1268,7 @@ KochCurve(1, 0);	//KochCurve(n - 1, dir);
 *******************************************************
 >以下为队列相关内容
 
-队列
+循环队列
 ======
 队列和栈不同,队列是先进先出,后进后出<br>
 
@@ -1301,5 +1329,189 @@ paqu->f = (paqu->f+1) % MAXNUM
 
 <code>(paqu->r + 1) % MAXNUM == paqu->f</code>
 
+>循环队列的相关程序设计和代码见SeqQueue项目
 
+链队列
+========
+首先定义结点以及队列的结构体,即结点包括数据域和指针域,队列里有头结点和尾结点
+```c
+typedef int DataType;
+struct Node
+{
+	DataType data;
+	struct Node *link;
+};
+typedef struct Node *PNode;
+struct Queue
+{
+	PNode f;
+	PNode r;
+};
+typedef struct Queue *LinkQueue;
+```
 
+创建空队列
+--------
+```c
+//创建一个空队列
+LinkQueue SetNullQueue_Link()
+{
+	LinkQueue lqueue;
+	lqueue = (LinkQueue)malloc(sizeof(struct Queue));
+	if(lqueue != NULL)
+	{
+		lqueue->f = NULL;
+		lqueue->r = NULL;
+	}
+	else
+	{
+		printf("Alloc failure!\n");
+	}
+	return lqueue;
+}
+```
+
+判断队列是否为空
+-----------
+```c
+//判断队列是否为空
+int IsNullQueue_Link(LinkQueue lqueue)
+{
+	return(lqueue->f == NULL);
+}
+```
+
+入队
+--------
+一个新结点要入队,在队的结尾进行该操作,此时原队尾结点的指针域指向新结点,队列的尾指针指向新结点.
+算法实现时有特殊情况,即空队列在插入结点时,头尾指针都需要指向新插入的结点.
+```c
+//入队操作
+void EnQueue_Link(LinkQueue lqueue,DataType x)
+{
+	PNode p;
+	p = (PNode)malloc(sizeof(struct Node));//申请结点空间
+	if(p == NULL)
+	{
+		printf("Alloc failure!\n");
+	}
+	else
+	{
+		p->data = x;	//数据域赋值
+		p->link = NULL;	//指针域赋值
+		//如果是空队列,则特殊处理
+		if(lqueue->f == NULL)
+		{
+			lqueue->f = p;
+			lqueue->r = p;
+		}
+		else
+		{
+			lqueue->r->link = p;	//新结点插入队尾
+			lqueue->r = p;			//修改队尾指针
+		}
+	}
+}
+```
+
+出队
+----------
+一个结点要出队,在队列的队头进行操作,首先确定要删除的结点,并用一个p指针指向它,之后头结点指向原队列的第二个结点,释放p即可.
+```c
+//出队操作
+void DeQueue_Link(LinkQueue lqueue)
+{
+	struct Node *p;
+	//对于空队列的报错提示
+	if(lqueue->f == NULL)
+	{
+		printf("It is already an empty queue!\n");
+	}
+	else
+	{
+		p = lqueue->f;		//p指向队头结点,用于释放
+		lqueue->f = lqueue->f->link;	//修改队头指针
+		free(p);			//释放结点空间
+	}
+}
+```
+
+队列的应用--农夫过河问题
+---------
+<font color=green>[背景]</font>农夫带着自己的狼,菜和羊,要过到河对岸去<br>
+<font color=orange>[要求]</font><br>
+船只能装两个东西,即农夫只能一个人或者带一个物品坐船<br>
+另外,农夫必须和物品在同一岸才能带走<br>
+狼会吃羊,羊会吃菜<br>
+<font color=blue>[思考]</font>如何用队列解决这个问题呢?<br>
+不可能的状态:两个物品不在同一岸<br>
+不安全的状态,狼会吃羊,羊会吃菜,不能共存<br>
+处理过的状态,记录处理过的状态,保证最后输出<br>
+
+假设初始为在南岸,四个物品都在,即0000<br>
+那么终止为在北岸,四个物品都到,即1111<br>
+解决问题的答案只有一种,如图:<br>
+![F17](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/FarmerPassRiverG1.png)<br>
+这里的问题是,狼会吃羊,羊会吃菜,应该怎么做呢<br>
+首先,农夫必定要先带羊走,即1001,以此类推,从而有了上图<br>
+[<font color=red>注意</font>]<br>
+图中第5列的0111状态是错误的,因为这个状态中狼菜羊共存,而农夫不见了,类似的状态还有很多<br>
+
+>注:0000的意思是:农夫,狼,菜,羊在南岸(值为0)
+
+那么最终的判断路径为:
+![F18](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/FarmerPassRiverG2.png)<br>
+>图中绿色表示不可能,不安全,或者处理过的状态<br>
+>紫色表示到达北岸经过的中间状态
+
+>>上例中如何使用队列呢?
+
+[解决思路]用队列实现广度搜索策略
+每次针对一个初始的状态都将其四种可能状态入队,并对这四个状态进行状态分析,将不可行的状态不管,将可行的状态入队,以此类推.
+此外,需要通过一个数组status来实现中间状态的记录
+
+<font color=brown>[算法思路]:</font><br>
+&emsp;初始状态0000入队<br>
+&emsp;当队列不空且没有到达结束状态1111时,循环以下操作:<br>
+&emsp;&emsp;队头状态出队<br>
+&emsp;&emsp;按照农夫一个人走,农夫分别带上一件物品走,循环以下操作:<br>
+&emsp;&emsp;&emsp;农夫和物品如果在同一岸,则计算新的状态<br>
+&emsp;&emsp;&emsp;如果新状态时安全的并且时没有处理过的,则更新状态数组,并将新状态入队<br>
+&emsp;当状态为1111时,逆向输出状态数组<br>
+
+>项目略
+
+补充:两种特殊的队列
+==========
+双端队列(double-ended queue,deque)
+--------
+具有队列和栈的性质,即可以在头部和尾部进行插入和删除元素的数据结构<br>
+
+优先队列(priority queue)
+--------
+根据元素的优先级和在队列中的位置决定出队的先后次序<br>
+
+>这两种数据结构都在标准模版库中有相应实现(标准模版库STL:Standard Template Library)
+
+双端队列的应用--滑动最小值
+--------
+[问题描述]
+给定一个长度为n的数列a<sub>0</sub>,a<sub>1</sub>,a<sub>2</sub>,...,a<sub>n-1</sub>和一个整数k<br>
+求数列b<sub>i</sub>=min{a<sub>i</sub>,a<sub>i+1</sub>,a<sub>i+2</sub>,...,a<sub>i+k-1</sub>}<br>
+限制条件:1<=k<=n<=10<sup>6</sup>&emsp;&emsp;0<=a<sub>i</sub><=10<sup>9</sup><br>
+输入:n=5,k=3,a={1,3,5,4,2}<br>
+//k=3,即每3个数比较,(1,3,5)中1最小,(3,5,4)中3最小,(5,4,2)中2最小<br>
+输出:b={1,3,2}<br>
+
+>说明:可以使用STL中的双端队列容器
+
+[分析]<br>
+双端队列开始为空,队列中存放数组a的下标,然后通过维护双端队列得到最小值.<br>
+(1)把0到k-1依次加入队列.加入i时,当双端队列的末尾的值j满足a<sub>j</sub>>=a<sub>i</sub>,则不断从末尾取出,直到双端队列为空或者a<sub>j</sub><a<sub>i</sub>,之后在末尾加入i.<br>
+(2)当k-1都加入双端队列之后,查看双端队列头部的值j,那么b<sub>0</sub>=a<sub>j</sub>,如果j=0,由于之后的计算中不再需要,因而从头部删除.<br>
+(3)继续计算b<sub>i</sub>,在双端队列的末尾加入k,进入(1)重复执行.<br>
+
+>即每次都进行判断然后入队<br>
+>当队尾元素比将入队元素大时,大的元素出队,然后继续判断<br>
+>当队尾元素比将入队元素小时,将入队元素入队,然后小的元素出队<br>
+>以此类推,完成问题<br>
