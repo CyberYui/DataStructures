@@ -1,0 +1,18 @@
+此目录的文件是关于链队列的实现
+===========================
+目录包含3个文件
+-------
+项目文件:main.c<br>
+　　　　LinkedQueue.h+LinkedQueue.c<br>
+<br>
+        main.c<br>
+        内容:<br>
+        包括主函数和链队列相关函数的测试<br>
+<br>
+        LinkedQueue.h<br>
+        内容:<br>
+        包括链队列的结构体设定以及相关的函数声明<br>
+<br>
+        LinkedQueue.c<br>
+        内容:<br>
+        包括链队列的相关函数的实现<br>

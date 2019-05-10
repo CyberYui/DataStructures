@@ -33,6 +33,8 @@ C:<br>
 
 栈和队列的相关内容
 ----------
+以下为栈和队列的C语言实现的相关介绍文件:<br>
+**栈:**<br>
 [MyStack&QueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/StackAndQueue_C_Learning.md)<br>
 [MySeqStackInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/SeqStack/SeqStack_Info.md)<br>
 >有一些在学习期间额外进行的实验,它们的介绍文件如下:<br>
@@ -44,6 +46,12 @@ C:<br>
 [BracketsMatch--LinkedStack](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/LinkedStackBrackets/BracketMatch_Info.md)<br>
 [NumberSystemConversion--LinkedStack](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/LinkedStackHEX/LinkedStackHEX_Info.md)<br>
 (Not Finished)[MazeProblem--LinkedStack](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/MazeDFS/Maze_Info.md)<br>
+
+**队列:**<br>
+[MySeqQueueInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/SeqQueue/SeqQueue_Info.md)<br>
+[MyLinkedQueueInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/LinkedQueue/LinkedQueue_Info.md)<br>
+
+**********************************
 
 MyDataStructuresPractices
 -----------------------
@@ -81,6 +89,7 @@ The Model of Sequential List
 Stacks & Queue
 ----------
 The main Info.md of Stack&Queue is:<br>
+**Stack:**<br>
 [MyStack&QueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/StackAndQueue_C_Learning.md)<br>
 <br>
 [MySeqStackInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/SeqStack/SeqStack_Info.md)<br>
@@ -94,4 +103,6 @@ The main Info.md of Stack&Queue is:<br>
 [NumberSystemConversion--LinkedStack](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/LinkedStackHEX/LinkedStackHEX_Info.md)<br>
 (Not Finished)[MazeProblem--LinkedStack](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/MazeDFS/Maze_Info.md)<br>
 
-
+**Queue:**<br>
+[MySeqQueueInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/SeqQueue/SeqQueue_Info.md)<br>
+[MyLinkedQueueInfo](https://github.com/CyberYui/DataStructures/blob/master/C/StackAndQueue/LinkedQueue/LinkedQueue_Info.md)<br>
