@@ -159,5 +159,153 @@ n=100&nbsp;==>K=6&nbsp;<br>
 则该完全二叉树n<sub>0</sub>=37+13=50<br>
 由<font color=red>n<sub>0</sub>=n<sub>2</sub>+1</font>可得n<sub>2</sub>=49<br>
 
-二叉树的遍历
+二叉树的深度优先遍历
 ----------
+[二叉树的遍历]<br>
+* 沿某条搜索路径访问二叉树,对二叉树中的每个结点<font color=red>访问且仅访问一次</font>
+>这样就将二叉树这样的非线性结构点线性化处理了
+
+三种访问形式<br>
+**1--**<font color=red>先根次序遍历二叉树DLR[前序遍历]</font><br>
+若二叉树非空,则:<br>
+1. 访问根结点<br>
+2. <font color=red>先根次序遍历</font>左子树<br>
+3. <font color=red>先根次序遍历</font>右子树<br>
+
+**2--**<font color=green>对称次序遍历二叉树LDR[中序遍历]</font><br>
+若二叉树非空,则:<br>
+1. <font color=green>对称次序遍历</font>左子树<br>
+2. 访问根结点<br>
+3. <font color=green>对称次序遍历</font>右子树<br>
+
+**2--**<font color=purple>后根次序遍历二叉树LRD[后序遍历]</font><br>
+若二叉树非空,则:<br>
+1. <font color=purple>后根次序遍历</font>左子树<br>
+2. <font color=purple>后根次序遍历</font>右子树<br>
+3. 访问根结点<br>
+
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG6.png)<br>
+
+二叉树深度优先遍历的算法
+---------
+对于二叉树的遍历,有递归和非递归两种方式,递归的方式简单但较难理解<br>
+非递归的方式需要使用到栈,并且有两种迭代的形式<br>
+
+<font color=red>递归遍历算法--前序遍历DLR</font><br>
+```c(伪)
+//前序遍历二叉树
+void PreOrder(BinTree t)
+{
+    //递归调用的结束条件
+    if(t==NULL)
+        return  //返回
+    //遍历,遵循DLR的形式
+    Visit(root(t))//非空则访问结点的数据域
+    //递归调用
+    PreOrder(LeftChild(t))//前序遍历t的左子树
+    //左子树遍历完毕,调用右子树
+    PreOrder(RightChild(t))
+}
+```
+
+例如下图,展示了上一节的二叉树的前序遍历路径,其中紫色和黑色箭头表示访问,蓝色箭头表示返回<br>
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG7.png)<br>
+
+<font color=green>递归遍历算法--中序遍历LDR</font><br>
+```c(伪)
+//中序遍历二叉树
+void InOrder(BinTree t)
+{
+    //递归调用的结束条件
+    if(t==NULL)
+        return  //返回
+    //递归调用,遵循LDR的形式
+    InOrder(LeftChild(t))//中序遍历t的左子树
+    Visit(root(t))//访问结点的数据域
+    //左子树遍历完毕,调用右子树
+    InOrder(RightChild(t))
+}
+```
+
+<font color=purple>递归遍历算法--后序遍历LRD</font><br>
+```c(伪)
+//后序遍历二叉树
+void PostOrder(BinTree t)
+{
+    //递归调用的结束条件
+    if(t==NULL)
+        return  //返回
+    //递归调用,遵循LDR的形式
+    PostOrder(LeftChild(t))//中序遍历t的左子树
+    //左子树遍历完毕,调用右子树
+    PostOrder(RightChild(t))
+    Visit(root(t))//访问结点的数据域
+}
+```
+
+>三种遍历算法,经过的路径相同,但是访问各个结点的时机不同
+
+二叉树的广度优先遍历---层次遍历
+----------
+[二叉树的遍历]<br>
+* 沿某条搜索路径访问二叉树,对二叉树中的每个结点<font color=red>访问且仅访问一次</font>
+>这样就将二叉树这样的非线性结构点线性化处理了
+
+二叉树的广度优先遍历(周游),是指<font color=red>从二叉树的第一层(根结点)开始,从上至下逐层遍历,在同一层中,则按照从左到右的顺序对结点逐个访问</font><br>
+>具体可以用队列进行实现,之前的农夫问题就是一种广度优先遍历<br>
+
+二叉树广度优先遍历的算法<br>
+--------
+```c(伪)
+//使用队列层次遍历二叉树
+void LevelOrder(BinTree bt)
+{
+    初始化队列 q;
+    if (bt==NULL)
+        return;  //返回
+    bt入队q;
+    while(队列不空)
+    {
+        出队元素p;
+        visit(p);   //访问队头结点的数据域
+        if (LeftChild(p) != NULL)
+            LeftChild(p) 入队 q;    //左孩子不空,则入队
+        if (RightChild(p) != NULL)
+            RightChild(p) 入队 q;   //右孩子不空,则入队
+    }
+}
+```
+
+二叉树的重构:即由遍历序列恢复二叉树
+----------
+由二叉树的遍历知道,任意一棵二叉树结点的前序,中序和后序遍历都是唯一的.<br>
+那么如果已知结点的前序,中序和后序遍历序列中的两项,能否确定二叉树呢?这样子的二叉树是否唯一呢?<br>
+>显然是不一定能确定出唯一的二叉树的,主要在于先根序列和后根序列已知的情况有难度
+
+[例如]先根序列:ABCDEFGHI&emsp;对称序列:BCAEDGHFI<br>
+A必为祖先结点,且在中序遍历序列中,A将二叉树分为两部分,即BC位于左侧,EDGHFI位于右侧<br>
+由对称序列的BC可知,B为根,C为右叶子结点<br>
+以此类推,D必为右子树的祖先结点,E位于左侧,GHFI位于右侧<br>
+接着,F必为右子树的右子树的祖先结点,GH位于左侧,I位于右侧<br>
+由对称序列的GH可知,G为根,H为右叶子结点<br>
+从而得到的二叉树为:<br>
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG8.png)<br>
+
+[总结--二叉树重构方法]
+* 在先根序列中,第一个结点一定是二叉树的根结点
+* 根结点在对称序列中必然将对称序列分割为两个子序列,前一个子序列是左子树的对称序列,后一个子序列是右子树的对称序列
+* 根据这两个子序列,在先根序列中找到对应的左子序列和右子序列.在先序序列中,左子序列的第一个结点是左子树的根结点,右子序列的第一个结点是右子树的根结点.如此便可确定一个子二叉树的三个结点
+* 递归上述操作,从而重构出二叉树
+>同样,已知后根序列和对称序列也能恢复重构
+
+[注意]已知先根序列和后跟序列,<font color=red>对于一般的二叉树是无法恢复的</font>,但是对于一些特定的二叉树--满二叉树,也是能够重构的<br>
+[例如]先根序列:ABDECFHIG&emsp;后根序列:DEBHIFGCA<br>
+很明显可以确定祖先结点A,且B为A的左子树的根<br>
+在后根序列中,紧跟着A的必定为A的右子树的根,即C<br>
+以此类推,D为B的左子树,E为B的右子树,即BDE在A的左侧,CFHIG在A的右侧<br>
+F为C的左子树的根,G为C的右子树的根<br>
+H为F的左子树的根,I为F的右子树的根<br>
+从而得到一个满二叉树<br>
+[总结--仅针对满二叉树]
+* 在先根序列中寻找左孩子结点
+* 在后根序列中寻找右孩子结点
