@@ -309,3 +309,143 @@ H为F的左子树的根,I为F的右子树的根<br>
 [总结--仅针对满二叉树]
 * 在先根序列中寻找左孩子结点
 * 在后根序列中寻找右孩子结点
+
+二叉树的交叉遍历
+---------
+观察以下代码,具体思考:<br>
+* 什么时候调用进去<br>
+* 什么时候调用返回<br>
+
+```c(伪)
+//PreOrder和InOrder调用的彼此,而不是递归调用自己
+void PreOrder(BinTree t)
+{
+    if(t==NULL)
+        return;
+    printf("%c",t->info);
+    InOrder(t->lchild);
+    InOrder(t->rchild);
+}
+void InOrder(BinTree t)
+{
+    if(t==NULL)
+        return;
+    PreOrder(t->lchild);
+    printf("%c",t->info);
+    PreOrder(t->rchild);
+}
+//给出一个二叉树,思考这样产生的序列是什么样呢
+void main()
+{
+    BinTree bt=NULL;
+    bt=CreateBinTree();
+    PreOrder(bt);
+}
+```
+
+例如如下的二叉树,要使用上述代码交叉遍历<br>
+![F9](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG9.png)<br>
+其流程如下:<br>
+```c(伪)
+Preorder(bt)
+访问1
+Inorder(1->lchild)-->return
+Inorder(1->rchild)-->2
+    Preorder(2->lchild)
+        访问3
+        Inorder(3->lchild)-->return
+        Inorder(3->rchild)-->4
+            Preorder(4->lchild)
+                访问5
+                Inorder(5->lchild)-->return
+                Inorder(5->rchild)-->return
+            访问4
+            Preorder(4->rchild)-->return
+    访问2
+    Preorder(2->rchild)-->return
+//遍历完毕
+```
+
+二叉树的存储
+---------
+二叉树的存储形式有三种:<br>
+<1>顺序存储&emsp;&emsp;<2>链式存储&emsp;&emsp;<3>线索二叉树
+
+二叉树的顺序存储
+---------
+即用一组地址连续的存储单元按层次次序依次存储的结点<br>
+
+完全二叉树适合用顺序存储表示,如以下二叉树可以用下表显示的顺序存储方式存储:<br>
+![F10](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG10.png)<br>
+
+|      | A | B | C | D | E | F | G | H | I | J |
+|------|---|---|---|---|---|---|---|---|---|---|
+| 下标 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+
+[为什么说完全二叉树采用顺序存储比较合适呢?]<br>
+* 依据完全二叉树的性质,结点的序号可以唯一地反映出结点之间的逻辑关系
+[优点:]<br>
+* 能够最大可能地节省存储空间
+* 利用数组元素的下标值确定结点在二叉树中的位置(之前有提过计算方式)
+* 利用数组元素的下标值确定结点之间的关系
+
+[一般二叉树及其顺序表示]<br>
+* 对于一般二叉树,数组元素下标之间的关系不能反应结点之间的逻辑关系
+* 可以将其改造成完全二叉树(增加不存在的结点),然后用一维数组存储
+如下图所示:<br>
+![F11](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG11.png)<br>
+>显然,对于一般的二叉树,使用链式存储的方式更为合适
+
+二叉树的链式存储
+-------
+链式存储是对二叉树最常用的一种存储方式
+
+在二叉树的链式存储中,一个结点由三部分构成:leftchild&nbsp;+&nbsp;data&nbsp;+&nbsp;rightchild
+* 一个二叉链表由头指针唯一确定
+* 若二叉树为空,则bt=NULL
+* 若结点的某个孩子不存在,则相应的指针为空
+```c
+typedef char DataType;//可以用整形定义
+typedef struct BTreeNode
+{
+    DataType data;
+    struct BTreeNode *leftchild;
+    struct BTreeNode *rightchild;
+}BinTreeNode;
+typedef BinTreeNode *BinTree;
+```
+<font color=red>优点</font>:二叉链表结构灵活,操作方便<br>
+<font color=red>缺点</font>:在二叉链表中无法由结点直接找到其双亲<br>
+* 具有n个结点的二叉树中,一共有<font color=red>2n</font>个指针域,其中只有<font color=red>n-1</font>个用来指示结点的左,右孩子,其余的<font color=red>n+1</font>个指针域为空<br>
+[思考]如何利用这些空的指针域呢?<br>---<font color=red>线索二叉树</font>
+
+可以使用三叉链表改进,从而建立二叉树
+即一个结点由三部分构成:leftchild&nbsp;+&nbsp;data&nbsp;+&nbsp;rightchild&nbsp;+&nbsp;parent
+* 每个结点由四个域组成,parent域为指向该结点双亲结点的指针
+* 既便于查找孩子结点,又便于查找双亲结点
+* 相对于二叉链表存储结构而言,它增加了空间的开销
+>综上,我们一般使用二叉链表建立二叉树,除非对父结点的访问十分频繁,才会建立三叉链表
+
+递归建立二叉树---按照先根序列
+--------
+```c
+TreeNode *CreateBinTree()
+{
+    char ch;
+    BinTreeNode *BT=NULL;
+    scanf("%c",&ch);
+    if(ch=='@')
+    {
+        BT=NULL;
+    }
+    else
+    {
+        BT=(BinTreeNode *)malloc(sizeof(BinTreeNode));
+        BT->info=ch;
+        BT->lchild=CreateBinTree();//构建左子树
+        BT->rchild=CreateBinTree();//构建右子树
+    }
+    return BT;
+}
+```
+>具体的代码实现参见BinTree项目
