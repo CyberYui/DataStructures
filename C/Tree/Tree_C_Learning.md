@@ -449,3 +449,23 @@ TreeNode *CreateBinTree()
 }
 ```
 >具体的代码实现参见BinTree项目
+
+二叉树的建立和遍历---非递归算法
+----------
+使用非递归的形式建立二叉树,需要使用到队列以及完全二叉树的相关知识<br>
+我们知道在对完全二叉树结点编号之后,每个子二叉树有这样的关系:<br>
+![F12](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG12.png)<br>
+<br>
+在本例中,我们的输入序列是<font color=red>ABC@DE@@@@F#</font><br>
+[程序设计]<br>
+(1)将二叉树用@扩充为完全二叉树,输入<font color=blue>完全二叉树序列</font>,以#作为结束的标志,设置计数器count为-1,用于标识结点的序号.<br>
+(2)如果输入的不是@,则产生一个新结点s,并对结点的数据域赋值为输入的字符,结点的左右指针赋值为空,然后结点s入队,<font color=green>计数器count+1</font><br>
+(3)如果计数器<font color=darred>count等于0</font>,这个结点就是根结点,设置二叉树的根<font color=darred>bt=s</font><br>
+&emsp;如果计数器count是<font color=purple>奇数</font>,则是父结点p(队头结点)的左孩子,即<font color=purple>p->leftchild=s</font><br>
+&emsp;&emsp;如果计数器count是<font color=green>偶数</font>,<br>
+&emsp;&emsp;&emsp;父结点p(队头结点)的右孩子,即<font color=green>p->rightchild=s</font><br>
+&emsp;&emsp;&emsp;<font color=pink>队头结点的左右孩子已经处理完毕,出队</font><br>
+
+>很明显,在真正入队时,并不是入ABCD@,入队的是结点,且结点是有指针域的
+>具体代码实现参见BinTree_NonRecursion项目
+
