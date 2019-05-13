@@ -466,6 +466,140 @@ TreeNode *CreateBinTree()
 &emsp;&emsp;&emsp;父结点p(队头结点)的右孩子,即<font color=green>p->rightchild=s</font><br>
 &emsp;&emsp;&emsp;<font color=pink>队头结点的左右孩子已经处理完毕,出队</font><br>
 
->很明显,在真正入队时,并不是入ABCD@,入队的是结点,且结点是有指针域的
+>很明显,在真正入队时,并不是入ABCD@,入队的是结点,且结点是有指针域的<br>
 >具体代码实现参见BinTree_NonRecursion项目
+
+二叉树的先根遍历---非递归遍历方式
+----------
+**[迭代 1]先序遍历的非递归实现**<br>
+仔细观察,和之前的层级遍历的非递归算法很类似,但之前用的可是队列<br>
+
+```c
+//先序遍历的非递归实现,迭代1
+void PreOrder_NRecursion1(BinTree bt)
+{
+    LinkStack lstack;   //定义链栈
+    lstack = SetNullStack_Link();   //初始化栈
+    BinTreeNode *p;
+    Push_link(lstack,bt);   //根结点入栈
+    //循环表现了递归的具体实现内容,这里也能看到指针的妙用
+    while(!IsNullStack_Link(lstack))
+    {
+        p = Top_Link(lstack);
+        Pop_Link(lstack);
+        printf("%c",p->data);   //访问结点
+        //因为是栈,是后进先出,所以先进右孩子,后进左孩子
+        if(p->rightchild)
+            Push_Link(lstack,p->rightchild);    //右子树不空,进栈
+        if(p->leftchild)
+            Push_Link(lstack,p->leftchild);     //左子树不空,进栈
+    }
+}
+```
+
+即根结点首先入栈,然后进入循环<br>
+栈顶结点(根结点)出栈,并被访问<br>
+根结点的右孩子进栈,然后左孩子进栈<br>
+进入第二轮循环<br>
+栈顶结点(根结点的左孩子)出栈,并被访问<br>
+根结点的左孩子的右孩子进栈,然后根结点的左孩子的左孩子进栈<br>
+...(如此循环)<br>
+当访问至叶子结点,判断栈非空<br>
+则栈顶结点(上一个结点的右孩子)出栈<br>
+...(以此类推)<br>
+[结束条件]栈空<br>
+<br>
+
+**[迭代 2]先序遍历的非递归实现**<br>
+对于迭代一中,每次左孩子都要先入栈,称为栈顶<br>
+然后再被取出来访问,能否直接访问,不用入栈这样的操作呢?<br>
+--这就是迭代&nbsp;2的思路了<br>
+
+```c
+//先序遍历的非递归实现,迭代2
+void PreOrder_NRecursion2(BinTree bt)
+{
+    LinkStack lstack;   //定义链栈
+    BinTreeNode *p = bt;
+    lstack = SetNullStack_Link();   //初始化栈
+    if(bt == NULL)
+        return;
+    Push_Link(lstack,bt);
+    //如果栈不空,则循环访问栈
+    while(!IsNullStack_Link(lstack))
+    {
+        //取栈顶结点,然后访问
+        p = Top_Link(lstack);
+        Pop_Link(lstack);   //出栈
+        while(p)
+        {
+            printf("%c",p->data);   //访问结点
+            if(p->rightchild)
+                //若右孩子为空,则不进栈
+                Push_Link(lstack,p->rightchild); //右孩子进栈
+            p = p->leftchild;
+        }
+    }
+}
+```
+
+即首先直接访问根结点,然后其右孩子进栈<br>
+接着,直接访问左孩子,然后左孩子的右孩子进栈<br>
+...(如此循环)<br>
+当访问至叶子结点,判断栈非空<br>
+则取栈顶结点(上一个结点的右孩子)出栈<br>
+...(以此类推)<br>
+[结束条件]栈空<br>
+<br>
+[思考]迭代1和迭代2对于同一个二叉树,其栈的不同在哪里?<br>
+例如下面的二叉树:<br>
+![F13](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG13.png)<br>
+<br>
+[迭代 1]<br>
+![F14](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG14.png)<br>
+<br>
+[迭代 2]<br>
+![F15](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG15.png)<br>
+
+
+二叉树的对称遍历---非递归遍历方式
+----------
+先序遍历是---根左右
+对称遍历是---左根右
+那么也就是说要先从左边到底才开始访问,刚刚好可以利用栈的后进先出的特性
+
+**[迭代 1]对称遍历的非递归实现**<br>
+```c
+//中序遍历非递归实现
+void InOrder_NRecursion1(BinTree bt)
+{
+    LInkStack lstack;   //定义链栈
+    lstack = SetNullStack_Link();   //初始化栈
+    BinTree p;
+    p = bt;
+    if(p == NULL)
+        return;
+    Push_Link(lstack,bt);   //根结点入栈
+    //一直寻找左子树,直到底才开始
+    p = p->leftchild;   //进入左子树
+    //只要p或者栈非空,就迭代
+    while(p || !IsNullStack_Link(lstack))
+    {
+        //p不为空,一直找左子树,并进栈左孩子
+        while(p != NULL)
+        {
+            Pushi_Link(lstack,p);
+            p = p->leftchild;
+        }
+        //找到底的时候开始出栈,出栈一个左孩子就扫描右孩子
+        p = Top_Link(lstack);
+        Pop_Link(lstack);
+        printf("%c",p->data);   //访问结点
+        p = p->rightchild;  //右子树非空,扫描右子树
+        //循环寻找右子树的左子树
+    }
+    //结束条件:栈空
+}//算法时间复杂度O(n)
+```
+
 
