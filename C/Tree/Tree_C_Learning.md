@@ -481,11 +481,11 @@ void PreOrder_NRecursion1(BinTree bt)
     LinkStack lstack;   //定义链栈
     lstack = SetNullStack_Link();   //初始化栈
     BinTreeNode *p;
-    Push_link(lstack,bt);   //根结点入栈
+    Push_Link(lstack,bt);   //根结点入栈
     //循环表现了递归的具体实现内容,这里也能看到指针的妙用
     while(!IsNullStack_Link(lstack))
     {
-        p = Top_Link(lstack);
+        p = Pop_seq_return(lstack);
         Pop_Link(lstack);
         printf("%c",p->data);   //访问结点
         //因为是栈,是后进先出,所以先进右孩子,后进左孩子
@@ -529,7 +529,7 @@ void PreOrder_NRecursion2(BinTree bt)
     while(!IsNullStack_Link(lstack))
     {
         //取栈顶结点,然后访问
-        p = Top_Link(lstack);
+        p = Pop_seq_return(lstack);
         Pop_Link(lstack);   //出栈
         while(p)
         {
@@ -568,12 +568,13 @@ void PreOrder_NRecursion2(BinTree bt)
 对称遍历是---左根右
 那么也就是说要先从左边到底才开始访问,刚刚好可以利用栈的后进先出的特性
 
-**[迭代 1]对称遍历的非递归实现**<br>
+**对称遍历的非递归实现**<br>
+中序遍历只有一种非递归实现的迭代方式<br>
 ```c
 //中序遍历非递归实现
 void InOrder_NRecursion1(BinTree bt)
 {
-    LInkStack lstack;   //定义链栈
+    LinkStack lstack;   //定义链栈
     lstack = SetNullStack_Link();   //初始化栈
     BinTree p;
     p = bt;
@@ -588,11 +589,11 @@ void InOrder_NRecursion1(BinTree bt)
         //p不为空,一直找左子树,并进栈左孩子
         while(p != NULL)
         {
-            Pushi_Link(lstack,p);
+            Push_Link(lstack,p);
             p = p->leftchild;
         }
         //找到底的时候开始出栈,出栈一个左孩子就扫描右孩子
-        p = Top_Link(lstack);
+        p = Pop_seq_return(lstack);
         Pop_Link(lstack);
         printf("%c",p->data);   //访问结点
         p = p->rightchild;  //右子树非空,扫描右子树
@@ -602,4 +603,45 @@ void InOrder_NRecursion1(BinTree bt)
 }//算法时间复杂度O(n)
 ```
 
+二叉树的后序遍历---非递归遍历方式
+----------
+后序遍历也是要先从左边到底才开始访问,之后访问右孩子,最后才访问一个二叉树的根结点
+实际中,就是一个叶子结点从左返回,从右返回,然后访问自己
+回到二叉树时就是左叶子已经访问过自己,右叶子也已访问过自己,根结点只需要访问自己就好
+刚刚好可以利用栈的后进先出的特性
 
+**后序遍历的非递归实现**<br>
+```c
+//后序遍历的非递归实现
+void PostOrder_NRecursion(BinTree bt)
+{
+    BinTree p = bt;
+    LinkStack lstack;   //定义链栈
+    //二叉树为空,直接返回
+    if(bt == NULL)
+        return;
+    lstack = SetNullStack_Link();   //初始化栈
+    //p非空或者栈非空,开始循环
+    while(p != NULL || !IsNullStack_Link(lstack))
+    {
+        //如果p不空,就一直找下去
+        while(p!=NULL)
+        {
+            Push_Link(lstack,p);
+            p = p->leftchild ? p->leftchild : p->rightchild;    //左子树有就压左,否则压右进栈
+        }
+        //空表示为叶子结点,左右都没有
+        p = Pop_seq_return(lstack);   //栈顶出栈
+        Pop_Link(lstack);
+        printf("%c",p->data);   //访问结点
+        //如果栈非空且栈顶结点的左孩子是刚刚出栈的结点
+        if(!IsNullStack_Link(lstack) && (Pop_seq_return(lstack)->leftchild == p))
+            //因为是左,所以还要看右边的
+            p = (Pop_seq_return(lstack))->rightchild; //从左子树退回,进入右子树
+        else
+            p = NULL;   //从右子树退回,返回上一层
+    }//循环结束条件:栈空或p空
+}
+```
+
+>二叉树各种遍历的非递归实现参照BinTree_NewNonRecursion项目
