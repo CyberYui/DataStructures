@@ -602,13 +602,15 @@ void InOrder_NRecursion1(BinTree bt)
     //结束条件:栈空
 }//算法时间复杂度O(n)
 ```
+<br>
+![F16](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG16.png)<br>
 
 二叉树的后序遍历---非递归遍历方式
 ----------
-后序遍历也是要先从左边到底才开始访问,之后访问右孩子,最后才访问一个二叉树的根结点
-实际中,就是一个叶子结点从左返回,从右返回,然后访问自己
-回到二叉树时就是左叶子已经访问过自己,右叶子也已访问过自己,根结点只需要访问自己就好
-刚刚好可以利用栈的后进先出的特性
+后序遍历也是要先从左边到底才开始访问,之后访问右孩子,最后才访问一个二叉树的根结点<br>
+实际中,就是一个叶子结点从左返回,从右返回,然后访问自己<br>
+回到二叉树时就是左叶子已经访问过自己,右叶子也已访问过自己,根结点只需要访问自己就好<br>
+刚刚好可以利用栈的后进先出的特性<br>
 
 **后序遍历的非递归实现**<br>
 ```c
@@ -643,5 +645,11 @@ void PostOrder_NRecursion(BinTree bt)
     }//循环结束条件:栈空或p空
 }
 ```
+
+在对上述二叉树进行后序遍历之前,先对其进行改造如下:<br>
+![F17](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG17.png)<br>
+<br>
+相对应的过程为:<br>
+![F18](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG18.png)<br>
 
 >二叉树各种遍历的非递归实现参照BinTree_NewNonRecursion项目
