@@ -653,3 +653,94 @@ void PostOrder_NRecursion(BinTree bt)
 ![F18](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG18.png)<br>
 
 >二叉树各种遍历的非递归实现参照BinTree_NewNonRecursion项目
+
+******************************************************
+
+二叉树的递归遍历应用
+============
+利用二叉树的递归遍历,可以很容易地统计一些数据
+* 统计二叉树叶子结点个数
+* 统计二叉树总结点数
+* 统计二叉树右结点数
+* 计算二叉树的深度
+* 查找数据元素
+* etc...
+
+统计二叉树叶子结点个数
+----------
+```c
+//统计叶子结点数
+int CountLeafNode(BinTree bt)
+{
+    if(bt == NULL)
+        return 0;   //递归调用的结束条件
+    //左右都为空,那么是个叶子
+    else if ((bt->leftchild == NULL)&&(bt->rightchild == NULL))
+            return 1;
+        else
+            //递归遍历左子树和右子树
+            return(CountLeafNode(bt->leftchild)+CountLeafNode(bt->rightchild));
+}
+```
+
+统计二叉树总结点数
+----------
+```c
+//统计二叉树总结点数
+int CountNode(BinTree bt)
+{
+    if(bt == NULL)
+        return 0;
+    else
+        //结点数为左子树结点数+右子树结点数+根结点(1)
+        return(CountNode(bt->leftchild)+CountNode(bt->rightchild)+1);
+}
+```
+
+统计二叉树右结点数
+----------
+```c
+//统计二叉树的右结点个数
+int CountRightNode(BinTree bt)
+{
+    int num = 0;
+    if(bt == NULL)
+        return 0;
+    //如果有右结点存在,则num+1
+    if(bt->rightchild != NULL)
+        num++;
+    //递归左子树和右子树
+    num += CountRightNode(bt->leftchild);
+    num += CountRightNode(bt->rightchild);
+    return num;
+}
+```
+
+计算二叉树的深度
+----------
+```c
+//统计二叉树的深度
+int CountLevel(BinTree bt)
+{
+    //空则返回0
+    if(bt == NULL)
+        return 0;
+    //否则返回两个子树中深度大的+1(根结点层)
+    else
+    {
+        int i = CountLevel(bt->leftchild);
+        int j = CountLevel(bt->rightchild);
+        return (i>j?i:j)+1;
+    }
+}
+```
+
+查找数据元素
+--------
+```c
+//查找特定数据元素的序号
+int CountSearchNode(BinTree bt,char ch)
+{
+    
+}
+```
