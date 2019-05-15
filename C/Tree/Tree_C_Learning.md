@@ -738,9 +738,173 @@ int CountLevel(BinTree bt)
 查找数据元素
 --------
 ```c
-//查找特定数据元素的序号
-int CountSearchNode(BinTree bt,char ch)
+//查找特定数据元素是否在二叉树中
+bool CountSearchNode(BinTree bt,char ch)
 {
-    
+    if(bt == NULL)
+        return false;
+    if(bt->data == ch)
+        return true;
+    return (CountSearchNode(bt->leftchild,ch)) || (CountSearchNode(bt->rightchild,ch));
 }
 ```
+
+线索二叉树
+--------
+在之前的二叉树链式存储中,n个结点会有n+1个空指针域
+可以建立线索二叉树充分利用这些指针域
+在线索二叉树中,一个结点包括5部分
+```c(伪)
+data    //数据域
+
+leftchild   //左孩子指针
+lthread     //左线索标记
+
+rightchild  //右孩子指针
+rthread     //右线索标记
+```
+线索标记的作用是:
+[lthread]
+若为0,表示leftchild是<font color=green>指针</font>,指向结点的左孩子
+若为1,表示leftchild是<font color=red>线索</font>,指向结点的<font color=blue>前驱结点</font>
+[rthread]
+若为0,表示rightchild是<font color=green>指针</font>,指向结点的右孩子
+若为1,表示rightchild是<font color=red>线索</font>,指向结点的<font color=blue>后继结点</font>
+
+线索标记如何实现呢?
+我们知道二叉树是一种层级结构,当使用某种遍历方式之后,其会以一种线性结构显示出来,那么这样就能较容易地得到一个结点的前驱和后继了.
+
+>也就是说,用先序,中序和后序遍历都可以实现将二叉树层级结构以线性结构表示
+
+对称穿线树
+--------
+[注]这里的前驱和后继是针对遍历序列说的
+建立对称穿线树,首先要知道二叉树的对称序列,例如DBAEGCHFI对应如下二叉树
+![F19](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG19.png)<br>
+
+[实际过程]
+以D为例,其无左子树,那么就要将leftchild利用,指向其前驱,而D确实<font color=darred>在对称序列中没有前驱</font>,所以leftchild还是NULL,D无右子树,那么其rightchild就要<font color=darred>指向其在对称序列中的后继结点</font>,即B
+接着看B,其有左孩子,那么leftchild不是线索而是指针,指向其左孩子,也就是其leftchild指向D,B无右孩子,那么其rightchild<font color=darred>指向其在对称序列中的后继结点</font>,即A
+A,C和F都是有左右孩子的,所以不用管
+接下来看E,E没有左孩子,所以其leftchild指向其<font color=darred>在对称序列中的前驱</font>,即A,其右右孩子,所以rightchild指向G
+如此类推,从而利用了一些空指针域
+
+在这一过程中,对每一个结点都进行了判断,实际上是进行了一次遍历,每访问一个结点,就要对结点进行相关的处理
+
+>类似地,可以建立先序穿线树和后序穿线树,注意二叉树的序列不要确定错即可
+
+如何建立中序线索数
+--------
+在中序遍历过程中修改结点的左右指针域,以保存当前访问结点的前驱和后继信息
+遍历过程中,指针p指向当前正在访问的结点,另有一指针pr,pr保持指向p所指结点的前驱结点
+两个结点之间进行穿线,即进行上述的标记赋值等操作
+
+```c
+//建立中序穿线树
+void Create_InOrderThread(BinTree bt)
+{
+    LinkStack st = SetNullStack_Link();
+    BinTreeNode *p,*pr,*q;
+    //二叉树为空,直接返回
+    if(bt == NULL)
+        return;
+    //初始化p指针和pr指针
+    p = bt;
+    pr = NULL;
+    //循环
+    do
+    {
+        //当p非空,就进栈p结点,一直找左子树,直到底
+        while(p!=NULL)
+        {
+            Push_Link(st,p);
+            p = p->leftchild;
+        }
+        //p无左子树,取栈顶元素
+        p = Pop_seq_return(st);   //取栈顶元素
+        Pop_Link(st);   //出栈栈顶元素
+        //判断当前p的前驱pr,处理线索
+        if(pr!=NULL)
+        {
+            if(pr->rightchild == NULL)
+            {
+                //pr的右子树为空,设置rthread线索
+                pr->rightchild = p;
+                pr->rthread = 1;
+            }
+            if(p->leftchild == NULL)
+            {
+                //p的左子树为空,设置lthread线索
+                p->leftchild = pr;
+                p->lthread = 1;
+            }
+        }
+        //继续处理下一个结点,保存当前的p给pr,作为下个结点的前驱
+        pr = p;
+        p = p->rightchild;
+    }while(!IsNullStack_Link(st) || p!=NULL);
+
+    //中序穿线树建立时的特殊处理,第一个和最后一个结点
+    p = bt;
+    q = bt;
+    //找到第一个结点
+    while(p->leftchild != NULL)
+    {
+        p = p->leftchild;
+    }//第一个结点是没有前驱的
+    p->lthread = 1;   //对中序遍历的第一个结点特殊处理
+    //找到最后一个结点
+    while(q->rightchild != NULL)
+    {
+        q = q->rightchild;
+    }//最后一个结点是没有后继的
+    q->rthread = 1;  //对中序遍历的最后一个结点特殊处理
+}
+```
+
+这样就建立了一个线索二叉树,那么建立它的意义是什么呢?
+
+之前建立的二叉树,对其遍历我们有递归和利用栈的非递归形式
+而线索二叉树能很方便地使用非递归遍历,而不需要使用栈
+
+中序遍历中序穿线树
+--------
+[如何找到对称序列的第一个结点]
+* 从根结点出发,沿着左指针不断往下走,直到左指针为空,到达"<font color=blue>最左下</font>"的结点,这个结点就是中序遍历的第一个结点
+
+[如何找到对称序列中一个结点的后继结点]--有两种情况
+* 如果一个结点的右指针字段是线索,那么该指针就指向该结点的后继
+* 如果一个结点p的右指针指向的是它的右子树,那么继续寻找此右子树的"<font color=blue>最左下</font>"结点,这个结点就是当前结点p的后继
+
+```c
+//中序遍历对称穿线树
+void InOrder_ThreadBinTree(BinTree bt)
+{
+    BinTreeNode *p;
+    if(bt == NULL)
+        return;
+    p = bt;
+    //沿着左子树一直向下寻找,直到找到第一个结点
+    while(p->leftchild != NULL && p->lthread == 0)
+        p = p->leftchild;
+    while(p != NULL)
+    {
+        printf("%c ",p->data);
+        printf("%d ",p->lthread);
+        printf("%d \n",p->rthread);
+        //rightchild指针不是线索而是右子树
+        if(p->rightchild != NULL && p->rthread == 0)
+        {
+            p = p->rightchild;
+            //顺其右子树的左子树一直向下,直到最左下结点
+            while(p->leftchild != NULL && p->lthread == 0)
+                p = p->leftchild;
+        }
+        //rightchild是线索
+        else
+            p = p->rightchild;  //顺着线索寻找
+    }
+}
+```
+
+>具体实现参照BinTree_Thread项目
