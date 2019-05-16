@@ -911,3 +911,57 @@ void InOrder_ThreadBinTree(BinTree bt)
 
 哈夫曼树:最优二叉树
 ===========
+先回忆一下之前学习到的扩充二叉树<br>
+即,一个二叉树中,将度为1和0的结点补全,使所有结点变为度为2的结点<br>
+
+扩充二叉树的外部路径长度:![F20](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG20.png)<br>
+
+其中:l<sub>i</sub>为从根到第i个外部结点的路径长度,m为外部结点的个数<br>
+
+扩充二叉树的带权的外部路径长度:![F21](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG21.png)<br>
+
+其中:w<sub>i</sub>是第i个外部结点的权值,l<sub>i</sub>为从根到第i个外部结点的路径长度,m为外部结点的个数<br>
+
+>引入权值的概念,才能说明哈夫曼树
+
+最优二叉树
+--------
+假设有一组(无序)实数<font color=blue>{w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>,...,w<sub>m</sub>}</font>,现要构造一棵以w<sub>i</sub>(i=1,2,...,m)为权的m个外部结点的扩充二叉树,使得带权的外部路径长度的<font color=red>WPL最小</font>.满足这一要求的扩充二叉树就称为哈夫曼树或者最优二叉树.<br>
+
+[例如]给出权值为{2,3,4,11},则可以构造许多不同的二叉树,其中三种及其WPL如下:<br>
+![F22](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG22.png)<br>
+
+哈夫曼算法
+--------
+**<1>** 由给定的m个权值<font color=blue>{w<sub>1</sub>,w<sub>2</sub>,w<sub>3</sub>,...,w<sub>m</sub>}</font>构造成m棵二叉树集F={T<sub>1</sub>,T<sub>2</sub>,...,T<sub>m</sub>,},其中每一棵二叉树T<sub>i</sub>中只有一个带权为w<sub>i</sub>的根结点,且<font color=green>根结点的权值为w<sub>i</sub></font><br>
+**<2>** 在F中选取<font color=red>两棵权值最小的树</font>作为左右子树以构造一棵新的二叉树,且新二叉树的根结点的权值为其左右子树根结点<font color=brown>权值之和</font><br>
+**<3>** 在F中<font color=green>删除这两棵树</font>,同时<font color=brown>将新得到的二叉树加入F</font>中<br>
+**<4>** 重复 **<2>** 和 **<3>**,直到<font color=red>F中只含一棵树</font>为止<br>
+
+[举例]以数据集合{3,5,7,8,9,11,12,15}为权值构造二叉树,并求其外部带权路径长度WPL<br>
+![F23](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG23.png)<br>
+**<1>** 首先找到最小的,即3,5,这两个权值之和为8,组成一个子二叉树,此时集合变为{7,8,<font color=red>8</font>,9,11,12,15}<br>
+**<2>** 再在集合中找最小的两个,即7,8,假设选择了新生成的那个8,就形成了新的一个二叉树,此时集合变为{8,9,11,12,<font color=red>15</font>,15}<br>
+**<3>** 重复类似的步骤,直到生成整个哈夫曼树,如上图所示[<font color=blue>请注意,这里的树并不唯一</font>],根据其深度层次(从0算),其权值之和为:WPL=(3+5)*4+(7+8+9+11+12)*3+15*2=203<br>
+
+>上例中可以生成两种哈夫曼树,这两个树称为<font color=purple>互不等价的哈夫曼(Huffman)树</font><br>
+><font color=pink>互不等价</font>:两个哈夫曼树WPL相等,但其中一棵树不能经过交换某些结点的左右子树而得到另一棵树<br>
+
+哈夫曼算法的实现
+---------
+根据性质7,外部结点的个数总是比内部结点多一个,即哈夫曼树的总结点数为2m-1个<br>
+则建立数组保存时,也就只需要申请2m-1个空间即可<br>
+每一个结点包括四部分:<br>
+* 权值
+* 父结点的位置,默认-1
+* 左孩子的位置,默认-1
+* 右孩子的位置,默认-1
+对于数组,前面的部分是外部结点占用,后面的部分根据哈夫曼算法放入内部结点<br>
+
+第一步,3和5形成第一个父结点8,这样,权值为3和5的结点其父结点位置被设置为8(数组下标),将8这个结点放入数组中,左孩子为0(数组下标),右孩子为1(数组下标)<br>
+以此类推,最后完成数组
+
+>具体实现参照BinTree_Huffman项目
+
+哈夫曼树的应用---哈夫曼编码
+---------
