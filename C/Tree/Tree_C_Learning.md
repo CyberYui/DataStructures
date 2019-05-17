@@ -997,3 +997,112 @@ void InOrder_ThreadBinTree(BinTree bt)
 例如如下的二叉树中,6的编码就为[1100]<br>
 ![F24](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG24.png)<br>
 
+树和森林
+======
+
+基本概念
+--------
+[树的基本概念]<br>
+* 包含n个结点的<font color=brown>有穷集合T</font>,当T非空时满足<br>
+* 有且仅有一个称为根的结点<br>
+* 除根结点之外,其余结点分成若干个不相交的非空集合T1,T2,...,Tm,这些集合又分别是一棵树,称为T的子树<br>
+
+[结点的度]结点的子结点个数<br>
+[树的度]树中度数最大的结点的度数<br>
+[有序树]从左到右规定好了结点的次序的树,这样一个根结点左子树的根结点为<font color=blue>长子</font>,右子树的根结点称为<font color=blue>次子</font>,次子又称为长子的<font color=blue>右兄弟</font><br>
+
+树的周游
+-------
+[深度优先周游]<br>
+* <font color=orange>先根次序</font><br>
+**<1>** 访问根结点<br>
+**<2>** 从左到右访问按照先根次序周游根结点的每棵子树<br>
+
+* <font color=orange>后跟次序</font><br>
+**<1>** 从左到右访问按照后根次序周游根结点的每棵子树<br>
+**<2>** 访问根结点<br>
+>不提及对称次序是因为日常中使用极少
+
+[广度优先周游]<br>
+* 先访问0层的结点,然后从左到右访问1层的结点,然后...,直到访问完树中的全部结点<br>
+
+树的实现
+--------
+* 树的<font color=green>父指针</font>表示法<br>
+* 树的<font color=green>子表</font>表示法<br>
+* 树的<font color=green>长子-兄弟</font>表示法<br>
+
+* 无论具体采用什么存储形式,都需要考虑:<br>
+        结点本身的信息<br>
+        结点之间的逻辑关系<br>
+
+树的父指针表示法
+--------
+即使用一个数组存储,一个结点包括两个部分,数据域info和父指针域parent<br>
+info存放数据,parent指向其父结点的下标<br>
+
+[优点]<br>
+* 容易找到父结点及其所有的祖先<br>
+* 能找到结点的子女和兄弟<br>
+
+[缺点]<br>
+* 找结点的子女和兄弟比较费事,需要查询整个数组<br>
+* 没有表示出结点之间的左右次序<br>
+>改进为先根序列存放进数组,这样,最先出来的就是长子
+
+树的子表表示法
+------
+同样,使用一个数组存储,一个节点包括两个部分,数据域info和子表域children<br>
+info存放数据,parent指向其子表<br>
+具体展示如下:
+![F25](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG25.png)<br>
+
+比如a,其子表就是b树和c树;b的子表就是d和e树;以此类推.<br>
+
+[优点]<br>
+* 求某个结点的最左子女运算很容易实现<br>
+* 容易找到结点的全部子女<br>
+
+[缺点]<br>
+* 求某个结点的父母实现比较费事:遍历所有子表,看哪个结点的子表包括所查结点<br>
+* 求某个结点的右兄弟实现比较费事:遍历所有子表,哪个子表包括所查结点,子表中的其他结点就是兄弟结点<br>
+
+★树的长子兄弟表示法
+----------
+类似于二叉链表,但是两个指针域的内容同二叉链表不同<br>
+一个结点由三部分构成:<br>
+**<1>** 数据域<br>
+**<2>** 指向长子的指针域<br>
+**<3>** 指向兄弟的指针域<br>
+>由于使用了二叉链表,这样就将一个树转化为了一个类二叉树的形式,可以用对二叉树的操作操作该树
+
+[优点]<br>
+* 容易找到结点的子女和右兄弟<br>
+
+[缺点]
+* 很难寻找父结点<br>
+
+树,树林与二叉树的转换
+========
+之前利用树的长子兄弟表示法可以将一个树转化为二叉树进行操作<br>
+那么如何将一个非常规二叉树化为树或者树林呢?<br>
+
+已知树,树林,转换为二叉树
+------------
+* [<font color=red>加线</font>]:在所有相邻的<font color=green>兄弟</font>结点之间连一条线<br>
+![F26](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG26.png)<br>
+* [<font color=red>抹线</font>]:对每个非终端结点,只<font color=green>保留</font>它到其<font color=green>最左子女</font>的连线,<font color=green>删去</font>与<font color=green>其他子女</font>的连线<br>
+![F27](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG27.png)<br>
+* [<font color=red>调整</font>]:以<font color=green>根结点</font>为轴心,将整棵树进行<font color=green>旋转</font><br>
+![F28](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG28.png)<br>
+>与二叉树的显著区别为:转化后的树只有左分支,没有右分支,这是因为根结点A是没有右兄弟的<br>
+>在一个树林中,各个树互为兄弟<br>
+
+<font color=pink>[TIPS]树转换为二叉树,其根结点的右子树总是空的</font>
+
+二叉树转换为树或树林
+------------
+* [<font color=red>加线</font>]:若<font color=green>p结点是双亲结点的左孩子</font>,则将<font color=green>p的右孩子,右孩子的右孩子</font>,...沿分支找到的所有右孩子,都与p的双亲用线连起来.<br>
+* [<font color=red>抹线</font>]:抹掉<font color=green>原二叉树</font>中双亲与右孩子之间的连线<br>
+* [<font color=red>调整</font>]:将结点<font color=green>按层次排列</font>,形成树结构<br>
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG29.png)<br>
