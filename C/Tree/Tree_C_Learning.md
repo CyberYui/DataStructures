@@ -602,8 +602,9 @@ void InOrder_NRecursion1(BinTree bt)
     //结束条件:栈空
 }//算法时间复杂度O(n)
 ```
-<br>
+过程展示如下:<br>
 ![F16](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG16.png)<br>
+<br>
 
 二叉树的后序遍历---非递归遍历方式
 ----------
@@ -1054,7 +1055,7 @@ info存放数据,parent指向其父结点的下标<br>
 ------
 同样,使用一个数组存储,一个节点包括两个部分,数据域info和子表域children<br>
 info存放数据,parent指向其子表<br>
-具体展示如下:
+具体展示如下:<br>
 ![F25](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinaryTreeG25.png)<br>
 
 比如a,其子表就是b树和c树;b的子表就是d和e树;以此类推.<br>
