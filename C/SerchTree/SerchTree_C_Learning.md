@@ -111,6 +111,19 @@ typedef struct BinSearchTreeNode
 }BSTreeNode;
 typedef BSTreeNode *BinSearchTree;
 ```
+实际的项目代码中是这样定义的
+```c
+typedef int DataType;
+//二叉排序树节点定义
+struct BinSearchTreeNode
+{
+	DataType data;
+	struct BinSearchTreeNode *leftchild;
+	struct BinSearchTreeNode *rightchild;
+};
+typedef struct BinSearchTreeNode *BSTreeNode;
+typedef struct BinSearchTreeNode *BinSearchTree;
+```
 
 二叉排序树的检索算法
 ---------
@@ -199,7 +212,7 @@ int BSTInsert(BinSearchTree bt,DataType key)
         temp->rightchild = p;   //作为右子树插入
     }
     return 1;
-}
+}//时间复杂度O(n)
 ```
 
 >有了插入算法,就可以从一棵空树开始,建立一棵二叉排序树了
@@ -209,3 +222,169 @@ int BSTInsert(BinSearchTree bt,DataType key)
 
 ![F8](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG8.png)<br>
 
+二叉排序树的删除
+----------
+假如要删除结点p,分两种情况:
+1.p没有左子树只有右子树
+2.p既有左子树也有右子树
+[要求]删除二叉排序树的某个指定结点后,仍然要是二叉排序树
+
+①若p左子树为空,此时,只要令p的右子树的根结点代替p即可
+假设指针p指向要删除的结点,那么parentp指向p的父结点
+
+②若p既有左子树又有右子树,对其操作有两种方法:
+**[方法1]**
+(a)按对称序周游p的左子树,找到关键码最大的结点maxpl,删除maxpl结点
+(b)用maxpl结点代替被删除的结点p
+
+![F9](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG9.png)<br>
+
+[如果maxpl有左分支]
+有两种情况,一种是maxpl自己有左分支且maxpl与p不相连,一种是maxpl有左分支与p相连
+
+![F10](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG10.png)<br>
+![F11](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG11.png)<br>
+
+第一种删除算法的具体实现
+-------------
+```c
+//第一种删除算法
+//删除与key相同的结点
+int BSTDelete1(BinSearchTree *bt,DataType key)
+{
+    BSTreeNode parent, p, maxpl;
+    p = *bt;
+    parent = NULL;
+    //查找被删除的结点
+    while(p != NULL)
+    {
+        if(p->data == key)
+            break;  //查找到了,跳出循环
+        if(p->data > key)
+            p = p->leftchild;
+        else
+            p = p->rightchild;
+    }//查询结束
+    if(p == NULL)
+    {
+        printf("%d not exist\n",key);
+        return 0;
+    }
+    //只有右子树的情况
+    if(p->leftchild == NULL)
+    {
+        //如果被删除的结点是根结点,那就要修改的是二叉排序树的根
+        if(parent == NULL)
+            *bt = p->rightchild;
+        //检查是左孩子还是右孩子
+        else if(parent->leftchild == p)
+            parent->leftchild = p->rightchild;
+        else
+            parent->rightchild = p->rightchild;
+    }
+    //既有左子树也有右子树
+    if(p->leftchild != NULL)
+    {
+        BSTreeNode parentp; //parentp记录maxpl的父结点
+        parentp = p;
+        maxpl = p->leftchild;
+        //对称遍历中,右侧的总是大的数
+        //定位p的左子树中的最大结点maxpl
+        while(maxpl->rightchild != NULL)
+        {
+            parentp = maxpl;
+            maxpl = maxpl->rightchild;
+        }
+        p->data = maxpl->data;  //修改p的数据域为maxpl的值
+        if(parentp == p)    //如果maxpl的父结点是p
+            p->leftchild = maxpl->leftchild;    //修改p结点的左指针
+        else
+            parentp->rightchild = maxpl->leftchild; //修改父结点的右指针
+        p = maxpl;  //更新p指针为maxpl结点以便删除
+    }
+    //释放空间
+    free(p);
+    return 1;
+}//时间复杂度O(n)
+```
+
+**[方法2]**
+首先找到p的左分支的最大值maxpl
+令p的左子树的根结点代替p,p的右子树变为maxpl的右子树
+像这样:
+![F12](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG12.png)<br>
+
+删除时结点的情况类似于方法1,基本的删除过程像这样:
+![F13](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG13.png)<br>
+
+```c
+//第二种删除算法
+//删除与key相同的结点
+int BSTDelete2(BinSearchTree *bt,DataType key)
+{
+    //parent记录p的父结点,maxpl记录p的左子树中的关键码最大结点
+    BSTreeNode parent, p, maxpl;
+    p = *bt;
+    parent = NULL;
+    //查找被删除的结点
+    while(p != NULL)
+    {
+        if(p->data == key)
+            break;  //查找到了,跳出循环
+        parent = p; //注意这一句
+        if(p->data > key)
+            p = p->leftchild;
+        else
+            p = p->rightchild;
+    }//查找结束
+    if(p == NULL)
+    {
+        printf("%d not exist!\n",key);
+        return 0;
+    }
+    //只有右子树的情况
+    if(p->leftchild == NULL)
+    {
+        //删除的是根结点,做特殊处理
+        if(parent == NULL)
+            *bt = p->rightchild;
+        //p是父结点parent的左孩子,则修改父结点的左指针
+        else if(parent->leftchild == p)
+            parent->leftchild = p->rightchild;
+        else
+            parent->rightchild = p->rightchild;
+    }
+    //以上和方法1几乎完全相同
+
+    //有左子树和右子树
+    if(p->leftchild != NULL)
+    {
+        maxpl = p->leftchild;
+        //定位左子树中的最大结点maxpl
+        while(maxpl->rightchild != NULL)
+            maxpl = maxpl->rightchild;
+        maxpl->rightchild = p->rightchild;
+        if(parent == NULL)
+            *bt = p->leftchild;
+        //p是父结点parent的左孩子,则修改父结点的左指针
+        else if(parent->leftchild == p)
+            parent->leftchild = p->leftchild;
+        //p是父结点parent的右孩子,则修改父结点的右指针
+        else
+            parent->rightchild = p->leftchild;
+    }
+    free(p);    //释放结点p
+    return 1;
+}//时间复杂度O(n)
+```
+>具体项目参照BinTree_BSTree(项目仍有一些问题,但是大体的逻辑并无大错,估计是语法问题,主要在创建处)
+
+BST算法分析
+---------
+最好情况:完全二叉树--时间复杂度O(logn)
+最坏情况:单支树--时间复杂度O(n)
+
+折中办法:相对平衡BST--构造AVL树或构造RB树
+
+平衡二叉排序树(AVL树)的概念
+---------
