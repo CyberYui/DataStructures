@@ -260,6 +260,7 @@ int BSTDelete1(BinSearchTree *bt,DataType key)
     {
         if(p->data == key)
             break;  //查找到了,跳出循环
+        parent = p; //注意这一句
         if(p->data > key)
             p = p->leftchild;
         else
@@ -377,14 +378,61 @@ int BSTDelete2(BinSearchTree *bt,DataType key)
     return 1;
 }//时间复杂度O(n)
 ```
->具体项目参照BinTree_BSTree(项目仍有一些问题,但是大体的逻辑并无大错,估计是语法问题,主要在创建处)
+>具体项目参照BinTree_BSTree
 
 BST算法分析
 ---------
-最好情况:完全二叉树--时间复杂度O(logn)
-最坏情况:单支树--时间复杂度O(n)
-
-折中办法:相对平衡BST--构造AVL树或构造RB树
+最好情况:完全二叉树--时间复杂度O(logn)<br>
+最坏情况:单支树--时间复杂度O(n)<br>
+<br>
+折中办法:相对平衡BST--构造AVL树或构造RB树<br>
 
 平衡二叉排序树(AVL树)的概念
 ---------
+它可以是一棵空树,或者是具有下列性质的二叉排序树:<font color=red>它的左右子树均为平衡二叉排序树,且左右子树的深度之差的绝对值不超过1</font>,即超过1就不是一棵平衡二叉排序树<br>
+结点的<font color=blue>平衡因子BF</font>:<font color=green>结点的左子树深度-右子树深度</font><br>
+>有的是右子树深度-左子树深度,性质其实是一样的
+
+最小不平衡子树:<br>
+* 离插入结点最近,且以平衡因子绝对值大于1的结点为根的子树<br>
+![F14](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG14.png)<br>
+
+我们的任务,就是将这种最小不平衡子树调整为平衡的<br>
+方式有四种:<br>
+* LL型调整<br>
+* RR型调整<br>
+* LR型调整<br>
+* RL型调整<br>
+
+AVL--LL型调整
+--------
+下图这样一棵平衡二叉树,其平衡因子为1,当给T的左孩子的左子树添加一个结点(LL),使其平衡因子变为2,这样就不是平衡二叉树了,现在,整个以T为根的树为最小不平衡子树<br>
+![F15](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG15.png)<br>
+那么如何调整为平衡呢?---以T为结点,右旋<br>
+![F16](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG16.png)<br>
+
+下面这个图可以简单地说明上述问题:<br>
+![F17](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG17.png)<br>
+>调整最小不平衡子树,其祖先的不平衡也就会转变为平衡了<br>
+
+AVL--RR型调整
+---------
+同LL型调整类似,这种情况就是当给T的右孩子的右子树添加一个结点(RR),调整方式即以T为结点,左旋<br>
+![F18](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG18.png)<br>
+
+AVL--LR型调整
+---------
+这种类型的不平衡需要进行左旋+右旋的方式才能调整好,这种情况的发生是因为给T的左分支的右子树添加结点(LR)引起了不平衡,如图,首先要以T的左孩子L为根左旋,此时变为了T结点的左孩子的左子树导致不平衡(即LL型),再以T为根右旋一次即可<br>
+![F19](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG19.png)<br>
+例如下面这两个例子:<br>
+第一个例子,调整之后,10的祖先没有收到影响,也是平衡的<br>
+![F20](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG20.png)<br>
+
+第二个例子,调整之后,祖先结点40原本不平衡的因子变为了平衡的因子<br>
+![F21](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG21.png)<br>
+
+AVL--RL型调整
+--------
+同LR的旋转方式刚刚好是反着的,这种情况的发生是因为给T的右分支的左子树添加了结点(RL)引起了不平衡,首先找到最小不平衡子树,以其根结点的右孩子为根进行右旋,再以最小不平衡字数的根结点为根进行左旋即可<br>
+比如下面这个例子:<br>
+![F22](https://github.com/CyberYui/DataStructures/blob/master/C/SearchTree/SearchTreeG22.png)<br>
