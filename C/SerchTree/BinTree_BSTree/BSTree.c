@@ -22,6 +22,8 @@ BinSearchTree create()
 	else
 	{
 		bt = (BSTreeNode *)malloc(sizeof(struct BinSearchTreeNode));
+		bt->leftchild = NULL;
+		bt->rightchild = NULL;
 		bt->data = ch;
 		//递归赋值左子树
 		bt->leftchild = create();
@@ -46,7 +48,7 @@ void InOrder(BinSearchTree ptree)
 		return;
 	}
 	InOrder(ptree->leftchild);
-	printf("%d", ptree->data);
+	printf("%d ", ptree->data);
 	InOrder(ptree->rightchild);
 }
 
@@ -106,6 +108,9 @@ int BSTInsert(BinSearchTree bt, DataType key)
 	}
 	//申请结点的内存空间
 	p = (BSTreeNode *)malloc(sizeof(struct BinSearchTreeNode));
+	//左右子树初始化
+	p->leftchild = NULL;
+	p->rightchild = NULL;
 	//申请失败提示
 	if (p == NULL)
 	{
@@ -133,7 +138,7 @@ int BSTInsert(BinSearchTree bt, DataType key)
 /* 返回值:无													*/
 /* 创建日期:2019-5-21						Author:Cyber Kaka	*/
 /****************************************************************/
-void BSTgetMax(BinSearchTree *bt)
+void BSTgetMax(BinSearchTree bt)
 {
 	BSTreeNode temp;
 	temp = bt;
@@ -143,7 +148,7 @@ void BSTgetMax(BinSearchTree *bt)
 		{
 			temp = temp->leftchild;
 		}
-		printf("%d", temp->data);
+		printf("%d \n", temp->data);
 	}
 }
 
@@ -154,7 +159,7 @@ void BSTgetMax(BinSearchTree *bt)
 /* 返回值:无													*/
 /* 创建日期:2019-5-21						Author:Cyber Kaka	*/
 /****************************************************************/
-void BSTgetMin(BinSearchTree *bt)
+void BSTgetMin(BinSearchTree bt)
 {
 	BSTreeNode temp;
 	temp = bt;
@@ -164,7 +169,7 @@ void BSTgetMin(BinSearchTree *bt)
 		{
 			temp = temp->rightchild;
 		}
-		printf("%d", temp->data);
+		printf("%d \n", temp->data);
 	}
 }
 
@@ -186,6 +191,7 @@ int BSTDelete1(BinSearchTree *bt, DataType key)
 	{
 		if (p->data == key)
 			break;  //查找到了,跳出循环
+		parent = p; //注意这一句
 		if (p->data > key)
 			p = p->leftchild;
 		else

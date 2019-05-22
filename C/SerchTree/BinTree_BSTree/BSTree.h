@@ -57,7 +57,7 @@ int BSTInsert(BinSearchTree bt, DataType key);
 /* 返回值:无													*/
 /* 创建日期:2019-5-21						Author:Cyber Kaka	*/
 /****************************************************************/
-void BSTgetMax(BinSearchTree *bt);
+void BSTgetMax(BinSearchTree bt);
 
 /****************************************************************/
 /* int BSTgetMin(BinSearchTree *bt)								*/
@@ -66,7 +66,7 @@ void BSTgetMax(BinSearchTree *bt);
 /* 返回值:无													*/
 /* 创建日期:2019-5-21						Author:Cyber Kaka	*/
 /****************************************************************/
-void BSTgetMin(BinSearchTree *bt);
+void BSTgetMin(BinSearchTree bt);
 
 /****************************************************************/
 /* int BSTDelete1(BinSearchTree *bt, DataType key)				*/
