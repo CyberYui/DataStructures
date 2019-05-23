@@ -181,7 +181,7 @@ GraphMatrix* InitGraph(int num)
     //给图中所有元素设置初值
     for(i=0;i<graphMatrix->size;i++)
     {
-        for(j=0;j<graphMatrix->size;i++)
+        for(j=0;j<graphMatrix->size;j++)
             graphMatrix->graph[i][j]=INT_MAX;   //初始设置所有顶点不邻接
     }
     return graphMatrix;
@@ -196,7 +196,7 @@ GraphMatrix* InitGraph(int num)
 (3)申请二维数组空间<br>
 ![F10](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic10.png)<br>
 <br>
-这样就解释了下面一段代码的用处:
+这样就解释了下面一段代码的用处:<br>
 ```c
 //start
 ...
@@ -212,4 +212,45 @@ for(i=0;i<graphMatrix->size;i++)
     graphMatrix->graph[i] = (int*)malloc(sizeof(int)*graphMatrix->size);    
 
 //end
+```
+
+图的读取
+--------
+```c
+void ReadGraph(GraphMatrix* graphMatrix)
+{
+	int vex1 = 0;
+	int vex2 = 0;
+	int weight = 0;
+	//输入方式为:点 点 权值,当权值为0时则输入结束
+	printf("请输入,输入方式为:点 点 权值,权值为0,则输入结束\n");
+	scanf_s("%d%d%d", &vex1, &vex2, &weight);
+
+	while (weight != 0)
+	{
+		graphMatrix->graph[vex1][vex2] = weight;
+		scanf_s("%d%d%d", &vex1, &vex2, &weight);
+	}
+}
+```
+
+图的遍历输出
+-------
+```c
+void WriteGraph(GraphMatrix* graphMatrix)
+{
+	int i = 0;
+	int j = 0;
+	printf("图的结构如下,输出方式为:点 点 权值\n");
+	for (i = 0; i < graphMatrix->size; i++)
+	{
+		for (j = 0; j < graphMatrix->size; j++)
+		{
+			if (graphMatrix->graph[i][j] < INT_MAX)
+			{
+				printf("%d %d %d\n", i, j, graphMatrix->graph[i][j]);
+			}
+		}
+	}
+}
 ```
