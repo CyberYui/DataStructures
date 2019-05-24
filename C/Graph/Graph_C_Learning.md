@@ -147,7 +147,7 @@
         对于邻接表来说,需要遍历链表,并配有计数器(较为复杂)
 >如果是有向图,则既有邻接表还有逆邻接表,空间开销较大
 
-图的相关代码实现
+图的相关代码实现--邻接矩阵
 =========
 
 图的类型定义
@@ -254,3 +254,118 @@ void WriteGraph(GraphMatrix* graphMatrix)
 	}
 }
 ```
+>具体项目参照Graph_AdjMatrix
+
+图的相关代码实现--邻接表
+==========
+
+图的类型定义
+----------
+```c
+typedef struct GRAPHLISTNODE_STRU
+{
+    int nodeno; //图中结点的编号
+    struct GRAPHLISTNODE_STRU * next; //指向下一个结点的指针
+}GraphListNode;
+
+typedef struct GRAPHLIST_STRU
+{
+    int size;   //图中结点的个数(和邻接矩阵一样)
+    GraphListNode * graphListArray;  //一维数组,图的邻接表
+}GraphList;
+```
+
+针对以下的图,在初始化图的时候,过程是这样的:
+![F11](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic11.png)<br>
+<br>
+* (1)申请结构体GraphList空间<code>GraphList *graphList;</code>
+* (2)申请一维数组空间,这个数组是用来保存结点的,从而能形成邻接表
+![F12](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic12.png)<br>
+<br>
+
+图的初始化
+------
+```c
+GraphList* InitGraph(int num)
+{
+	int i = 0;
+	//首先申请图的空间,分配size,从而获得邻接表数组
+	GraphList *graphList = (GraphList *)malloc(sizeof(GraphList));
+	graphList->size = num;
+	//按照size的大小申请结点空间,每一个数组位置都保存一个结点
+	graphList->graphListArray = (GraphListNode*)malloc(sizeof(GraphListNode)*num);
+	//给图中结点内容初始化,数据域按序,指针域为空
+	for (i = 0; i < num; i++)
+	{
+		graphList->graphListArray[i].next = NULL;
+		graphList->graphListArray[i].nodeno = i;
+	}
+	return graphList;
+}
+```
+
+图的读取
+------
+```c
+void ReadGraph(GraphList* graphList)
+{
+	int vex1 = 0;	//起点
+	int vex2 = 0;	//终点
+	GraphListNode *tempNode = NULL;	//申请临时结点用于数据传输
+	//输入方式为:点 点,意思为点->点,当点为-1时,输入结束
+	printf("请输入内容,输入方式为:点 点,当点为-1时输入结束:\n");
+	scanf_s("%d %d", &vex1, &vex2);
+	//只要有一个值为-1循环就结束
+	while (vex1 >= 0 && vex2 >= 0)
+	{
+		//插入结点的内容
+		tempNode = (GraphListNode *)malloc(sizeof(GraphListNode));	//给临时结点申请空间
+		tempNode->nodeno = vex2;
+		tempNode->next = NULL;
+
+		//插入相应结点,在头部插入结点
+		//将原数组内容的next赋给新结点,新结点变成邻接表第一个结点
+		tempNode->next = graphList->graphListArray[vex1].next;
+		//修改原数组内容的next,连接新的邻接表,从而实现tempNode的插入
+		graphList->graphListArray[vex1].next = tempNode;
+		scanf_s("%d %d", &vex1, &vex2);
+	}
+}
+```
+
+图的遍历输出
+---------
+```c
+void WriteGraph(GraphList* graphList)
+{
+	int i = 0;
+	GraphListNode *tempNode = NULL;	//申请临时结点用于数据传输
+
+	tempNode = (GraphListNode *)malloc(sizeof(GraphListNode));
+	tempNode->next = NULL;
+	tempNode->nodeno = 0;
+
+	printf("图的结构如下:\n");
+	while(i < graphList->size - 1)	//数组是从0开始算的,但是保存的size=num=输入的值(比如测试的这里是4)
+	{
+		tempNode = graphList->graphListArray[i].next;
+		printf("结点%d与结点%d有边相连;\n", i, tempNode->nodeno);
+        //遍历每一个数组内容的邻接表,全部输出出来
+		for (int j = 0; j < graphList->size; j++)
+		{
+			if (tempNode->next != NULL)
+			{
+				tempNode = tempNode->next;
+				printf("结点%d与结点%d有边相连;\n", i, tempNode->nodeno);
+			}
+			else
+			{
+				break;
+			}
+		}
+		i++;
+	}
+}
+```
+
+>具体项目参照Graph_AdjList
