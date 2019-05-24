@@ -369,3 +369,40 @@ void WriteGraph(GraphList* graphList)
 ```
 
 >具体项目参照Graph_AdjList
+
+图的周游
+=========
+>在二叉树中就提及过周游这个概念<br>
+<br>
+图的周游是指从图中<font color=brown>某个顶点出发</font>,按照某种方式系统地访问图中的<font color=red>所有顶点</font>,使每个顶点仅被访问<font color=purple>一次</font>.<br>
+
+图的遍历通常有两种方法:<br>
+* <font color=green>深度优先搜索</font><br>
+* <font color=green>广度优先搜索</font><br>
+
+之前对二叉树的周游就是通过一种方式,使得二叉树这种非线性结构变成线性结构,从而简化问题,图的周游也是类似的思想.<br>
+
+通过深度优先搜索或者广度优先搜索,可以将图这种复杂的数据结构变成树这种较为简单的数据结构.<br>
+
+图的周游:<font color=green>深度优先周游---DFS(v)</font>
+--------------
+* 首先给定一个起始的顶点v,从v出发,先<font color=orange>访问v</font>,并将其<font color=orange>标记为已访问过,记录下相应的边</font>;<br>
+* 如果存在与v邻接的顶点没有被访问,则选择<font color=orange>其中的一个w</font>出发进行<font color=orange>递归地DFS</font>.<br>
+* 如果已经不存在与v邻接的顶点,那就返回.<br>
+[例如]
+![F13](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic13.png)<br>
+<br>
+对于上述的无向图,假设从v1开始,将其标记访问,记录下相应的边,然后就要从v2和v3中选一个继续周游<br>
+假设选择v2,首先访问v2,将其标记访问,记录下相应的边,再从v4和v5中选择一个<br>
+再从v4访问,记录下相应的边,与v4相连的是v8,则访问v8,记录下相应的边,接着访问v5<br>
+此时可见,与v5相连的v2已被访问过,则回退,返回v8,直到返回v1,再访问v3,记录边,再继续,从而完成遍历<br>
+>将访问过的顶点和访问过的边描出,就是DFS生成树,即通过周游的形式,将图这种复杂的数据结构变成树这种较为简单的数据结构<br>
+
+有的图中有不相连的子图,应该如何进行周游呢?<br>
+[注]<font color=pink>如果图中还有未被访问的顶点,则从另一未被访问过的顶点出发重复上述过程,直到图中所有顶点都被访问过为止.</font><br>
+[例如]
+![F14](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic14.png)<br>
+<br>
+
+图的DFS实现
+--------
