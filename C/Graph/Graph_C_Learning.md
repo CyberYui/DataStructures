@@ -398,11 +398,144 @@ void WriteGraph(GraphList* graphList)
 此时可见,与v5相连的v2已被访问过,则回退,返回v8,直到返回v1,再访问v3,记录边,再继续,从而完成遍历<br>
 >将访问过的顶点和访问过的边描出,就是DFS生成树,即通过周游的形式,将图这种复杂的数据结构变成树这种较为简单的数据结构<br>
 
-有的图中有不相连的子图,应该如何进行周游呢?<br>
+有的图中有不相连的连通分量,应该如何进行周游呢?<br>
 [注]<font color=pink>如果图中还有未被访问的顶点,则从另一未被访问过的顶点出发重复上述过程,直到图中所有顶点都被访问过为止.</font><br>
-[例如]
+[例如]<br>
 ![F14](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic14.png)<br>
 <br>
 
 图的DFS实现
 --------
+[邻接矩阵表示图]<br>
+dfs_graphmatrix.c:<br>
+```c
+/*图的深度优先遍历实现,用邻接矩阵表示图*/
+#include <stdio.h>
+#include <stdlib.h>
+#include "dfs_graphmatrix.h"
+
+/****************************************************************/
+/* void DFS(GraphMatrix* graphMatrix, int * visited, int i)		*/
+/* 功能:图的深度优先遍历递归算法,邻接矩阵表示图					*/
+/* 输入参数graphMatrix:图										*/
+/* 输入参数visited:做标记用(设置点是否被访问)的一位数组			*/
+/* 输入参数i:遍历起始的结点编号									*/
+/* 返回值:无													*/
+/* 创建日期:2019-5-25						Author:Cyber Kaka	*/
+/****************************************************************/
+void DFS(GraphMatrix* graphMatrix, int * visited, int i)
+{
+	int j = 0;
+	//首先对顶点访问,标记为已访问过
+	visited[i] = 1;
+	printf("%d ", i);	//访问
+	//递归实现深度优先遍历
+	for (j = 0; j < graphMatrix->size; j++)
+	{
+		//如果i和j有边相连,并且j没有被访问过
+		if (graphMatrix->graph[i][j] != INT_MAX && !visited[j])
+		{
+			DFS(graphMatrix, visited, j);	//对j进行深度优先遍历
+		}
+	}
+}
+
+/****************************************************************/
+/* void DFSGraphMatrix(GraphMatrix* graphMatrix)				*/
+/* 功能:深度遍历,邻接矩阵表示图									*/
+/* 输入参数graphMatrix:图										*/
+/* 返回值:无													*/
+/* 创建日期:2019-5-25						Author:Cyber Kaka	*/
+/****************************************************************/
+void DFSGraphMatrix(GraphMatrix* graphMatrix)
+{
+	int i = 0;
+	//用于记录图中哪些结点已经被访问了
+	int *visited = (int*)malloc(sizeof(int) * graphMatrix->size);
+
+	//初始化为点都没有被访问
+	for (i = 0; i < graphMatrix->size; i++)
+	{
+		visited[i] = 0;
+	}
+	//从0出发开始访问结点,只要有没访问过的就对其进行深度优先遍历,
+	//这样就能访问到所有的连通分量
+	for (i = 0; i < graphMatrix->size; i++)
+	{
+		//对未访问过的顶点调用DFS,若是连通图,则只会执行一次
+		if (!visited[i])
+		{
+			DFS(graphMatrix, visited, i);
+		}
+	}
+}
+```
+//可见一个<font color=brown>用邻接矩阵表示的图</font>被完全遍历其算法时间复杂度为O(n<sup>2</sup>)<br>
+>采用邻接矩阵表示的图的DFS实现参照GraphDFStravel项目<br>
+
+[邻接表表示图]<br>
+dfs_graphlist.c:<br>
+```c
+/*图的深度优先遍历算法,用邻接表表示的图*/
+#include <stdio.h>
+#include <stdlib.h>
+#include "dfs_graphlist.h"
+
+/****************************************************************/
+/* void DFS(GraphList* graphList, int * visited, int i)			*/
+/* 功能:图的深度优先遍历递归算法,邻接表表示图					*/
+/* 输入参数graphList:图											*/
+/* 输入参数visited:做标记用(设置点是否被访问过)的一维数组		*/
+/* 输入参数i:结点编号											*/
+/* 返回值:无													*/
+/* 创建日期:2019-5-25						Author:Cyber Kaka	*/
+/****************************************************************/
+void DFS(GraphList* graphList, int * visited, int i)
+{
+	int j = 0;
+	GraphListNode *tempNode = NULL;
+	visited[i] = 1;
+	printf("%d ", i);
+
+	tempNode = graphList->graphListArray[i].next;
+	while (tempNode != NULL)
+	{
+		if (!visited[tempNode->nodeno])
+		{
+			DFS(graphList, visited, tempNode->nodeno);
+		}
+		tempNode = tempNode->next;	
+	}
+}
+
+/****************************************************************/
+/* void GFSGraphList(GraphList* graphList)						*/
+/* 功能:深度遍历,邻接表表示图									*/
+/* 输入参数graphList:图											*/
+/* 返回值:无													*/
+/* 创建日期:2019-5-25						Author:Cyber Kaka	*/
+/****************************************************************/
+void DFSGraphList(GraphList* graphList)
+{
+	int i = 0;
+	//用于记录图中哪些结点已经被访问了
+	int *visited = (int*)malloc(sizeof(int) * graphList->size);
+
+	//初始化为点都没有被访问过
+	for (i = 0; i < graphList->size; i++)
+	{
+		visited[i] = 0;
+	}
+
+	for (i = 0; i < graphList->size; i++)
+	{
+		//对未访问过的顶点调用DFS,若是连通图,只会执行一次
+		if (!visited[i])
+		{
+			DFS(graphList, visited, i);
+		}
+	}
+}
+```
+//可见一个<font color=brown>用邻接表表示的图</font>被完全遍历其算法时间复杂度为O(n+e)<br>
+>采用邻接表表示的图的DFS实现参照GraphDFStravelL项目<br>
