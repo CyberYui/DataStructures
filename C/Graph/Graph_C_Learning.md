@@ -724,3 +724,143 @@ void BFSGraphList(GraphList* graphList)
 ```
 
 >采用邻接表表示的图的BFS实现参照GraphBFStravelL项目<br>
+
+连通图和连通分量---如何判断图的连通性
+============
+[连通图和连通分量]<br>
+在无向图G中,若从顶点v<sub>i</sub>到顶点v<sub>j</sub>有路径,则称v<sub>i</sub>和v<sub>j</sub>是<font color=green>连通的</font>.<br>
+若V(G)中任意两个不同的顶点v<sub>i</sub>和v<sub>j</sub>都连通(即有路径),则称G为<font color=green>连通图</font>.<br>
+无向图G的极大连通子图称为G的<font color=green>连通分量</font>.<br>
+<br>
+在有向图G中,若对于V(G)中任意两个不同的顶点v<sub>i</sub>和v<sub>j</sub>以及v<sub>j</sub>和v<sub>i</sub>(即正反向),都存在从v<sub>i</sub>到v<sub>j</sub>和v<sub>j</sub>到v<sub>i</sub>的路径,则称G是<font color=green>强连通图</font>;有向图G的极大强连通子图称为G的<font color=green>强连通分量</font>.<br>
+>即无向图相关的概念为连通图和连通分量,有向图相关的概念为强连通图和强连通分量.<br>
+
+判断一个图是否为连通图,以及判断非连通图的连通分量个数都可以采用之前的图的遍历实现,无论是深度遍历还是广度遍历都可以.<br>
+如果是一个连通图,则进行一次遍历即可.<br>
+如果是一个非连通图,则需要多次调用,调用几次,就是几个连通分量.<br>
+
+比如要用BFS,针对邻接矩阵表示的图<br>
+修改的内容基本一致,参照以下代码相应修改即可<br>
+修改之后的代码如下:<br>
+```c
+void BFSGraphMatrix(GraphMatrix* graphMatrix)
+{
+    int i = 0;
+    int brance = 0; //用于记录连通分量个数的计数器
+
+    //用于记录图中哪些结点已经被访问过了
+    int *visited = (int*)malloc(sizeof(int) * graphMatrix->size);
+
+    //设置所有结点都没有被访问过
+    for(i = 0;i < graphMatrix->size; i++)
+    {
+        //如果是连通图,则只调用一次
+        if(!visited[i])
+        {
+            brance++;
+            BFS(graphMatrix,visited,i);
+        }
+    }//end for
+
+    if(brance == 1)
+    {
+        //这是一个连通图
+        printf("This graph is a connected graph!\n");
+    }
+    else
+    {
+        //这不是一个连通图,并输出连通分量个数
+        printf("This graph is not a connected graph!\n");
+        printf("The number of connected components is:%d \n",brance);
+    }
+}
+```
+
+图的层数的确定
+========
+我们知道,对一个图进行广度优先遍历时,BFS生成树是分层的,我们可以根据生成树的层数确定原图的层数<br>
+和计算连通分量相同,我们只需要加一个计数器level即可.<br>
+我们需要知道每一层最后一个结点出队的时机,在此时计数器+1即可<br>
+
+[思路整理]<br>
+使用广度优先搜索算法的框架,通过以下变量记录变化:<br>
+<font color=green>增加变量level,用来记录层数</font><br>
+增加变量<font color=blue>last,用于保存上一层最后入队的顶点</font><br>
+增加变量<font color=blue>tail,用来记录当前层最后访问顶点</font>,每次循环时,将last更新为tail<br>
+当<font color=red>出队顶点为last时,level加1</font><br>
+
+具体实现只要在原先的BFS框架下做一些改动即可<br>
+修改的代码参照以下内容,以下为针对邻接表表示的图的记录层数算法<br>
+计算图的层数代码如下:<br>
+```c
+void BFS_Level(GraphList* graphList,int *visited,int source)
+{
+    int tempVex = 0;    //临时变量
+    int level = 0;  //记录广度优先搜索树的层数
+    int last = source;  //用last保存上一层最后访问的结点
+    int tail = source;  //用tail来记录当前最后访问的结点
+    GraphListNode *tempNode = NULL; //临时结点
+
+    //同样,C语言中不允许C++的STL出现,使用之前建立的链队列
+    //queue<int> waitingQueue;
+	LinkedQueue waitingQueue = NULL;
+	waitingQueue = SetNullQueue_Link(); //创建空队列
+
+    visited[source] = 1;    //设置标记,表明已经被访问过了
+    printf("%d ",source);   //输出访问的结点编号
+
+    //waitingQueue.push(source);
+    EnQueue_Link(waitingQueue,source);  //将刚访问的结点放入队列
+
+    //广度优先访问结点
+    //while(!waitingQueue.empty())
+    while(!IsNullQueue_Link(waitingQueue))
+    {
+
+        //tempVex=waitingQueue.front();
+        tempVex = FrontQueue_Link(waitingQueue);    //取队头元素
+
+        //waitingQueue.pop();
+        DeQueue_Link(waitingQueue); //出队队头元素
+
+        //一次访问与当前结点相邻的点
+        tempNode = graphList->graphListArray[tempVex].next; //开始访问邻接表内容
+        while(tempNode != NULL)
+        {
+
+            //如果其他顶点与当前顶点存在边且未被访问过
+            if(!visited[tempNode->nodeno])
+            {
+                visited[tempNode->nodeno] = 1;  //做标记
+
+                //waitingQueue.push(tempNode->nodeno);  //入队
+                EnQueue_Link(waitingQueue, tempNode->nodeno);	//入队
+                
+                printf("%d ",tempNode->nodeno); //输出
+                tail = tempNode->nodeno;
+            }
+            tempNode = tempNode->next;  //移动到下一个结点
+        }//end while
+
+        //从队列中取出的结点的下一层都访问过后,再判断刚刚的这个结点是否是其所在层的最后结点
+        if(tempVex == last)
+        {
+            level++;
+            last = tail;    //移动last
+            printf("The current level is %d\n",level);
+        }//end if
+    }//end while
+}
+```
+>[思考]以上给出的是BFS判断层数和连通分量,那么如果是DFS的话应该怎么做呢?
+
+最小生成树(MST---Minimum Spanning Tree)
+=========
+最小生成树有很多应用场景:<br>
+* N个城市之间建立通信网络<br>
+* M个村庄之间建立村村通公路<br>
+* ......<br>
+
+
+
+
