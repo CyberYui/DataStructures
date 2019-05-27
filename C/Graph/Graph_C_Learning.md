@@ -857,10 +857,97 @@ void BFS_Level(GraphList* graphList,int *visited,int source)
 最小生成树(MST---Minimum Spanning Tree)
 =========
 最小生成树有很多应用场景:<br>
-* N个城市之间建立通信网络<br>
-* M个村庄之间建立村村通公路<br>
+如果将顶点作为城市,边作为城市之间的公路<br>
+* N个城市之间建立通信网络,考虑成本最优<br>
+* M个村庄之间建立村村通公路,考虑成本最优<br>
 * ......<br>
 
+之前我们对一个图进行DFS和BFS时,会生成两个不同的生成树<br>
+那么如果换一个顶点出发进行DFS和BFS,则会再生成两个不同的生成树<br>
+以此类推,其中代价最小的生成树就是我们需要的生成树<br>
 
+最小生成树
+-------
+首先,最小生成树是通过某种算法生成的一棵树,即是一棵生成树,而不是凭空给出的<br>
+其特点是:<br>
+* 是生成树<br>
+* 包含n个顶点和n-1条边的连通图<br>
+* 无回路<br>
+* DFS生成树和BFS生成树就满足上述的两条特点<br>
+* (最小)各边权值之和最小<br>
 
+构造最小生成树的算法
+--------
+* Prim(普利姆)算法<br>
+* Kruskal(克鲁斯卡尔)算法<br>
 
+普利姆算法(Prim)
+----------
+一个图是由顶点的集合V和边的集合E组成的,<br>
+即G&nbsp;=&nbsp;(V,E)<br>
+假设最小生成树叫T<sub>mst</sub>,它是由其顶点的集合V<sub>T</sub>和其边的集合E<sub>T</sub>组成的<br>
+即T<sub>mst</sub>&nbsp;=&nbsp;(V<sub>T</sub>,E<sub>T</sub>)<br>
+由之前的最小生成树定义可知,V&nbsp;=&nbsp;V<sub>T</sub>,即所有顶点都要包含起来<br>
+而E<sub>T</sub>则应该是E的一个子集<br>
+
+[算法思路]<br>
+* (1)从图G中任意顶点V<sub>m</sub>(V<sub>m</sub>∈V)开始,将V<sub>m</sub>加入到最小生成树<br>
+* (2)选择代价最小的边(V<sub>k</sub>,V<sub>j</sub>),将这条边加入到最小生成树中,同时将顶点V<sub>j</sub>加入到最小生成树,在选择这条边的时候要求:<br>
+        ①&nbsp;两个顶点属于不同的集合,V<sub>k</sub>∈V<sub>T</sub>,V<sub>j</sub>∈V-V<sub>T</sub><br>
+        ②&nbsp;加入的边不能使最小生成树产生回路<br>
+* (3)重复这一过程,直到T<sub>mst</sub>中有n-1条边为止,即V<sub>T</sub>=V<br>
+<br>
+比如一棵树有5个顶点,分别记为ABCDE,Prim算法就是:<br>
+* 首先将A放入最小生成树中然后在A->B,A->C,A->D,A->E中选择最小的边,<br>
+* 假如当前全职最小的边是A->C,那么就将这条边放入最小生成树中,同时C也放入最小生成树中<br>
+* 此时最小生成树中有A,C顶点以及A->C这条边<br>
+* 接着,在A->B,A->D,A->E以及C->B,C->D,C->E这些边中再找权值最小的边,假设A->E最小<br>
+* 则A->E这条边放入最小生成树,同时E也放入其中<br>
+* 以此类推,直到最小生成树中有所有的顶点,并且能形成连通图,且无回路即可<br>
+>规则:1.有边&emsp;&emsp;2.权值最小<br>
+
+普利姆算法的实现
+---------
+在实现过程中,需要设置三个数组:<br>
+* component[j]数组<br>
+        用于记录已经加入最小生成树的顶点j,<br>
+        初始化时component[j] = 0,当顶点j加入最小生成树之后,设置component[j] = 1<br>
+
+* distance[j]数组<br>
+        用来记录代价最小的边(V<sub>k</sub>,V<sub>j</sub>)的权值<br>
+        (其中V<sub>k</sub>∈component[])<br>
+        初始化时distance[j] = graphMatrix->graph[0][j]<br>
+
+* neighbor[j]数组<br>
+        用于记录代价最小的边(V<sub>k</sub>,V<sub>j</sub>)所对应的顶点V<sub>k</sub><br>
+        初始化时neighbor[j] = 0<br>
+
+[例子]<br>
+![F17](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic17.png)<br>
+<br>
+
+以上面的带权图为例,用下表说明:<br>
+假设一共有6个顶点,记为0&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5<br>
+表格中每一格的数字表示为对应顶点的(component[],distance[],neighbor[])变化<br>
+<font color=blue>蓝色</font>表示已加入最小生成树<br>
+<font color=red>红色</font>表示数组有更新<br>
+|  顶点  |   0   |   1   |    2   |    3   | 4      | 5      |
+|:------:|:-----:|:-----:|:------:|:------:|:------:|:------:|
+| 第一次 | <font color=blue>1,0,0</font> | 0,5,0 | 0,30,0 | 0,14,0 | 0,∞,0  | 0,∞,0  |
+| 第二次 | <font color=blue>1,0,0</font> | <font color=blue>1,5,0</font> | <font color=red>0,24,1</font> | 0,14,0 | <font color=red>0,14,1</font> | <font color=red>0,10,1</font> |
+| 第三次 | <font color=blue>1,0,0</font> | <font color=blue>1,5,0</font> | <font color=red>0,17,5</font> | <font color=red>0,8,5</font>  | 0,14,1 | <font color=blue>1,10,1</font> |
+| 第四次 | <font color=blue>1,0,0</font> | <font color=blue>1,5,0</font> | 0,17,5 | <font color=blue>1,8,5</font>  | 0,14,1 | <font color=blue>1,10,1</font> |
+| 第五次 | <font color=blue>1,0,0</font> | <font color=blue>1,5,0</font> | 0,17,5 |  <font color=blue>1,8,5</font> | <font color=blue>1,14,1</font> | <font color=blue>1,10,1</font> |
+| 第六次 | <font color=blue>1,0,0</font> | <font color=blue>1,5,0</font> | <font color=blue>1,17,5</font> |  <font color=blue>1,8,5</font> | <font color=blue>1,14,1</font> | <font color=blue>1,10,1</font> |
+
+* 第一次,V<sub>0</sub>进入最小生成树,并对distance判断,5最小<br>
+* 第二次,由于V<sub>1</sub>对应的distance最小,所以V<sub>1</sub>和对应的(V<sub>0</sub>,V<sub>1</sub>)进入最小生成树,此时更新distance数组和neighbor数组,先对比V<sub>1</sub>到V<sub>2</sub>和V<sub>0</sub>到V<sub>2</sub>的权值(24)最小,所以更新distance中的内容为24,neighbor中的内容为1,继续对比V<sub>1</sub>到V<sub>3</sub>和V<sub>0</sub>到V<sub>3</sub>的权值,发现V<sub>1</sub>到V<sub>3</sub>是无穷(∞,即不相连),V<sub>0</sub>到V<sub>3</sub>是14,则不改变distance和neighbor,以此类推,完成此行的数组更新,对distance判断,10最小<br>
+* 第三次,由于V<sub>5</sub>到V<sub>1</sub>的权值(10)最小,所以V<sub>5</sub>和对应的(V<sub>1</sub>,V<sub>5</sub>)进入最小生成树,此时更新distance数组和neighbor数组...<br>
+* ...<br>
+* 以此类推,直到最后生成最小生成树.<br>
+>这个带权图的最小生成树并不唯一,比如刚刚我们得到的是左边的这个最小生成树,而也可以得到右边的这个最小生成树<br>
+
+![F18](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic18.png)<br>
+<br>
+
+>原因是在加入3结点的时候,2结点对应的(component[],distance[],neighbor[])并没有更新,如果在这时更新(component[],distance[],neighbor[]),则会生成右边的这个最小生成树<br>
