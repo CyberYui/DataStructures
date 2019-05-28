@@ -1,0 +1,23 @@
+此目录的文件是一个简单的霍夫曼树的实现
+----------
+目录包含4个文件
+------
+项目文件:main.c<br>
+　　　　Huffman.h+Huffman.c<br>
+　　　　file.txt<br>
+<br>
+        main.c<br>
+        内容:<br>
+        包括主函数和霍夫曼树的相关函数测试<br>
+<br>
+        Huffman.h<br>
+        内容:<br>
+        读入自选文件或默认文件进行字频分析,并由此构造霍夫曼树的函数声明<br>
+<br>
+        Huffman.c<br>
+        内容:<br>
+        相关头文件中的函数实现<br>
+<br>
+        file.txt<br>
+        内容:<br>
+        字频文件,用于字频读取函数<br>
