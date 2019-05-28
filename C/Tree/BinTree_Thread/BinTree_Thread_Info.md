@@ -1,0 +1,27 @@
+此目录的文件是关于递归建立二叉树并将其转化为中序线索树并遍历的实现
+----------
+目录包含5个文件
+------
+项目文件:main.c<br>
+　　　　BinTreeThread.h+BinTreeThread.c<br>
+　　　　LinkStack.h+LinkStack.c<br>
+<br>
+        main.c<br>
+        内容:<br>
+        包括主函数和二叉线索树相关函数的测试<br>
+<br>
+        BinTreeThread.h<br>
+        内容:<br>
+        递归建立二叉树以及将二叉树转化为中序线索树,以及中序遍历中序线索二叉树的函数声明<br>
+<br>
+        BinTreeThread.c<br>
+        内容:<br>
+        递归建立中序线索二叉树以及相关的函数实现<br>
+<br>
+        LinkStack.h<br>
+        内容:<br>
+        链栈的相关函数声明,内容同之前的链栈项目,做了一点修改以适应二叉树内容<br>
+<br>
+        LinkStack.c<br>
+        内容:<br>
+        链栈的相关函数实现<br>
