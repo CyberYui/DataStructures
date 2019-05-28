@@ -1,0 +1,27 @@
+此目录的文件是关于非递归建立二叉树及其层次遍历的实现
+----------
+目录包含5个文件
+------
+项目文件:main.c<br>
+　　　　BinTreeQueue.h+BinTreeQueue.c<br>
+　　　　LinkQueue.h+LinkQueue.c<br>
+<br>
+        main.c<br>
+        内容:<br>
+        包括主函数和二叉树相关函数的测试<br>
+<br>
+        BinTreeQueue.h<br>
+        内容:<br>
+        非递归建立二叉树以及使用队列层次遍历二叉树的函数声明<br>
+<br>
+        BinTreeQueue.c<br>
+        内容:<br>
+        非递归建立二叉树以及使用队列层次遍历二叉树的函数实现<br>
+<br>
+        LinkQueue.h<br>
+        内容:<br>
+        链队列的相关函数声明,内容同之前的链队列项目,仅做了一点修改以适应二叉树内容<br>
+<br>
+        LinkQueue.c<br>
+        内容:<br>
+        链队列的相关函数实现<br>
