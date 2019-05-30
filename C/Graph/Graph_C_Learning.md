@@ -951,3 +951,82 @@ void BFS_Level(GraphList* graphList,int *visited,int source)
 <br>
 
 >原因是在加入3结点的时候,2结点对应的(component[],distance[],neighbor[])并没有更新,如果在这时更新(component[],distance[],neighbor[]),则会生成右边的这个最小生成树<br>
+
+普利姆算法的代码实现
+----------
+```c
+//无向图采用邻接矩阵表示
+GraphMatrix* prim(int source,GraphMatrix *graphMatrix)
+{
+    int i = 0;
+    int j = 0;
+    int *component = (int*)malloc(sizeof(graphMatrix->size));   //新点集合
+    int *distance = (int*)malloc(sizeof(graphMatrix->size));    //距离
+    int *neighbor = (int*)malloc(sizeof(graphMatrix->size));    //邻居,例如neighbor[i]=j表示i的邻居是j
+    GraphMatrix *tree = InitGraph(graphMatrix->size);   //存放结果的图
+
+    //初始化
+    for(i = 0; i<graphMatrix->size; i++)
+    {
+        component[i] = 0;
+        distance[i] = graphMatrix->graph[source][i];
+        neighbor[i] = source;
+    }//O(n)
+
+    //将起点放入新点集合
+    component[source] = 1;
+
+    //每次添加一个结点到新点集合中
+    for(i = 1; i<graphMatrix->size; i++)
+    {
+        int v;  //v记录最小的distance[j]的下标
+        int min = INT_MAX;  //min记录最小的distance
+
+        //选择不是新点的集合中,距离新点集合最短的那个点
+        for(j = 0; j<graphMatrix->size; j++)
+        {
+            if(!component[j])
+            {
+                //找最小值
+                if(distance[j] < min)
+                v = j;
+                min = distance[j];
+            }
+        }//O(n)
+
+        //将找到的点v加入新点集合中,并更新distance
+        if(min < INT_MAX)
+        {
+            component[v] = 1;
+            tree->graph[v][neighbor[v]] = distance[v];  //更新v到neighbor[v]的距离
+            tree->graph[neighbor[v]][v] = distance[v];  //更新neighbor[v]到v的距离
+            //更新非新点集合中的点到新点集合的距离
+            for(j = 0; j<graphMatrix->size; j++)
+            {
+                if(!component[j])
+                {
+                    if(graphMatrix->graph[v][j] < distance[j])
+                    {
+                        distance[j] = graphMatrix->graph[v][j];
+                        neighbor[j] = v;
+                    }
+                }
+            }
+        }
+        else
+        {
+            break;
+        }
+    }//O(n^2)
+    return tree;
+}
+```
+>普利姆算法的时间复杂度为O(n<sup>2</sup>)
+>具体实现参照GraphPrim项目
+
+克鲁斯卡尔算法(Kruskal)
+----------
+
+
+
+
