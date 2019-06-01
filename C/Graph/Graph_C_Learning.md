@@ -1188,12 +1188,146 @@ GraphMatrix* kruskal(GraphMatrix *graphMatrix)
 
 最短路径(Shortest Path)
 ==========
+[最短路径问题有两类]<br>
+* 1.从某个源点到其余各顶点的最短路径(可以用Dijkstra算法解决)<br>
+* 2.每一对顶点之间的最短路径(可以用Floyd算法解决)<br>
 
+有这样一个带权有向图,要求其中的V<sub>0</sub>到其他各个顶点的最短路径:<br>
+![F22](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic22.png)<br>
+<br>
+由图可见,V<sub>0</sub>和V<sub>1</sub>,V<sub>2</sub>以及V<sub>3</sub>是直接相连的,到V<sub>4</sub>和V<sub>5</sub>没有直接边相连,视其路径为无穷(∞)<br>
+显然,V<sub>0</sub>到V<sub>1</sub>的最短路径为5<br>
+[有没有可能V<sub>0</sub>绕道到V<sub>1</sub>成为最短路径呢?在特殊情况下这是可能的,但在本图中是不可能的.]<br>
+确定了V<sub>0</sub>到V<sub>1</sub>的最短路径,接着判断以V<sub>1</sub>为跳板的路径到其他地方是否比V<sub>0</sub>直接到要短,并相应更新<br>
+可以看出V<sub>1</sub>到V<sub>5</sub>路径最短,此时以V<sub>5</sub>为跳板进行...<br>
+以此类推,直到得到V<sub>0</sub>到其他个各个顶点的最短路径.<br>
+<br>
+以V<sub>0</sub>为源点,可以依次得到V<sub>0</sub>到其他各个顶点的最短路径如下:<br>
+* V<sub>0</sub>-->V<sub>1</sub>:最短路径为(V<sub>0</sub>,V<sub>1</sub>),最短路径长度为5<br>
+* V<sub>0</sub>-->V<sub>2</sub>:最短路径为(V<sub>0</sub>,V<sub>1</sub>,V<sub>2</sub>),最短路径长度为29<br>
+* V<sub>0</sub>-->V<sub>3</sub>:最短路径为(V<sub>0</sub>,V<sub>1</sub>,V<sub>5</sub>,V<sub>3</sub>),最短路径长度为23<br>
+* V<sub>0</sub>-->V<sub>4</sub>:最短路径为(V<sub>0</sub>,V<sub>1</sub>,V<sub>5</sub>,V<sub>4</sub>),最短路径长度为27<br>
+* V<sub>0</sub>-->V<sub>5</sub>:最短路径为(V<sub>0</sub>,V<sub>1</sub>,V<sub>5</sub>),最短路径长度为15<br>
 
+迪杰斯特拉(Dijkstra)算法思路
+-----------
+主要设置两个数组:<br>
+distance[]:记录V<sub>0</sub>到各个顶点的最短路径<br>
+path[]:记录V<sub>0</sub>到该顶点的直接前驱,比如V<sub>0</sub>-->V<sub>5</sub>中,V<sub>1</sub>就是这里V<sub>5</sub>的直接前驱<br>
+<br>
+以下表作为演示:<br>
+![F23](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic23.png)<br>
+<br>
+>通过最后的distance数组提取出V<sub>0</sub>到各个顶点的最短距离<br>
+>通过最后的path数组得到V<sub>0</sub>到一个顶点的最短路径<br>
 
+迪杰斯特拉(Dijkstra)算法的实现
+-----------
+```c
+/****************************************************************/
+/* int* dijkstra(int source, GraphMatrix *graphMatrix)			*/
+/* 功能:对邻接矩阵表示的图使用dijkstra算法找出一个顶点到其它顶点*/
+/*		的最短路径												*/
+/* 输入参数source:起点											*/
+/* 输入参数graphMatrix:图										*/
+/* 返回值:存放最短路径的一维数组distance						*/
+/* 创建日期:2019-6-1						Author:Cyber Kaka	*/
+/****************************************************************/
+int* dijkstra(int source, GraphMatrix *graphMatrix)
+{
+	int i = 0;	//循环计数器1
+	int j = 0;	//循环计数器2
+	int vex = 0;	//用于存放顶点编号的临时变量
+	int min = 0;	//距离最小值的临时存放变量
 
+	//found数组是用于记录哪些点的最短路径已经确定,即用于标记
+	int* found = (int*)malloc(sizeof(int) * graphMatrix->size);
 
+	//距离数组,算法过程中会不断更新,最终的结果也会放于其中
+	int* distance = (int*)malloc(sizeof(int) * graphMatrix->size);
 
+	//path数组,用于记录相应顶点在最短路径中的前驱顶点
+	int* path = (int*)malloc(sizeof(int) * graphMatrix->size);
 
+	//初始化
+	for (i = 0; i < graphMatrix->size; i++)
+	{
+		found[i] = 0;	//所有结点的最短路径都没有确定
+		distance[i] = graphMatrix->graph[source][i];	//权值
+		path[i] = 0;	//默认每个结点初始都无直接前驱
+	}//end for
 
+	//将起点加入新点集合中
+	found[source] = 1;
+	distance[source] = 0;	//顶点到自身的距离为0
 
+	//循环确定每个顶点的最短路径
+	for (i=0;i<graphMatrix->size;i++)
+	{
+		//寻找距离最小的点
+		min = INT_MAX;
+		for (j = 0; j < graphMatrix->size; j++)
+		{
+			//如果j结点没有确定过最短路径,且其距离小于min
+			if ((!found[j]) && (distance[j] < min))
+			{
+				//记录j顶点到vex,记录其距离,这是最短的
+				vex = j;
+				min = distance[j];
+			}//end if
+		}//end for(j) 1
+
+		//找到的点标记为已确定最短路径
+		found[vex] = 1;
+
+		//此时以vex为跳板进行数据更新
+		//看是否需要更新其他的顶点的distance和path
+		for (j = 0; j < graphMatrix->size; j++)
+		{
+			//顶点j未确定最短路径,且vex和j之间有边相连
+			if (!found[j] && graphMatrix->graph[vex][j] != INT_MAX)
+			{
+				//判断之前的最短路径加上现在跳板vex到j的距离是否小于源点到j的距离
+				//若小于则更新其路径
+				if (min + graphMatrix->graph[vex][j] < distance[j])
+				{
+					//更新权值
+					distance[j] = min + graphMatrix->graph[vex][j];
+					path[j] = vex;	//记录前驱结点
+				}//end if
+			}//end if
+		}//end for(j) 2
+	}//end for(i)
+
+	//由于无法同时返回distance和path数组,在此输出path数组(如果需要的话)
+	//for (j = 0; j < graphMatrix->size; j++)
+	//{
+	//	if (distance[j]<INT_MAX)
+	//	{
+	//		printf("0号结点到%d号结点的前驱结点为%d \n", j, path[j]);
+	//	}
+	//}
+
+	//上面的输出path数组的循环有个问题,那样只能输出直接前驱
+	//往往我们在找路径时要"顺藤摸瓜"才能找到所有前驱
+	//for (j=0;j<graphMatrix->size;j++)
+	//{
+	//	if (distance[j]<INT_MAX)
+	//	{
+	//		i = j;
+	//		printf("\n0号结点到%d号结点的前驱结点依次为:", j);
+	//		while (path[i] != 0)
+	//		{
+	//			printf("%d ", path[i], i);
+	//			i = path[i];
+	//		}
+	//		printf("%d", 0);	//最后不要忘记源点
+	//	}
+	//}
+	//printf("\n");
+
+	return distance;
+}//end dijkstra
+```
+>算法的时间复杂度为O(n<sup>2</sup>)<br>
+>空间复杂度为O(n),即一维数组<br>
