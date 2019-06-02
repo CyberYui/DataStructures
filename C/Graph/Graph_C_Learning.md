@@ -1331,3 +1331,87 @@ int* dijkstra(int source, GraphMatrix *graphMatrix)
 ```
 >算法的时间复杂度为O(n<sup>2</sup>)<br>
 >空间复杂度为O(n),即一维数组<br>
+
+图的典型应用:拓扑排序(topological sorting)
+==============
+图中的拓扑排序并不是比较关键码的大小,而是指一种先后的约束关系<br>
+<br>
+研究内容:<font color=green>AOV</font>网:顶点活动网(<font color=green>A</font>ctivity <font color=green>O</font>n <font color=green>V</font>ertex network)<br>
+AOV网:<br>
+* 首先它是一个<font color=red>有向图</font><br>
+* 并且图中<font color=red>无环存在</font><br>
+* 图中的<font color=red>顶点表示活动</font><br>
+* 图中的<font color=red>边表示活动间的先后关系</font><br>
+
+例如下面这个图就是一个AOV网:<br>
+![F24](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic24.png)<br>
+<br>
+图中的顶点表示知识点<br>
+图中的边表示依赖关系<br>
+例如:Linux链表依赖的知识是单循环链表和双链表,没有这两个知识,是无法理解Linux链表的<br>
+
+拓扑排序的方法
+---------
+* 从AOV网中选择一个<font color=red>入度为0</font>的顶点将其输出
+* 在AOV网中<font color=red>删除</font>此顶点及其所有的出边
+* 反复执行以上两步,直到所有顶点都已经输出为止
+
+以下面的AVO网为例:
+![F25](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic25.png)<br>
+<br>
+
+[假设我们每次都从序号小的顶点开始]<br>
+入度为0的顶点为C<sub>1</sub>和C<sub>9</sub><br>
+假设选择C<sub>1</sub>输出,则此时受C<sub>1</sub>约束的C<sub>4</sub>,C<sub>2</sub>,C<sub>12</sub>都可以删去与其相连的边,不再受其约束<br>
+此时C<sub>4</sub>,C<sub>2</sub>,C<sub>9</sub>都是入度为0的顶点,假设选择C<sub>2</sub>输出,则删除其出边,即C<sub>3</sub>不再受其约束<br>
+以此类推...<br>
+如此便线性输出了C<sub>1</sub>到C<sub>12</sub>这样的一个拓扑序列<br>
+>即也是一种将非线性结构转化为线性结构的过程<br>
+
+[注]<br>
+一个AOV网的拓扑序列不是唯一的,主要取决于从哪个顶点开始<br>
+AOV网中如果出现回路则一定不能完成拓扑排序,否则会产生死锁的现象<br>
+
+拓扑排序算法思路
+--------
+对邻接表表示的图进行拓扑排序<br>
+回忆下之前邻接表表示图的定义:<br>
+```c
+typedef struct GRAPHLISTNODE_STRU
+{
+    int nodeno; //图中结点的编号
+    struct GRAPHLISTNODE_STRU * next;
+}GraphListNode;
+
+typedef struct GRAPHLIST_STRU
+{
+    int size;   //图中实际的结点个数
+    GraphListNode * graphListArray; //图的顶点表,用二维数组表示
+}GraphList;
+```
+例如这样的图和邻接表:<br>
+![F27](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic27.png)<br>
+<br>
+在这里,邻接表就是出边表<br>
+<br>
+算法核心过程:<br>
+* <font color=red><1>计算各个顶点的入度</font><br>
+* <font color=red><2>将入度为0的顶点入栈</font><br>
+* <font color=purple><3>如果栈不空,则从栈中取出一个元素v,输出到拓扑序列中</font><br>
+* <font color=green><4>检查顶点v的出边表,将出边表中的每个顶点w的入度减1(即删除顶点v为弧头的边表),如果w的入度为0,则顶点w入栈</font><br>
+* <font color=blue><5>重复第三步和第四步,直到栈为空为止</font><br>
+>请注意,这里使用了栈(后进先出)<br>
+
+在拓扑排序的具体实现中,需要建立一个inPoint数组,这个数组用于保存各个顶点的入度<br>
+同时还需要一个栈nodeStack,每当一个顶点的入度为0时,就入栈<br>
+
+下表显示了实际的排序过程:<br>
+![F26](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic26.png)<br>
+<br>
+>初始各个顶点入度需要先通过循环计算得出,之后再进行拓扑排序<br>
+>一般更新的顶点入度是和之前输出的顶点有联系的顶点,而不是所有的顶点入度都更新<br>
+>V<sub>2</sub>和V<sub>4</sub>入栈的顺序,要看哪一个顶点在邻接表中先出现<br>
+>请注意在入栈时顶点是头插法,要想栈输出5,2,1,就需要输入的顺序为1,2,5<br>
+
+
+
