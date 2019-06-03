@@ -64,7 +64,7 @@ void ReadGraph(GraphList* graphList)
 /* 功能:将图的结构显示出来										*/
 /* 输入参数graphList:图											*/
 /* 返回值:无													*/
-/* 创建日期:2019-5-24						Author:Cyber Kaka	*/
+/* 创建日期:2019-6-3						Author:Cyber Kaka	*/
 /****************************************************************/
 void WriteGraph(GraphList* graphList)
 {
@@ -76,9 +76,20 @@ void WriteGraph(GraphList* graphList)
 	tempNode->nodeno = 0;
 
 	printf("图的结构如下:\n");
-	while (i < graphList->size - 1)	//数组是从0开始算的,但是保存的size=num=输入的值(比如测试的这里是4)
+	while (i < graphList->size)	//数组是从0开始算的,但是保存的size=num=输入的值(比如测试的这里是4)
 	{
 		tempNode = graphList->graphListArray[i].next;
+		//循环判断当前的顶点是否有邻接表,如果没有邻接表,则直接看下一个顶点,如此循环,直到找到有邻接表的顶点
+		for (int k = 0; k < graphList->size; k++)
+		{
+			if (!tempNode)
+			{
+				i++;
+				tempNode = graphList->graphListArray[i].next;
+			}
+			else
+				break;
+		}
 		printf("结点%d与结点%d有边相连;\n", i, tempNode->nodeno);
 		//遍历每一个数组内容的邻接表,全部输出出来
 		for (int j = 0; j < graphList->size; j++)

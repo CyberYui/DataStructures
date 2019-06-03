@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "GraphAdjListUtil.h"
+#include "graphlistutil.h"
 
 /****************************************************************/
 /* GraphList* InitGraph(int num)								*/
@@ -21,7 +21,7 @@ GraphList* InitGraph(int num)
 	//给图中结点内容初始化,数据域按序,指针域为空
 	for (i = 0; i < num; i++)
 	{
-		graphList->graphListArray[i].nodeno = i;
+		graphList->graphListArray[i].nodeno = -1;
 		graphList->graphListArray[i].next = NULL;
 	}
 	return graphList;
@@ -50,7 +50,7 @@ void ReadGraph(GraphList* graphList)
 		tempNode->nodeno = vex2;
 		tempNode->next = NULL;
 
-		//插入相应结点,在头部插入结点
+		//插入相应结点,在头部插入结点,仅仅是为了方便,并不是必须的
 		//将原数组内容的next赋给新结点,新结点变成邻接表第一个结点
 		tempNode->next = graphList->graphListArray[vex1].next;
 		//修改原数组内容的next,连接新的邻接表,从而实现tempNode的插入

@@ -39,7 +39,7 @@ void ReadGraph(GraphList* graphList);
 /* 功能:将图的结构显示出来										*/
 /* 输入参数graphList:图											*/
 /* 返回值:无													*/
-/* 创建日期:2019-5-24						Author:Cyber Kaka	*/
+/* 创建日期:2019-6-3						Author:Cyber Kaka	*/
 /****************************************************************/
 void WriteGraph(GraphList* graphList);
 
