@@ -1523,3 +1523,433 @@ int topologicalsort(GraphList *graphList)
 ```
 >具体参照TopologicalSort项目
 >可以使用队列替代链栈来保存内容,注意队列是"先进先出"
+
+图的典型应用:关键路径(critical path)
+==========
+关键路径通常决定项目工期的进度活动序列,通常是项目中最长的路径.<br>
+研究内容:<font color=green>AOE</font>网(<font color=green>A</font>ctivity <font color=green>O</font>n <font color=green>E</font>dge network):<br>
+* 首先它是一个<font color=red>带权的有向图</font><br>
+* 在有向图中,<font color=blue>顶点表示事件</font>,<font color=brown>有向边表示活动</font><br>
+* 边上的<font color=purple>权值表示活动持续的时间</font><br>
+* 顶点所表示的事件实际上就是它的<font color=red>入边所表示的活动都完成后</font>,<font color=red>开始其出边所表示的活动</font>,这样一种状态<br>
+* <font color=orange>只有一个入度为0的顶点</font><br>
+* <font color=orange>只有一个出度为0的顶点</font><br>
+>
+
+例如下面这个图就是一个AOE网:<br>
+![F28](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic28.png)<br>
+<br>
+由图可见,此工程有11项活动(11条边),9个事件(9个顶点),V<sub>0</sub>是工程开始的事件(入度为0),V<sub>8</sub>是工程结束的事件(出度为0)<br>
+从V<sub>0</sub>到V<sub>8</sub>有多条路径,其相关的权值为:<br>
+* 1.<font color=green>V<sub>0</sub></font>--><font color=green>V<sub>1</sub></font>--><font color=green>V<sub>4</sub></font>--><font color=green>V<sub>6</sub></font>--><font color=green>V<sub>8</sub></font>&nbsp;<font color=red>(18)</font><br>
+* 2.<font color=green>V<sub>0</sub></font>--><font color=green>V<sub>1</sub></font>--><font color=green>V<sub>4</sub></font>--><font color=green>V<sub>7</sub></font>--><font color=green>V<sub>8</sub></font>&nbsp;<font color=red>(18)</font><br>
+* 3.V<sub>0</sub>-->V<sub>2</sub>-->V<sub>4</sub>-->V<sub>6</sub>-->V<sub>8</sub>&nbsp;(16)<br>
+* 4.V<sub>0</sub>-->V<sub>2</sub>-->V<sub>4</sub>-->V<sub>7</sub>-->V<sub>8</sub>&nbsp;(16)<br>
+* 5.V<sub>0</sub>-->V<sub>3</sub>-->V<sub>5</sub>-->V<sub>7</sub>-->V<sub>8</sub>&nbsp;(15)<br>
+>其中1和2路径是关键路径,其权值最大,即耗时最久
+
+要实现的AOE网的例子
+--------
+某建筑公司的工程活动计划表如下:<br>
+| 活动名称 | 符号 | 活动时间(天) | 依赖活动 |
+|:--------:|:----:|:------------:|:--------:|
+|   框架   |  C<sub>0</sub>  |      14      |    --    |
+|   屋面   |  C<sub>1</sub>  |      22      |    C<sub>0</sub>    |
+|   外墙   |  C<sub>2</sub>  |      25      |    C<sub>0</sub>    |
+|   门窗   |  C<sub>3</sub>  |      17      |    C<sub>2</sub>    |
+| 卫生管道 |  C<sub>4</sub>  |      34      |    C<sub>2</sub>    |
+| 各种电器 |  C<sub>5</sub>  |      35      |    C<sub>1</sub>    |
+| 内部装修 |  C<sub>6</sub>  |      12      |   C<sub>4</sub>,C<sub>5</sub>  |
+| 外部粉刷 |  C<sub>7</sub>  |      24      |    C<sub>3</sub>    |
+| 工程验收 |  C<sub>8</sub>  |      13      |   C<sub>6</sub>,C<sub>7</sub>  |
+
+相应的AOE网为:<br>
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+该AOE网作为一个图,其逆邻接表和邻接表为:<br>
+![F30](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic30.png)<br>
+<br>
+>因为需要两个表,那么在输入方式相同时,邻接表可以像原先那样创建,但是创建逆邻接表的时候就需要多加考虑了<br>
+
+[注]同之前的逆邻接表和邻接表不同,AOE图中的邻接表每个结点有三部分,除了对应的链接顶点和顶点的指针之外,还有相关的权值(即活动持续时间)<br>
+
+求关键路径的步骤
+---------
+* 求事件的最早发生时间earliestTime(j)--之后用eT表示<br>
+* 求事件的最迟发生时间latestTime(i)--之后用lT表示<br>
+* 求活动的最早发生时间activityEarliestTime(k)--之后用aET表示<br>
+* 求活动的最迟发生时间activityLatestTime(k)--之后用aLT表示<br>
+* 计算活动的时间余量reminder = activityLatestTime(k) - activityEarliestTime(k)<br>
+* <font color=red>Reminder = 0 的即为关键活动</font><br>
+
+求事件的最早发生时间
+----------
+&emsp;&emsp;比如事件V<sub>i</sub>,其最早可能的开始时间,是从开始顶点V<sub>0</sub>到顶点V<sub>i</sub>的最长路径的长度.由此计算事件的最早发生时间.<br>
+<br>
+<font color=blue>采用正向递推方式</font>:<br>
+&emsp;初始时earliestTime[0] = 0;<br>
+&emsp;之后的earliestTime[j] = max{earliestTime[i] + weight<vi,vj>}<br>
+&emsp;&emsp;>><font color=gray>其中,<vi,vj>是以顶点vj为终点的所有有向边</font><br>
+[比如]<br>
+&emsp;&emsp;V<sub>2</sub>的最早发生时间就是V<sub>1</sub>的最小发生时间加上V<sub>1</sub>到V<sub>2</sub>的活动持续时间,即14+25=39<br>
+&emsp;&emsp;V<sub>6</sub>的最早发生时间就是在<font color=green>V<sub>5</sub>的最小发生时间加上V<sub>5</sub>到V<sub>6</sub>的活动持续时间</font>和<font color=brown>V<sub>2</sub>的最小发生时间加上V<sub>2</sub>到V<sub>6</sub>的活动持续时间</font>两者之间取最大值,即73<br>
+<br>
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+由此得到eT的表如下:<br>
+||V<sub>0</sub>|V<sub>1</sub>|V<sub>2</sub>|V<sub>3</sub>|V<sub>4</sub>|V<sub>5</sub>|V<sub>6</sub>|V<sub>7</sub>|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|eT|0|14|39|56|85|36|73|98|
+
+求事件的最迟发生时间
+-----------
+&emsp;&emsp;比如事件V<sub>i</sub>,其最迟发生时间即为其允许的最迟开始时间,是指在不推迟整个工期的前提下,事件V<sub>i</sub>允许的最晚发生时间.<br>
+<font color=blue>采用反向递推方式</font>:<br>
+&emsp;初始时latestTime[n-1] = earliestTime[n-1];<br>
+&emsp;之后的latestTime[j] = min{latestTime[i] - weight<vj,vi>}<br>
+&emsp;&emsp;>><font color=gray>其中,<vi,vj>是以顶点vj为起点的所有有向边</font><br>
+[比如]<br>
+&emsp;&emsp;V<sub>4</sub>的最迟发生时间为V<sub>7</sub>的最迟发生时间减去V<sub>4</sub>到V<sub>7</sub>的活动持续时间,即85<br>
+&emsp;&emsp;V<sub>2</sub>的最迟发生时间为在<font color=green>V<sub>3</sub>的最迟发生时间减去V<sub>2</sub>到V<sub>3</sub>的活动持续时间</font>和<font color=brown>V<sub>6</sub>的最迟发生时间减去V<sub>2</sub>到V<sub>6</sub>的活动持续时间</font>两者之间取最小值,即39<br>
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+由此得到的lT的表如下:<br>
+||V<sub>0</sub>|V<sub>1</sub>|V<sub>2</sub>|V<sub>3</sub>|V<sub>4</sub>|V<sub>5</sub>|V<sub>6</sub>|V<sub>7</sub>|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|eT|0|14|39|56|85|36|73|98|
+|lT|0|14|39|61|85|38|73|98|
+
+活动的最早发生时间计算<font color=red>activityEarliestTime</font>
+------------
+&emsp;&emsp;设C<sub>k</sub>是边<V<sub>i</sub>,V<sub>j</sub>>上的活动,则activityEarliestTime是源点V<sub>0</sub>到起始顶点V<sub>i</sub>的最长路径长度,即为:<br>
+activityEarliestTime[k] = earliestTime[i]<br>
+<font color=red>即活动的最早发生时间,就是其起始顶点V<sub>i</sub>的最早发生时间</font><br>
+
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+由此得到eT和aET的对比表如下:<br>
+||V<sub>0</sub>|V<sub>1</sub>|V<sub>2</sub>|V<sub>3</sub>|V<sub>4</sub>|V<sub>5</sub>|V<sub>6</sub>|V<sub>7</sub>|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|aET|0|14|14|39|39|36|73|56|85|
+|eT|0|14|39|56|85|36|73|98|
+
+活动的最迟发生时间计算<font color=red>activityLatestTime</font>
+------------
+&emsp;&emsp;设C<sub>k</sub>是边<V<sub>i</sub>,V<sub>j</sub>>上的活动,则activityLatestTime[k]是在不引起时间延误的前提下,活动C<sub>k</sub>允许的最迟时间,也就是顶点V<sub>j</sub>的最迟发生时间减去活动C<sub>k</sub>持续的时间weight<V<sub>i</sub>,V<sub>j</sub>>,即为:<br>
+activityLatestTime[k] = latestTime[j] - weight<V<sub>i</sub>,V<sub>j</sub>><br>
+<font color=red>即活动的最迟发生时间,就是其终止顶点V<sub>j</sub>的最迟发生时间减去活动的持续时间</font><br>
+
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+由此得到lT和aLT的对比表如下:<br>
+||V<sub>0</sub>|V<sub>1</sub>|V<sub>2</sub>|V<sub>3</sub>|V<sub>4</sub>|V<sub>5</sub>|V<sub>6</sub>|V<sub>7</sub>|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|lT|0|14|39|61|85|38|73|98|
+|aLT|0|16|14|44|39|38|93|61|85|
+
+活动的时间余量计算<font color=red>reminder</font>
+-------------
+&emsp;&emsp;reminder[k]表示活动C<sub>k</sub>的最早发生时间和最迟发生时间的时间余量<br>
+即:reminder[k] = activityLatestTime[k] - activityEarliestTime[k]<br>
+当activityLatestTime[k] = activityEarliestTime[k]时,reminder[k] = 0<br>
+表示该活动C<sub>k</sub>的<font color=red>时间余量为0</font>,<font color=red>即该活动为关键活动</font>,关键活动的延期与否直接影响到项目的工期,这是项目经理需要重点关注的内容<br>
+<font color=red>即活动的时间余量是其最迟发生时间和最早发生时间的差值</font><br>
+
+![F29](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic29.png)<br>
+<br>
+由此得到reminder和aLT以及aET的对比表如下:<br>
+||V<sub>0</sub>|V<sub>1</sub>|V<sub>2</sub>|V<sub>3</sub>|V<sub>4</sub>|V<sub>5</sub>|V<sub>6</sub>|V<sub>7</sub>|
+|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|
+|aET|0|14|14|39|39|36|73|56|85|
+|aLT|0|16|14|44|39|38|93|61|85|
+|reminder|0|2|0|5|0|2|0|5|0|
+|是否为关键活动|T|F|T|F|T|F|T|F|T|
+
+使用代码计算事件的eT和lT
+------------
+* 事件V<sub>j</sub>可能的<font color=green>最早发生时间</font>earliestTime(j)
+        <font color=red>初始earliestTime[0] = 0;</font>
+        <font color=red>earliestTime[j] = max{ earliestTime[i] + weight<vi,vj>}</font>
+* 事件V<sub>i</sub>允许的<font color=green>最迟发生时间</font>latestTime(i)
+        <font color=red>初始latestTime[n-1] = earliestTime[n-1];</font>
+        <font color=red>latestTime[j] = min{ latestTime[i] - weight<vj,vi>}</font>
+>在计算最早发生时间时,要判断事件的入度,需要使用邻接表
+>而在计算最迟发生时间时,要判断事件的出度,需要使用逆邻接表
+
+回忆拓扑排序时的操作,我们就已经做了每个事件的入度-1操作,并且有入栈和出栈的操作,这里则需要计算每一个事件的最早发生时间,因此可以在拓扑排序的基础上进行拓展来计算事件的最早发生时间,同样的,也可以借此来计算事件的最迟发生时间
+
+```c
+/****************************************************************/
+/*int eventEarliestTime(GraphList *graphList, int *earliestTime)*/
+/*	功能:求事件可能的最早发生时间								*/
+/*	输入参数graphList:用邻接表表示的图							*/
+/*	输入参数earliestTime:事件可能的最早发生时间					*/
+/*	返回值success:1--成功	0--失败								*/
+/*	创建日期:2019-6-4						Author:Cyber Kaka	*/
+/****************************************************************/
+int eventEarliestTime(GraphList *graphList, int *earliestTime)
+{
+	int i = 0;	//初始化循环计数器
+	int cnt = 0;	//记录拓扑排序中顶点个数的变量
+	int nodeNum = 0;	//记录栈顶结点在图中序号的临时变量
+	int success = 1;	//排序成功与否的flag
+
+	LinkedStack nodeStack = NULL;	//用于保存从栈中提取的结点内容的临时结点
+	GraphListNode *tempNode = NULL;	//用于保存顶点内容的临时结点
+
+	//申请用于保存各个顶点入度的数组空间
+	int *inPoint = (int*)malloc(sizeof(int) * graphList->size);
+	nodeStack = SetNullStack_Link();	//创建一个空栈
+
+	//初始化inPoint数组,即各个顶点初始入度为0
+	for (i = 0; i < graphList->size; i++)
+	{
+		inPoint[i] = 0;
+	}
+
+	//循环计算各个顶点的初始入度,修改inPoint数组
+	for (i = 0; i < graphList->size; i++)
+	{
+		//从图中提取顶点
+		tempNode = graphList->graphListArray[i].next;
+
+		//检查顶点的邻接表(出边表)
+		while (tempNode != NULL)
+		{
+			//邻接表不为空,则入度加1
+			inPoint[tempNode->nodeno]++;
+			tempNode = tempNode->next;	//向后查询
+		}
+	}
+
+	//首先循环将入度为0的顶点入栈,否则栈会为空直接退出函数
+	for (i = 0; i < graphList->size; i++)
+	{
+		if (inPoint[i] == 0)
+		{
+			Push_link(nodeStack, i);
+		}
+	}
+
+	//[Core]如果记录结点的栈不为空
+	cnt = 0;	//初始时拓扑排序好的顶点数为0
+	while (!IsNullStack_link(nodeStack))
+	{
+		//取栈顶元素v
+		nodeNum = Pop_seq_return(nodeStack);
+		//printf("%d ", nodeNum);	//输出顶点,此顶点算拓扑排序完成
+		Pop_link(nodeStack);	//完成的顶点出栈
+		cnt++;	//计数器+1
+
+		//检查v的出边,将每条出边的终端顶点的入度减1
+		//若此时该顶点入度为0,则将其入栈
+		tempNode = graphList->graphListArray[nodeNum].next;	//检查
+		while (tempNode != NULL)
+		{
+			//去掉入边
+			inPoint[tempNode->nodeno]--;	//出边表中所有相关顶点入度-1
+			//为每条出边的终点事件更新可能的最早发生时间
+			if (earliestTime[tempNode->nodeno] < earliestTime[nodeNum] + tempNode->weight)
+			{
+				earliestTime[tempNode->nodeno] = earliestTime[nodeNum] + tempNode->weight;
+			}
+
+			//检查入度是否为0,是0则入栈
+			if (inPoint[tempNode->nodeno] == 0)
+			{
+				Push_link(nodeStack, tempNode->nodeno);
+			}
+			//检查下一个顶点入度
+			tempNode = tempNode->next;
+		}
+	}//栈为空时结束循环
+
+	//若图中所有顶点有未拓扑排序的,则代表排序失败
+	if (cnt != graphList->size)
+	{
+		success = 0;
+	}
+
+	return success;	//返回flag
+}//O(n+1)
+
+/****************************************************************************/
+/*	int eventLatestTime(GraphInverseList *graphInverseList, int *latestTime)*/
+/*	功能:计算事件允许的最迟发生时间											*/
+/*	输入参数graphInverseList:用逆邻接表表示的图								*/
+/*	输入参数latestTime:事件允许的最迟发生时间数组							*/
+/*	返回值success:1--成功	0--失败											*/
+/*	创建日期:2019-6-4									Author:Cyber Kaka	*/
+/****************************************************************************/
+int eventLatestTime(GraphInverseList *graphInverseList, int *latestTime)
+{
+	int i = 0;	//初始化循环计数器
+	int cnt = 0;	//记录拓扑排序中顶点个数的变量
+	int nodeNum = 0;	//记录栈顶结点在图中序号的临时变量
+	int success = 1;	//排序成功与否的flag
+
+	LinkedStack nodeStack = NULL;	//用于保存从栈中提取的结点内容的临时结点
+	GraphInverseListNode *tempNode = NULL;	//用于保存顶点内容的临时结点
+
+	//申请用于保存各个顶点出度的数组空间
+	int *outPoint = (int*)malloc(sizeof(int) * graphInverseList->size);
+	nodeStack = SetNullStack_Link();	//创建一个空栈
+
+	//初始化inPoint数组,即各个顶点初始出度为0
+	for (i = 0; i < graphInverseList->size; i++)
+	{
+		outPoint[i] = 0;
+	}
+
+	//循环计算各个顶点的初始出度,修改outPoint数组
+	for (i = 0; i < graphInverseList->size; i++)
+	{
+		//从图中提取顶点
+		tempNode = graphInverseList->graphInverseListArray[i].next;
+
+		//检查顶点的邻接表(出边表)
+		while (tempNode != NULL)
+		{
+			//邻接表不为空,则入度加1
+			outPoint[tempNode->nodeno]++;
+			tempNode = tempNode->next;	//向后查询
+		}
+	}
+
+	//首先循环将出度为0的顶点入栈,否则栈会为空直接退出函数
+	for (i = 0; i < graphInverseList->size; i++)
+	{
+		if (outPoint[i] == 0)
+		{
+			Push_link(nodeStack, i);
+		}
+	}
+
+	//[Core]如果记录结点的栈不为空
+	cnt = 0;	//初始时拓扑排序好的顶点数为0
+	while (!IsNullStack_link(nodeStack))
+	{
+		//取栈顶元素v
+		nodeNum = Pop_seq_return(nodeStack);
+		//printf("%d ", nodeNum);	//输出顶点,此顶点算拓扑排序完成
+		Pop_link(nodeStack);	//完成的顶点出栈
+		cnt++;	//计数器+1
+
+		//检查v的入边,将每条入边的终端顶点的出度减1
+		//若此时该顶点出度为0,则将其入栈
+		tempNode = graphInverseList->graphInverseListArray[nodeNum].next;	//检查
+		while (tempNode != NULL)
+		{
+			//去掉出边
+			outPoint[tempNode->nodeno]--;	//入边表中所有相关顶点出度-1
+			//为每条出边的终点事件更新可能的最迟发生时间
+			if (latestTime[tempNode->nodeno] < latestTime[nodeNum] + tempNode->weight)
+			{
+				latestTime[tempNode->nodeno] = latestTime[nodeNum] + tempNode->weight;
+			}
+
+			//检查出度是否为0,是0则入栈
+			if (outPoint[tempNode->nodeno] == 0)
+			{
+				Push_link(nodeStack, tempNode->nodeno);
+			}
+			//检查下一个顶点出度
+			tempNode = tempNode->next;
+		}
+	}//栈为空时结束循环
+
+	//若图中所有顶点有未拓扑排序的,则代表排序失败
+	if (cnt != graphInverseList->size)
+	{
+		success = 0;
+	}
+
+	return success;	//返回flag
+}//O(n+1)
+```
+>具体实现参照CriticalPath项目
+
+计算关键路径的实现
+---------
+```c
+/********************************************************************************/
+/*	void criticalPath(GraphList *graphList, GraphInverseList *graphInverseList)	*/
+/*	功能:根据一个图的邻接表和逆邻接表计算关键路径								*/
+/*	输入参数graphList:用邻接表表示的图											*/
+/*	输入参数graphInverseList:用逆邻接表表示的图									*/
+/*	返回值:无																	*/
+/*	创建日期:2019-6-4										Author:Cyber Kaka	*/
+/********************************************************************************/
+void criticalPath(GraphList *graphList, GraphInverseList *graphInverseList)
+{
+	int i = 0;	//用于循环体的计数器
+	int max = 0;	//用于保存最早发生时间的最大值的临时变量
+
+	//申请最早发生时间数组的空间
+	int* earliestTime = (int*)malloc(sizeof(int) * graphList->size);
+	//申请最迟发生时间数组的空间
+	int* latestTime = (int*)malloc(sizeof(int) * graphInverseList->size);
+
+	int activityEarliestTime = 0;
+	int activityLatestTime = 0;
+
+	GraphListNode *tempNode = NULL;
+
+	//初始化所有事件可能的最早发生时间为0
+	for (i=0;i<graphList->size;i++)
+	{
+		earliestTime[i] = 0;
+	}
+
+	//调用算法,求每个事件可能的最早发生时间
+	eventEarliestTime(graphList, earliestTime);
+
+	//求事件最早发生时间的最大值,方便后面设置事件允许最迟发生时间的初值
+	max = earliestTime[0];
+	for (i=0;i<graphList->size;i++)
+	{
+		if (max<earliestTime[i])
+		{
+			max = earliestTime[i];
+		}
+	}
+
+	//初始化所有事件允许的最迟发生时间为最大值
+	for (i=0;i<graphInverseList->size;i++)
+	{
+		latestTime[i] = max;
+	}
+
+	//调用算法,求每个事件允许的最迟发生时间
+	eventLatestTime(graphInverseList, latestTime);
+
+	//初始化任务完成
+
+	//遍历每条边,求每个活动的最早开始时间和最晚开始时间,并进行对比
+	//相等即为关键路径上的边,也就是两者时间余量为0
+	for (i=0;i<graphList->size;i++)
+	{
+		tempNode = graphList->graphListArray[i].next;
+
+		while (tempNode != NULL)
+		{
+			activityEarliestTime = earliestTime[i];
+			activityLatestTime = latestTime[tempNode->nodeno] - tempNode->weight;
+
+			if (activityEarliestTime == activityLatestTime)
+			{
+				printf("<v%2d,v%2d>", i, tempNode->nodeno);
+			}
+			tempNode = tempNode->next;
+		}
+	}
+}//O(n+1)
+```
+>具体实现参照CriticalPath项目
+
+>该算法的算法时间复杂度为O(n+1)
+
+<font color=red>**[注]CriticalPath项目仍有许多需要修改的地方,甚至有遗留问题内容,请注意在结课后修改**</font>
+
+六度空间
+=========
