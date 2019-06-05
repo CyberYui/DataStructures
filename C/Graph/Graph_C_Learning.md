@@ -1667,16 +1667,19 @@ activityLatestTime[k] = latestTime[j] - weight<V<sub>i</sub>,V<sub>j</sub>><br>
 
 使用代码计算事件的eT和lT
 ------------
-* 事件V<sub>j</sub>可能的<font color=green>最早发生时间</font>earliestTime(j)
-        <font color=red>初始earliestTime[0] = 0;</font>
-        <font color=red>earliestTime[j] = max{ earliestTime[i] + weight<vi,vj>}</font>
-* 事件V<sub>i</sub>允许的<font color=green>最迟发生时间</font>latestTime(i)
-        <font color=red>初始latestTime[n-1] = earliestTime[n-1];</font>
-        <font color=red>latestTime[j] = min{ latestTime[i] - weight<vj,vi>}</font>
->在计算最早发生时间时,要判断事件的入度,需要使用邻接表
->而在计算最迟发生时间时,要判断事件的出度,需要使用逆邻接表
+* 事件V<sub>j</sub>可能的<font color=green>最早发生时间</font>earliestTime(j)<br>
+        <font color=red>初始earliestTime[0] = 0;</font><br>
+        <font color=red>earliestTime[j] = max{ earliestTime[i] + weight<vi,vj>}</font><br>
+* 事件V<sub>i</sub>允许的<font color=green>最迟发生时间</font>latestTime(i)<br>
+        <font color=red>初始latestTime[n-1] = earliestTime[n-1];</font><br>
+        <font color=red>latestTime[j] = min{ latestTime[i] - weight<vj,vi>}</font><br>
+>在计算最早发生时间时,要判断事件的入度,需要使用邻接表<br>
+>而在计算最迟发生时间时,要判断事件的出度,需要使用逆邻接表<br>
 
-回忆拓扑排序时的操作,我们就已经做了每个事件的入度-1操作,并且有入栈和出栈的操作,这里则需要计算每一个事件的最早发生时间,因此可以在拓扑排序的基础上进行拓展来计算事件的最早发生时间,同样的,也可以借此来计算事件的最迟发生时间
+![F30](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic30.png)<br>
+<br>
+
+回忆拓扑排序时的操作,我们就已经做了每个事件的入度-1操作,并且有入栈和出栈的操作,这里则需要计算每一个事件的最早发生时间,因此可以在拓扑排序的基础上进行拓展来计算事件的最早发生时间,同样的,也可以借此来计算事件的最迟发生时间<br>
 
 ```c
 /****************************************************************/
@@ -1867,7 +1870,7 @@ int eventLatestTime(GraphInverseList *graphInverseList, int *latestTime)
 	return success;	//返回flag
 }//O(n+1)
 ```
->具体实现参照CriticalPath项目
+>具体实现参照CriticalPath项目<br>
 
 计算关键路径的实现
 ---------
@@ -1945,11 +1948,253 @@ void criticalPath(GraphList *graphList, GraphInverseList *graphInverseList)
 	}
 }//O(n+1)
 ```
->具体实现参照CriticalPath项目
+>具体实现参照CriticalPath项目<br>
+>该算法的算法时间复杂度为O(n+1)<br>
 
->该算法的算法时间复杂度为O(n+1)
+<font color=red>**[注]CriticalPath项目仍有许多需要修改的地方,甚至有遗留问题内容,请注意在结课后修改**</font><br>
 
-<font color=red>**[注]CriticalPath项目仍有许多需要修改的地方,甚至有遗留问题内容,请注意在结课后修改**</font>
-
-六度空间
+图的应用--六度空间 (Six Degrees of Separation)
 =========
+&emsp;&emsp;六度空间理论是一个数学领域的猜想,又称为<font color=red>六度分割理论或者小世界理论</font>.在社交网络中,通过6个人可以找到一个陌生人,也就是最多通过5个中间人你就能找到一个陌生人.<br>
+
+[如何实现呢?]<br>
+在之前,我们通过广度优先搜索遍历能够记录<font color=red>图的层数</font>,因而可以记录层数level=6的顶点个数.我们可以在其基础上进行修改:<br>
+* 设置变量cnt,用来记录满足六度空间的顶点个数,将其作为此时BFS()算法的返回值.<br>
+* 从每个顶点出发进行BFS,记录满足六层的结点个数cnt,然后计算cnt占总顶点个数的百分比.<br>
+
+我们同样使用队列完成,以下为sixdegree.cpp的代码:<br>
+>实际上,这里的visited数组是可以省略的,因为这里仅仅是计算个数,并不需要判断一个结点是否仅被访问了一次<br>
+```c
+#include "bfs_graphlist.h"
+#include <stdio.h>
+#include <stdlib.h>
+//如果是C++则可以使用STL也可以使用自己定义的队列
+//如果是C则只能使用自己定义的队列
+#include <queue>
+using namespace std;
+
+//修改之后的BFS_level
+int BFS_level(GraphList* graphList,int *visited,int source)
+{
+    int tempVex = 0;    //临时变量
+    int level = 0;  //记录广度优先搜索树的层数
+    int last = source;  //用last保存上一层最后访问的结点
+    int tail = source;  //用tail来记录当前最后访问的结点
+    int cnt = 1;    //记录满足六度空间的结点个数
+    GraphListNode *tempNode = NULL;
+    queue<int> waitingQueue;
+    //注意,在这里对每个结点调用时需要重新初始化visited
+    //因为在六度空间中并不是遍历一次图,而是要遍历多次
+    for(int i = 0;i<graphlist->size;i++)
+    {
+        visited[i] = 0;
+    }
+    visited[source] = 1;    //设置标记,表明已经被访问
+    printf("%d ",source);   //输出访问的结点编号
+    waitingQueue.push(source);  //将刚访问的结点放入队列
+    //广度优先访问结点
+    while(!waitingQueue.empty())
+    {
+        tempVex = waitingQueue.front();
+        waitingQueue.pop();
+        //依次访问与当前结点相邻的点
+        tempNode = graphList->graphListArray[tempVex].next;
+        while(tempNode != NULL)
+        {
+            //如果其他顶点与当前顶点存在边且未访问过
+            if(!visited[tempNode->nodeno])
+            {
+                visited[tempNode->nodeno] = 1;  //做标记
+                waitingQueue.push(tempNode->nodeno);    //入队
+                // printf("%d ",tempNode->nodeno);  //输出
+                cnt++;
+                tail = tempNode->nodeno;
+            }
+            tempNode = tempNode->next;  //移动到下一个结点
+        }
+        //从队列中取出的结点的下一层都访问后
+        //再判断该结点是否是其所在层的最后结点
+        if(tempVex == last)
+        {
+            level++;
+            last = tail;
+            //  printf("The current level is %d\n", level);
+        }
+
+        if(level == 6)
+        {
+            break;
+        }
+    }
+    return cnt;
+}
+
+//六度空间的过程
+void SixDegreeofSeperation(GraphList* graphList)
+{
+    int i = 0;
+    int cnt = 0;
+    //用于记录图中哪些结点已经被访问了
+    int *visited = (int*)malloc(sizeof(int) * graphList->size);
+    //从0号结点开始进行广度优先遍历
+    for(i = 0;i<graphList->size;i++)
+    {
+        cnt = BFS_level(graphList,visited,i);
+        printf("%d:%.2f\n",i,cnt*100.0/graphList->size);
+    }
+}
+
+```
+
+相关的主程序代码为:<br>
+```c
+#include "dfs_graphlist.h"
+#include "bfs_graphlist.h"
+#include "sixdegree.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+0 1
+1 0
+1 2
+2 1
+2 3
+3 2
+3 4
+4 3
+4 5
+5 4
+5 6
+6 5
+6 7
+7 6
+7 8
+8 7
+8 9
+9 8
+-1 -1
+*/
+//计算邻接表表示的图的六度空间百分比
+//从每一个结点出发进行遍历,其满足六度空间的结点占总结点个数的百分比
+int main(void)
+{
+    GraphList *graphList = NULL;
+
+    graphList = InitGraph(10);
+
+    ReadGraph(graphList);
+
+    SixDegreeofSeperation(graphList);
+
+    printf("\n");
+
+    return 0;
+}
+```
+>具体项目略<br>
+>在这里不用邻接矩阵表示的图的原因是,当关系网过大之后,其消耗的空间很多,而边的个数e是远远小于n<sup>2</sup>的,即考虑到空间的消耗,使用邻接表是更为稳妥的办法<br>
+
+图的综合应用--中国邮递员问题
+==========
+相关知识点:<br>
+* 图的存储表示 (邻接矩阵,邻接表)<br>
+* 顶点的度数 (遍历)<br>
+* 图的连通性 (拓扑排序)<br>
+* 顶点间的最短路径 (迪杰斯特拉算法)<br>
+* 欧拉图的判断,欧拉回路输出<br>
+
+问题提出:我做数学家管梅谷先生在20世纪60年代提出<br>
+[问题描述]<br>
+一个邮递员从邮局出发走遍每条街道,最后返回邮局,请找到一条最短的行走路线.<br>
+以下图表示,绿点为邮局,红点为各个街区的信箱,边表示街道,现在的问题就是如何找到最短的行走线路.<br>
+![F31](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic31.png)<br>
+<br>
+>前两个图的走法没有什么问题,可以很容易地找到最短路径<br>
+>第三个图中,先走完五角星,然后走完五边形,则会多出两条街道,走回邮局需要多走一条线路<br>
+
+那么这种路线是如何找到的呢?这就是一个<font color=red>最短欧拉回路</font>问题.<br>
+>其实就是一笔画的游戏而已.<br>
+
+[例子]<br>
+![F32](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic32.png)<br>
+<br>
+[总结]<br>
+满足"一笔画":<br>
+* 凡是由偶点组成的连通图,一定可以一笔画成,画时可以把任一偶点作为起点,最后一定能以这个点为终点画完此图<br>
+* 凡是只有两个奇点的连通图(其余都为偶点),一定可以一笔画成.画时必须把一个奇点作为起点,另一个奇点作为终点<br>
+* 除上述两种,其他情况的图都不能一笔画出<br>
+[知识回顾]<br>
+偶点:结点的度为偶数<br>
+奇点:结点的度为奇数<br>
+>度:结点拥有的子结点的个数<br>
+
+中国邮递员问题实例
+--------
+[例]一个邮递员投递信件要走的街道如图所示,图中的数字表示各条街道的距离(km),他从邮局出发,要走遍各街道,最后回到邮局.怎样走才能使所走的行程最短?全程一共多少千米?<br>
+![F33](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic33.png)<br>
+<br>
+
+首先要判断这个图是否为欧拉图,如果不是,<font color=brown>怎么样能使其变为欧拉图</font>.<br>
+解决方式很简单,除去<font color=blue>奇点</font>即可,可以加边或减边,这里以重复走某些边为例.<br>
+
+[分析]<br>
+![F34](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic34.png)<br>
+<br>
+图中共有8个奇点,不可能不重复地走遍所有的路.必须在8个奇点间添加4条线,才能消除所有奇点,从而成为能从邮局出发最后返回邮局的一笔画.当然,要在<font color=green>距离最近的两个奇点间添加一条连线</font>,如图中所示,共添加了4条线,这4条线表示要重复走的路,显然,这样重复走的路程最短,全程34千米,但走法可以是不唯一的.<br>
+
+[相关内容]<br>
+* 建立街区无向图的邻接矩阵<br>
+* 求各顶点的度数<br>
+* 求出所有奇度点<br>
+* 图的连通性的判断<br>
+* <font color=purple>求出每一个奇度点到其他奇度结点的最短路径</font><br>
+* <font color=purple>根据最佳方案添加边,对图进行修改,使其满足一笔画</font><br>
+* <font color=purple>对图进行一笔画,并输出</font><br>
+
+* 1."添加"哪些边<br>
+        * 添加的边所依附的顶点必须都是<font color=red>奇度顶点</font><br>
+        * 添加的边必须是<font color=red>已有</font>的边,也就是重复走图中的边<br>
+* 2.如何选择代价最小的边<br>
+        * 奇数顶点之间的最短路径<br>
+        &emsp;<1>Dijkstra算法<br>
+        &emsp;<2>Floyd算法<br>
+* 3.如何输出一笔画<br>
+        * FE算法 (<font color=pink>F</font>leury <font color=pink>E</font>uler)<br>
+
+中国邮递员问题具体实例
+----------
+[完备匹配]<br>
+给定一个图G,M为G边集的一个子集,如果M满足当中的任意两条边都不依附于同一个顶点,则称M是一个<font color=red>匹配</font><br>
+如果任意一个匹配中,图中的每个顶点都和图中某条边相关联,则称此匹配为<font color=blue>完全匹配</font>,也称作<font color=blue>完备匹配</font><br>
+
+![F35](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic35.png)<br>
+<br>
+>假设上图中V<sub>1</sub>为邮局<br>
+
+[内容]<br>
+* 1.求奇度点的最短路径<br>
+* 2.构造奇度点之间的完全加权图,V表示奇度点,U表示偶度点<br>
+* 3.求图的最佳(总权最小)完备匹配M={1,4;2,3},即(V<sub>1</sub>-->U<sub>1</sub>-->V<sub>4</sub>)和(V<sub>2</sub>-->U<sub>4</sub>-->V<sub>3</sub>)需要重复走<br>
+* 4.求1和4之间的最短轨V<sub>1</sub>&nbsp;U<sub>1</sub>&nbsp;V<sub>4</sub>;2和3之间的最短轨V<sub>2</sub>&nbsp;U<sub>4</sub>&nbsp;V<sub>3</sub>;<br>
+* 5.加同权边即可<br>
+
+[使用FE算法输出欧拉回路]<br>
+* 1.取G中的起始顶点V<sub>0</sub>,令P<sub>0</sub>=V<sub>0</sub><br>
+* 2.假设沿着P<sub>i</sub>=v<sub>0</sub>e<sub>1</sub>v<sub>1</sub>e<sub>2</sub>...e<sub>i</sub>v<sub>i</sub>走到顶点V<sub>i</sub>,按下面方法从E(G)-{e<sub>1</sub>,e<sub>2</sub>,...,e<sub>i</sub>}中选e<sub>i+1</sub>这条边<br>
+&emsp;① e<sub>i+1</sub>与V<sub>i</sub>相关联<br>
+&emsp;② 除非没有别的边可供选择,否则e<sub>i+1</sub>不应该是G<sub>i</sub>=G-{e<sub>1</sub>,e<sub>2</sub>,...,e<sub>i</sub>}中的桥<br>
+* 3.当2不能再进行时算法停止<br>
+
+例如下图中V<sub>5</sub>-->V<sub>6</sub>就是一个桥,一般先选不是桥的边,如V<sub>5</sub>-->V<sub>2</sub><br>
+![F36](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/GraphPic36.png)<br>
+<br>
+
+[总结步骤]
+* 1.求图中奇度结点集合Vo={v}
+* 2.对Vo中的每个顶点对(u,v),用Dijkstra算法求距离d(u,v)
+* 3.构造加权完全图
+* 4.求加权图的总权最小的完备匹配M
+* 5.在G中求M中同一边的结点间的最短轨
+* 6.把G中在上一步求得的每条最短轨之边变成同权倍边,得到欧拉图G1
+* 7.用FE算法求G1的一条欧拉回路W,W即为解,W不唯一
