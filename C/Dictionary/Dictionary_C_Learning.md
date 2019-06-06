@@ -50,5 +50,248 @@ Merkle树---查找完整性校验<br>
 ![F2](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic2.png)<br>
 >比如7这个结点,它有4个指针,那么在实际使用时,就可以通过其第3层指针跳过9和12这两个结点从而直接查找18这个结点
 
-跳跃链表的建立和查找
+跳跃链表的数据结构定义
 -----------
+```c
+#define MAX_LEVEL 6 //定义最大层数
+typedef int KeyType;
+//跳跃链表结点结构定义
+typedef struct node
+{
+    int level;  //结点层数
+    KeyType key;    //结点的值
+    struct node *next[MAX_LEVEL];   //指针数组
+}*PNode;
+```
+跳跃链表的结点结构示意图如下:
+![F3](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic3.png)<br>
+```c
+//跳跃链表结构定义
+typedef struct
+{
+    int num;    //跳跃链表数据个数
+    int maxLevel;   //跳跃链表最大层数
+    PNode head; //跳跃链表的头指针
+}*SkipList;
+```
+跳跃链表的结构示意图如下:
+![F4](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic4.png)<br>
+
+空跳跃链表的建立
+-----------
+```c
+//创建带有头结点的空跳跃链表
+SkipList SetNullSkipList(int level)
+{
+    SkipList list = (SkipList)malloc(sizeof(SkipList));
+    //申请内存失败
+    if(list == NULL)
+    {
+        return NULL;
+    }
+    list->num = 0;  //空跳跃链表计数器赋值0
+    list->maxLevel = level; //跳跃链表的层数
+    list->head = CreateNode(level,-1);  //头结点的数据域赋值为-1
+    if(list->head == NULL)
+    {
+        free(list);
+        return NULL;
+    }
+    //给头结点的每一层后继设置为空
+    for(int i=0;i<level;i++)
+    {
+        list->head->next[i]=NULL;
+    }
+    return list;
+}
+```
+相关的结点创建函数如下:
+```c
+//生成一个新结点
+PNode CreateNode(int level,KeyType key)
+{
+    PNode p=(PNode)malloc(sizeof(struct node)+sizeof(PNode) * level);
+    if(p == NULL)
+    {
+        return NULL;
+    }
+    p->level = level;
+    p->key = key;
+    return p;
+}
+```
+生成的空跳跃链表像这样:
+![F5](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic5.png)<br>
+
+跳跃链表的查找:成功情况
+---------
+[查找算法]<br>
+&emsp;&emsp;假设要查找元素key,从最高层的指针开始,如果找到该元素,则返回结点指针.如果到达了链表的末尾,或者找到大于key的某个元素elem,接着降低一层,从包含elem的那个结点的前一个结点重新开始查找.重复该过程直到找到key,或者在第一层查找达到了链表末尾,或者找到了一个大于key的元素.<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic2.png)<br>
+[例如]查找关键码12:<br>
+&emsp;&emsp;先在第四层查找,这一层只有7,查找失败.<br>
+&emsp;&emsp;接着从第三层查找,这一层有7和18,查找失败.<br>
+&emsp;&emsp;然后从第二层查找,7-->9-->12,查找成功<br>
+
+跳跃链表的查找:失败情况
+---------
+[查找算法]<br>
+&emsp;&emsp;假设要查找元素key,从最高层的指针开始,如果找到该元素,则返回结点指针.如果到达了链表的末尾,或者找到大于key的某个元素elem,接着降低一层,从包含elem的那个结点的前一个结点重新开始查找.重复该过程直到找到key,或者在第一层查找达到了链表末尾,或者找到了一个大于key的元素.<br>
+![F2](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic2.png)<br>
+[例如]查找关键码23:<br>
+&emsp;&emsp;先在第四层查找,这一层只有7,查找失败.<br>
+&emsp;&emsp;接着从第三层查找,这一层有7和18,查找失败.<br>
+&emsp;&emsp;然后从第二层查找,7-->9-->12-->18-->30,30>23,查找失败<br>
+&emsp;&emsp;然后从最底层查找,查到25时,25>23,查找失败,查找结束<br>
+
+跳跃链表的查找算法具体实现
+------------
+```c
+//按值查找,存在返回key的位置,失败返回NULL
+//传入跳跃链表list,要查找的key
+PNode SkipListSearch(SkipList list,KeyType key)
+{
+    int n = 0;
+    PNode p = NULL;
+    PNode q = NULL;
+    p = list->head;
+
+    //从高层开始,纵向逐层比较
+    for(int i = list->maxlevel-1; i>=0; i--)
+    {
+        //横向比较
+        //q=p->next[i]是检查是否到达链表尾部
+        //q->key<=key是检查是否找到了比查询的key大的元素
+        while((q=p->next[i])&&(q->key<=key))
+        {
+            p = q;
+            n++;    //记录比较次数
+            if(p->key == key)
+            {
+                printf("%d\n",n);
+                return p;   //查找成功,返回p
+            }
+        }
+    }
+    return NULL;    //查找失败,返回NULL
+}
+```
+
+跳跃链表的插入
+---------
+* [插入过程]:
+        首先进行查找,
+        <font color=green>查找成功</font>,<font color=green>返回0</font>(因为在这里约定不能有相同的key),故不再插入.
+        <font color=blue>查找失败</font>,<font color=blue>则创建一个结点</font>,<font color=red>接着,逐层修改关联的指针</font>,<font color=purple>跳跃链表的计数器+1</font>.
+
+&emsp;&emsp;创建结点的层数根据投币产生,在算法中使用逻辑表达式rand() % 2来模拟投币过程,通过(伪)随机数的奇偶来模拟一次理想的投币过程.根据RandomLevel的返回值插入到相应的层
+
+像这样:
+![F6](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic6.png)<br>
+
+```c
+//插入结点,成功返回1,否则返回0
+//输入参数跳跃链表list,要查找的值key
+int SkipListInsert(SkipList list,KeyType key)
+{
+    int level = 0;
+    PNode Pre[MAX_LEVEL];   //记录每层的前驱结点位置
+    PNode p = NULL;
+    PNode q = NULL;
+    p = list->head; //从头结点开始
+
+    //查找位置,记录前驱结点信息
+    for(int i = list->maxlevel-1; i>=0; i--)    //纵向控制层
+    {
+        //横向查找插入位置,而for循环时纵向移动查找位置
+        while((q = p->next[i]) && (q->key < key))
+            //注意这两句,可能有问题
+            p = q;
+            Pre[i] = p;
+    }
+
+    //已经存在相同的key,不能插入
+    if((q !=NULL) && (q->key == key))
+        return 0;   //查找成功,不插入
+    
+    //使用RandomLevel投币
+    level = RandomLevel(list->maxLevel);    //产生一个随机层数
+    p = CreateNode(levle,key);  //创建新结点
+    if(p == NULL)
+    {
+        return 0;   //创建新结点不成功
+    }
+    
+    //纵向逐层修改指针
+    for(int i = 0; i < level; i++)
+    {
+        p->next[i] = Pre[i]->next[i];
+        Pre[i]->next[i] = p;
+    }
+
+    //新结点添加成功
+    list->num++;    //跳跃链表的计数器+1
+    return 1;   //插入成功
+}
+
+//产生随机层数,在各塔中自底向上逐层生长
+int RandomLevel(int maxlevel)
+{
+    int i = 1;
+    while(rand() %2)    //出现偶数
+        i++;
+    i = (i>maxlevel)?maxlevel:i;
+    return i;   //i就是产生的层数
+}
+
+```
+
+跳跃链表的删除
+--------
+* [删除过程]:
+        首先进行查找,
+        <font color=green>查找不成功返回0</font>,
+        <font color=blue>查找成功则逐层修改关联的指针</font>,<font color=blue>释放结点</font>,<font color=brown>跳跃链表的计数器-1</font>.
+
+[例如]
+要删除30,需要修改30的前驱结点18和27的指针,其中虚线表示要修改的指针.
+像这样:
+![F7](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic7.png)<br>
+
+```c
+//按值删除,成功返回1,否则返回0
+//传入参数跳跃链表list,要删除的结点的值key
+int SkipListDelete(SkipList list,KeyType key)
+{
+    PNode Pre[MAX_LEVEL];
+    PNode p = NULL;
+    PNode q = NULL;
+    p = list->head;
+
+    int k = list->maxLevel;
+
+    for(int i = k-1; i>=0; i--)
+    {
+        while((q = p->next[i]) && (q->key < key))
+            //注意这两句,可能有问题
+            p = q;
+            Pre[i] = p;
+    }
+
+    //存在key则进行删除操作
+    if(q && q->key==key)
+    {
+        for(int i = 0; i < list->maxLevel; i++)
+        {
+            if(Pre[i]->next[i] == q)
+                Pre[i]->next[i] = q->next[i];
+        }
+        free(q);    //删除结点
+        list->num--;    //跳跃链表的计数器-1
+        return 1;   //删除成功
+    }
+    return 0;   //删除失败
+}
+```
+
+>跳跃链表的实现参照SkipList项目
