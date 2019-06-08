@@ -366,3 +366,119 @@ void PrintSkipList(SkipList list)
 ```
 
 >跳跃链表的实现参照SkipList项目
+
+散列表
+========
+**[字典的散列表示]**<br>
+**[例1]**比如在一个词汇表中,<font color=red>关键码</font>是最多由<font color=red>8</font>个字母构成<br>
+则关键码的空间会达到26<sup>8</sup>≈2*10<sup>11</sup>≈2<sup>28</sup><br>
+但由于由8个字母组成的并不一定就是一个词汇,也就是说词汇所占的空间并没有26<sup>8</sup>这么大<br>
+即词汇是sparse(adj. 稀疏的；稀少的),这种时候称之为<font color=blue>稀疏表</font><br>
+这种情况下,我们不可能会去用26<sup>8</sup>的空间<br>
+
+**[例2]**C语言中,编译器把程序中使用的所有变量都保存在一个符号表中,但是程序实际使用的只是其中的一小部分<br>
+那么如何<font color=red>设计一个函数h</font>,使得编译器迅速访问与每个变量相关联的位置呢?<br>
+如果将变量名中所有字母相加作为索引,假设变量i由31个字幕组成,变量k由31个z组成,则需要<font color=red>h(k)=31*122=3782</font>个单元(122为z的ASCII码)<br>
+那就有个问题,如何<font color=red>避免冲突h(abc)=h(cba)呢</font><br>
+
+散列表的概念
+----------
+对于上述的问题,我们采用散列法进行解决<br>
+>散列法又称为杂凑法,或哈希法,或<font color=pink>关键码--地址转换法</font><br>
+
+关键码--散列函数h-->存储地址[key--h(key)-->entry/&entry]<br>
+比如关键码空间为R,那么散列表是通过散列函数h生成的,其空间为M,M远小于R<br>
+>装填因子=n/M,n为关键码真正的数量,M为散列地址空间长度<br>
+
+具体表示如图:<br>
+![F8](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic8.png)<br>
+
+对应的散列地址空间就称为<font color=orange>散列表/哈希表(hash table)</font><br>
+如果一个散列地址是以索引形式给出的,则称这一个散列地址为<font color=orange>桶(bucket)</font>,整个散列地址空间称为<font color=orange>桶数组(bucket array)</font><br>
+<br>
+之前提到了h(abc)=h(cba)的冲突,在这里称为<font color=red>碰撞</font><br>
+即若key<sub>1</sub>≠key<sub>2</sub>,而h(key<sub>1</sub>)=h(key<sub>2</sub>)<br>
+则称key<sub>1</sub>和key<sub>2</sub>为同义词,因为算出来的位置一样<br>
+<br>
+解决这样的冲突可以在一定程度上从两方面进行避免:<br>
+* 1.改用更好的散列函数<br>
+* 2.增加表长<br>
+>完全的避免是不可能的,只能说从一定程度上解决<br>
+
+好的散列函数的设计原则
+---------
+* <font color=red>确定</font>:同一关键码总是映射到同一地址<br>
+* <font color=red>快速</font>:散列函数的计算代价尽量保持在常数级,即O(1)级<br>
+* <font color=red>满射</font>:在已知关键码时,尽量使散列函数覆盖整个散列地址空间<br>
+* <font color=red>均匀</font>:尽量使散列地址均匀地分布,从而减少聚集(clustering)和冲突<br>
+
+**[常用的散列函数]**<br>
+* <font color=red>除余法</font><br>
+* 数字分析法<br>
+* 折叠法<br>
+* 中平方法<br>
+* 技术转换法<br>
+>通过实验,结果表明对于一般的应用,除余法是一种理想的方法<br>
+
+**[除余法]**<br>
+h(key)=(int)key % p<br>
+>key可能不是一个整数而是一个字符,我们需要通过某些方法将其转换为数字<br>
+>基于数论的原理确定p的值,gcd(s,p)=1&emsp;(s和p的最大公因子是1)<br>
+
+<font color=green>p的选取:小于基本长度m的最大素数</font>(素数即质数:只能由1和其本身整除的数)<br>
+>由此满足了散列函数的均匀性<br>
+
+[数字分析法]<br>
+假设关键码是以r为基的数,并且哈希表中可能出现的关键码都是<font color=blue>已知</font>的,则可以去关键码的若干数位组成散列地址(即取几位作为关键码的地址标识)<br>
+例如Key=000<font color=brown>3</font>194<font color=brown>26</font>-->h(Key)=326<br>
+
+[折叠法]<br>
+将关键码分割成几部分,然后取这几部分的叠加和作为地址<br>
+例如key=<font color=green>58</font><font color=blue>2422</font><font color=orange>241</font><br>
+![F9](https://github.com/CyberYui/DataStructures/blob/master/C/Dictionary/Dictionary_Pic9.png)<br>
+
+[中平方法]<br>
+先求出关键码的平方,然后取中间几位作为地址<br>
+如key=4731,则(4731)<sup>2</sup>=22<font color=red>382</font>361,即h(key)=382<br>
+
+[基数转换法]<br>
+把关键码看成基数为r<sub>1</sub>的数,将它转换成基数为r<sub>2</sub>的数,用数字分析法取中间几位作为散列地址.r<sub>1</sub>和r<sub>2</sub>最好互素<br>
+如key=236075,r<sub>1</sub>=13,r<sub>2</sub>=10(即13进制转换为10进制)<br>
+(236075)<sub>13</sub>=2*135+3*134*6+133*7*13+5=(8<font color=red>4154</font>7)<sub>10</sub>
+h(key)=4154<br>
+
+生日悖论(虽然可以在一定程度山避免,但冲突一直会存在)
+---------
+* 1.在一个教室中最少应有多少学生才使得找一个学生与某人生日(该人也在教室)相同的概率不小于1/2<br>
+
+即给定一个x,根据某种Hash函数h,找到y≠x,使得H(y)=h&emsp;(即已知一个人的生日,找另外一个)<br>
+
+&emsp;&emsp;&emsp;假设教室中有k个人:<br>
+&emsp;&emsp;&emsp;假设一个人生日为某天<br>
+&emsp;&emsp;&emsp;<font color=green>P<sub>(其他某个同学不是和他同一天生日)</sub>=(1-1/365)=364/365</font><br>
+&emsp;&emsp;&emsp;<font color=green>P<sub>(随机取k个人都与该同学不同生日)</sub>=(364/365)<sup>k</sup></font><br>
+&emsp;&emsp;&emsp;<font color=green>所以P<sub>(随机取k个人至少有一个人与该同学同生日)</sub>=1-(364/365)<sup>k</sup></font><br>
+&emsp;&emsp;&emsp;得出的<font color=red>k<sub>min</sub>=254</font><br>
+
+* 2.在一个教室中最少应有多少学生才使得至少有两个学生的生日在同一天的概率不小于1/2<br>
+
+即寻找两个随机的信息x和y,使得H(x)=H(y)&emsp;(即随机找两个,两个生日一样)<br>
+&emsp;&emsp;&emsp;假设第一个人的生日为一个特定生日<br>
+&emsp;&emsp;&emsp;<font color=blue>P<sub>(第二个人不在该日出生)</sub>=(1-1/365)<br>
+&emsp;&emsp;&emsp;<font color=blue>P<sub>(第三个人与前两位不同生日)</sub>=(1-2/365)<br>
+&emsp;&emsp;&emsp;<font color=blue>P<sub>(第k个人与前k-1个人不同生日)</sub>=[1-(k-1)/365]<br>
+&emsp;&emsp;&emsp;<font color=blue>P<sub>(k个人都不同生日)</sub>=(1-1/365)×(1-2/365)×...×[1-(k-1)/365]=365!/(365-k)!×365<sup>k</sup><br>
+&emsp;&emsp;&emsp;<font color=blue>P<sub>(k个人至少有两个人生日相同)</sub>=1-[365!/(365-k)!365<sup>k</sup>]<br>
+&emsp;&emsp;&emsp;利用<font color=green>1-x≈e<sup>-x</sup>(当x很小)</font>,则本题概率约为<font color=green>1-e<sup>-k(k-1)/(2×365)</sup></font><br>
+&emsp;&emsp;&emsp;则<font color=orange>k≈1.18*365<sup>1/2</sup>≈22.54</font><br>
+&emsp;&emsp;&emsp;得出的<font color=red>k<sub>min</sub>=23</font><br>
+&emsp;&emsp;&emsp;当<font color=red>k=23</font>时,<font color=red>P(365,23)=0.5073</font><br>
+&emsp;&emsp;&emsp;当<font color=red>k=100</font>时,<font color=red>P(365,100)=0.9999997</font><br>
+
+由此有了生日悖论:<br>
+当人数k给定时,得到的至少有两个人的生日相同的概率比想象的要大得多<br>
+
+在这里两个人的生日相同在散列函数中就是h(key1)=h(key2)的冲突情况<br>
+
+
+
