@@ -94,9 +94,9 @@ GraphMatrix* prim(int source, GraphMatrix *graphMatrix)
 {
 	int i = 0;
 	int j = 0;
-	int *component = (int*)malloc(sizeof(graphMatrix->size));   //新点集合
-	int *distance = (int*)malloc(sizeof(graphMatrix->size));    //距离
-	int *neighbor = (int*)malloc(sizeof(graphMatrix->size));    //邻居,例如neighbor[i]=j表示i的邻居是j
+	int *component = (int*)malloc(sizeof(int) * graphMatrix->size);   //新点集合
+	int *distance = (int*)malloc(sizeof(int) * graphMatrix->size);    //距离
+	int *neighbor = (int*)malloc(sizeof(int) * graphMatrix->size);    //邻居,例如neighbor[i]=j表示i的邻居是j
 	GraphMatrix *tree = InitGraph(graphMatrix->size);   //存放结果的图
 
 	//初始化
@@ -123,8 +123,10 @@ GraphMatrix* prim(int source, GraphMatrix *graphMatrix)
 			{
 				//找最小值
 				if (distance[j] < min)
+				{
 					v = j;
-				min = distance[j];
+					min = distance[j];
+				}
 			}
 		}
 

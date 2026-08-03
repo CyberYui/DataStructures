@@ -49,6 +49,7 @@ CMap::~CMap()
 	//释放结点和邻接矩阵的内存
 	delete[]m_pNodeArray;
 	delete[]m_pMatrix;
+	delete[]m_pEdge;
 }
 
 

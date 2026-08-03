@@ -170,9 +170,9 @@ int eventLatestTime(GraphInverseList *graphInverseList, int *latestTime)
 			//去掉出边
 			outPoint[tempNode->nodeno]--;	//入边表中所有相关顶点出度-1
 			//为每条出边的终点事件更新可能的最迟发生时间
-			if (latestTime[tempNode->nodeno] < latestTime[nodeNum] + tempNode->weight)
+			if (latestTime[tempNode->nodeno] > latestTime[nodeNum] - tempNode->weight)
 			{
-				latestTime[tempNode->nodeno] = latestTime[nodeNum] + tempNode->weight;
+				latestTime[tempNode->nodeno] = latestTime[nodeNum] - tempNode->weight;
 			}
 
 			//检查出度是否为0,是0则入栈
