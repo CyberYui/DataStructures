@@ -72,7 +72,7 @@ bool Tree::AddNode(int nodeIndex, int direction, int *pNode)
 		return false;
 	}
 	//在树中,如果值为0,代表这里不是一个叶子节点/子节点
-	if (&m_pTree[nodeIndex] == 0)
+	if (m_pTree[nodeIndex] == 0)
 	{
 		return false;
 	}
