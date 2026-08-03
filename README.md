@@ -150,6 +150,9 @@ DataStructures/
 │   │   └── BinTree_Huffman/        # 哈夫曼树
 │   ├── SearchTree/                 # 查找树
 │   │   └── BinTree_BSTree/         # 二叉搜索树（BST）
+│   ├── Sort/                       # 排序算法（新增）
+│   │   ├── Sort.h / Sort.c         # 七种排序算法实现
+│   │   └── main.c                  # 演示程序
 │   ├── Graph/                      # 图
 │   │   ├── Graph_AdjMatrix/        # 邻接矩阵存储
 │   │   ├── Graph_AdjList/          # 邻接表存储
@@ -172,6 +175,8 @@ DataStructures/
     ├── MyQueueModel/               # 队列（顺序队列 + 链式队列）
     ├── MyOwnString/                # 串（KMP 模式匹配）
     ├── MyTreeModel/                # 树（通用树 + 二叉树）
+    ├── MyBinTreeModel/             # 二叉树（链式，新增）
+    ├── MySortModel/                # 排序算法（新增）
     └── MyMapModel/                 # 图（邻接矩阵 + DFS/BFS + Prim + Kruskal）
 ```
 
@@ -191,11 +196,13 @@ DataStructures/
 | 串/KMP 匹配 (String) | — | ✅ `C++/MyOwnString` |
 | 通用树 (General Tree) | — | ✅ `C++/MyTreeModel` (TreeBasic) |
 | 二叉树-递归建立与遍历 | ✅ `C/Tree/BinTree` | ✅ `C++/MyTreeModel` (TreeAdv) |
+| 二叉树-层次遍历/统计/查找/镜像 | ✅ `C/Tree/BinTree` | ✅ `C++/MyBinTreeModel`（新增） |
 | 二叉树-非递归遍历 | ✅ `C/Tree/BinTree_NewNonRecursion` | — |
-| 二叉树-层次遍历 | ✅ `C/Tree/BinTree_NonRecursion` | — |
+| 二叉树-层次遍历(队列) | ✅ `C/Tree/BinTree_NonRecursion` | — |
 | 中序线索二叉树 | ✅ `C/Tree/BinTree_Thread` | — |
 | 哈夫曼树 | ✅ `C/Tree/BinTree_Huffman` | — |
 | 二叉搜索树 (BST) | ✅ `C/SearchTree/BinTree_BSTree` | — |
+| 排序算法（7种） | ✅ `C/Sort`（新增） | ✅ `C++/MySortModel`（新增） |
 | 图-邻接矩阵 | ✅ `C/Graph/Graph_AdjMatrix` | ✅ `C++/MyMapModel` |
 | 图-邻接表 | ✅ `C/Graph/Graph_AdjList` | — |
 | 图遍历 DFS/BFS | ✅ `C/Graph/GraphDFS*/GraphBFS*` | ✅ `C++/MyMapModel` |
@@ -208,9 +215,9 @@ DataStructures/
 
 ---
 
-## 本次修复说明 / Bug Fixes (Phase 1)
+## 本次修复说明 / Bug Fixes
 
-以下 bug 已在本次修复中解决：
+### 阶段一修复
 
 1. **`C/Graph/GraphPrim/graphmatrixutil.c` - Prim 算法 malloc 大小错误及 min/v 逻辑错误**
    - 原始代码：`malloc(sizeof(graphMatrix->size))` 只分配了 4 字节（sizeof(int)），而非 `size` 个 int 的空间
@@ -231,13 +238,29 @@ DataStructures/
 
 ---
 
-## 待实现内容 / Planned (Phase 2)
+## 阶段二新增内容 / Phase 2 Additions
 
-- [ ] C 端：排序算法模块（冒泡、插入、选择、归并、快排、堆排）`C/Sort/`
-- [ ] C++ 端：二叉树模块 `C++/MyBinTreeModel/`（递归/非递归建立、前/中/后序遍历、统计）
-- [ ] C++ 端：排序算法模块 `C++/MySortModel/`
-- [ ] C++ 端：二叉搜索树 `C++/MySearchTreeModel/`
-- [ ] README 最终版（编译运行说明、关键代码讲解等）
+### C 端新增
+
+- **`C/Sort/`** - 排序算法模块（7种）：冒泡、插入、选择、希尔、归并、快排、堆排
+  - 编译：`gcc Sort.c main.c -o sort_demo && ./sort_demo`
+
+### C++ 端新增
+
+- **`C++/MyBinTreeModel/`** - 链式二叉树（对应 C/Tree/BinTree）
+  - 包含：前/中/后序遍历、层次遍历、结点统计、高度计算、查找、镜像翻转
+  - 编译：`g++ BinTreeNode.cpp BinTree.cpp BinTreeDemo.cpp -o demo && ./demo`
+
+- **`C++/MySortModel/`** - 排序算法模块（同 C 端 7 种，封装为 Sort 静态类，使用 vector）
+  - 编译：`g++ Sort.cpp SortDemo.cpp -o demo && ./demo`
+
+---
+
+## 已知限制 / Known Limitations
+
+- 部分 C 文件使用了 `scanf_s`（MSVC 专用），在 Linux/gcc 下编译需将其替换为 `scanf`
+- C/Graph/CriticalPath 目录名称保留了原有的 `(Need_Fix)` 后缀，实际 bug 已修复
+- C++ 端图实现（MyMapModel）目前仅有邻接矩阵实现，暂无邻接表版本
 
 ---
 
@@ -251,6 +274,13 @@ DataStructures/
 cd C/StackAndQueue/LinkedStack
 gcc LinkedStack.c Demo.c -o demo
 ./demo
+```
+
+**C 排序算法：**
+```bash
+cd C/Sort
+gcc Sort.c main.c -o sort_demo
+./sort_demo
 ```
 
 **C++ 语言项目：**
@@ -284,9 +314,9 @@ C++:<br>
 [MyQueueModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyQueueModel/QueueInfo.md)<br>
 [MyStackModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyStackModel)<br>
 [MyTreeModel-Info](https://github.com/CyberYui/DataStructures/tree/master/C++/MyTreeModel)<br>
-[String-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyOwnString/StringInfo.md)
-
-Hoping these files are useful for you guys who is learning DataStructures.
+[String-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyOwnString/StringInfo.md)<br>
+[MyBinTreeModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MyBinTreeModel/BinTreeInfo.md)<br>
+[MySortModel-Info](https://github.com/CyberYui/DataStructures/blob/master/C++/MySortModel/SortInfo.md)
 <br><br>
 C:<br>
 The Model of Sequential List
@@ -347,6 +377,9 @@ Inorder Thread Binary Tree Project:<br>
 
 A simple project of create a Huffman Tree:<br>
 [MyHuffmanTreeInfo](https://github.com/CyberYui/DataStructures/blob/master/C/Tree/BinTree_Huffman/BinTree_HuffmanTree_Info.md)<br>
+
+**Sorting Algorithms:**<br>
+[Sort-Info](https://github.com/CyberYui/DataStructures/blob/master/C/Sort/Sort_Info.md)<br>
 
 **Graph:**<br>
 [Graph-Info](https://github.com/CyberYui/DataStructures/blob/master/C/Graph/Graph_C_Learning.md)<br>
